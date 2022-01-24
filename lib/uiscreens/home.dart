@@ -81,13 +81,19 @@ class _HomeState extends State<Home> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10),
-          child: Column(
-            children: [
-              HomeFourCards(),
-              // HomeLiveAuctions(),
-              // HomeUpcomingAuctions(),
-              // HomeProductCategoryList(),
-            ],
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: [
+                HomeFourCards(),
+                SizedBox(
+                  height: 30,
+                ),
+                HomeLiveAuctions(),
+                // HomeUpcomingAuctions(),
+                // HomeProductCategoryList(),
+              ],
+            ),
           ),
         ),
       ),
@@ -106,6 +112,10 @@ class HomeFourCards extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            'Dashboard',
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          ),
           Row(
             children: [
               Expanded(
@@ -119,9 +129,9 @@ class HomeFourCards extends StatelessWidget {
               ),
               Expanded(
                 child: ShadedContainer(
-                    theTitle: 'Upcoming Auction',
+                    theTitle: 'Upcoming Auctions',
                     theRoute: 'Hi',
-                    imgName: 'liveauction'),
+                    imgName: 'upcomingauctions3'),
               ),
             ],
           ),
@@ -141,9 +151,10 @@ class HomeFourCards extends StatelessWidget {
               ),
               Expanded(
                 child: ShadedContainer(
-                      theTitle: 'Live Auction',
-                      theRoute: 'Hi',
-                      imgName: 'liveauction')),
+                    theTitle: 'Live Auction',
+                    theRoute: 'Hi',
+                    imgName: 'liveauction'),
+              ),
             ],
           ),
         ],
@@ -162,7 +173,53 @@ class HomeLiveAuctions extends StatefulWidget {
 class _HomeLiveAuctionsState extends State<HomeLiveAuctions> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Ongoing Auctions',
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+              Text('See All'),
+            ],
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                ShadedContainer(
+                    theTitle: 'Live Auction',
+                    theRoute: 'Hi',
+                    imgName: 'liveauction'),
+                ShadedContainer(
+                    theTitle: 'Live Auction',
+                    theRoute: 'Hi',
+                    imgName: 'liveauction'),
+                ShadedContainer(
+                    theTitle: 'Live Auction',
+                    theRoute: 'Hi',
+                    imgName: 'liveauction'),
+                ShadedContainer(
+                    theTitle: 'Live Auction',
+                    theRoute: 'Hi',
+                    imgName: 'liveauction'),
+                ShadedContainer(
+                    theTitle: 'Live Auction',
+                    theRoute: 'Hi',
+                    imgName: 'liveauction'),
+                ShadedContainer(
+                    theTitle: 'Live Auction',
+                    theRoute: 'Hi',
+                    imgName: 'liveauction'),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 

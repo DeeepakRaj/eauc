@@ -22,6 +22,7 @@ class ShadedContainer extends StatelessWidget {
       child: Container(
         height: 150.0,
         width: 160.0,
+        margin: EdgeInsets.all(5),
         // padding: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
