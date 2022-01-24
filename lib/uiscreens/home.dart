@@ -141,10 +141,9 @@ class HomeFourCards extends StatelessWidget {
               ),
               Expanded(
                 child: ShadedContainer(
-                    theTitle: 'Live Auction',
-                    theRoute: 'Hi',
-                    imgName: 'liveauction'),
-              ),
+                      theTitle: 'Live Auction',
+                      theRoute: 'Hi',
+                      imgName: 'liveauction')),
             ],
           ),
         ],
