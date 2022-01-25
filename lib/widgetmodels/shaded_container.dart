@@ -1,10 +1,10 @@
+import 'package:eauc/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
 class ShadedContainer extends StatelessWidget {
   // ShadedContainer({required this.theTitle,required this.theRoute,required this.imgName,required this.theIcon});
-  ShadedContainer(
-      {required this.theTitle, required this.theRoute, required this.imgName});
+  ShadedContainer({required this.theTitle, required this.theRoute, required this.imgName});
 
   final String theTitle;
   final String imgName;
@@ -39,7 +39,7 @@ class ShadedContainer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Expanded(
-              flex: 3,
+              flex: 4,
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
@@ -63,7 +63,7 @@ class ShadedContainer extends StatelessWidget {
                   theTitle,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.brown,
+                      color: kprimarycolor,
                       fontSize: 18.0),
                 ),
               ),
