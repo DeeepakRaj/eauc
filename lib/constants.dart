@@ -19,3 +19,8 @@ final kTextInputDecoration = InputDecoration(
     errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.0),
         borderSide: BorderSide(color: Colors.red, width: 2.0)));
+
+final kCardTitleTextStyle =
+    TextStyle(fontWeight: FontWeight.w900, color: kprimarycolor, fontSize: 20);
+
+final kCardSubTitleTextStyle = TextStyle(fontSize: 18, color: Colors.grey);

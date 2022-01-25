@@ -1,4 +1,5 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/widgetmodels/home_ongoingauctions_container.dart';
 import 'package:eauc/widgetmodels/shaded_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,20 +21,24 @@ class _HomeState extends State<Home> {
       backgroundColor: kbackgroundcolor,
       appBar: AppBar(
         titleSpacing: 10,
-        backgroundColor: kprimarycolor,
-        elevation: 5.0,
+        backgroundColor: kbackgroundcolor,
+        elevation: 0,
         centerTitle: true,
         title: typing
             ? TextBox()
             : Text(
                 'HOME',
-                style: TextStyle(fontSize: 23, fontWeight: FontWeight.w900),
+                style: TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.w900,
+                    color: kprimarycolor),
               ),
         leading: typing
             ? IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
                   size: 25,
+                  color: kprimarycolor,
                 ),
                 onPressed: () {
                   setState(() {
@@ -53,6 +58,7 @@ class _HomeState extends State<Home> {
                   icon: Icon(
                     Icons.search,
                     size: 30,
+                    color: kprimarycolor,
                   ),
                   onPressed: () {
                     setState(() {
@@ -63,7 +69,7 @@ class _HomeState extends State<Home> {
           typing
               ? Icon(
                   Icons.filter_alt_outlined,
-                  color: Colors.white,
+                  color: kprimarycolor,
                 )
               : SizedBox(
                   width: 5,
@@ -74,7 +80,7 @@ class _HomeState extends State<Home> {
                 )
               : Icon(
                   Icons.settings,
-                  color: Colors.white,
+                  color: kprimarycolor,
                 ),
         ],
       ),
@@ -186,37 +192,7 @@ class _HomeLiveAuctionsState extends State<HomeLiveAuctions> {
               Text('See All'),
             ],
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                ShadedContainer(
-                    theTitle: 'Live Auction',
-                    theRoute: 'Hi',
-                    imgName: 'liveauction'),
-                ShadedContainer(
-                    theTitle: 'Live Auction',
-                    theRoute: 'Hi',
-                    imgName: 'liveauction'),
-                ShadedContainer(
-                    theTitle: 'Live Auction',
-                    theRoute: 'Hi',
-                    imgName: 'liveauction'),
-                ShadedContainer(
-                    theTitle: 'Live Auction',
-                    theRoute: 'Hi',
-                    imgName: 'liveauction'),
-                ShadedContainer(
-                    theTitle: 'Live Auction',
-                    theRoute: 'Hi',
-                    imgName: 'liveauction'),
-                ShadedContainer(
-                    theTitle: 'Live Auction',
-                    theRoute: 'Hi',
-                    imgName: 'liveauction'),
-              ],
-            ),
-          )
+          HomeOngoingAuctionsContainer()
         ],
       ),
     );
