@@ -5,7 +5,7 @@ import 'package:eauc/splashscreen.dart';
 import 'package:eauc/uiscreens/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'uiscreens/products.dart';
-import 'uiscreens/home.dart';
+import 'uiscreens/home/home.dart';
 import 'uiscreens/hosted.dart';
 import 'uiscreens/auctions.dart';
 

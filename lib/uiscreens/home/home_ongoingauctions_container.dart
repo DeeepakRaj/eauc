@@ -54,7 +54,6 @@ class _HomeOngoingAuctionsContainerState
                 child: Stack(
                   children: [
                     Container(
-                      height: 150,
                       width: screenWidth,
                       child: CarouselSlider(
                         carouselController: carouselController,
@@ -125,9 +124,11 @@ class _HomeOngoingAuctionsContainerState
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Flexible(
-                            child:
-                                Text('Product 1', style: kCardTitleTextStyle)),
+                        Text(
+                          'Product 1//////////////////////////////////////////////',
+                          style: kCardTitleTextStyle,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         Flexible(
                             child: Text('Description',
                                 style: kCardSubTitleTextStyle)),

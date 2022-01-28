@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 
 import '../constants.dart';
 import 'auctions.dart';
-import 'home.dart';
+import 'home/home.dart';
 import 'hosted.dart';
 import 'products.dart';
 
