@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eauc/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -11,15 +12,25 @@ class HomeOngoingAuctionsContainer extends StatefulWidget {
 
 class _HomeOngoingAuctionsContainerState
     extends State<HomeOngoingAuctionsContainer> {
+  CarouselController carouselController = CarouselController();
+  final featuredImages = [
+    'assets/images/upcomingauctions.jpg',
+    'assets/images/upcomingauctions2.jpg',
+    'assets/images/upcomingauctions3.jpg'
+  ];
+
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
+
     return GestureDetector(
       onTap: () {
         //TODO: Navigate to Individual Auction page
       },
       child: Container(
-        height: MediaQuery.of(context).size.height / 3,
-        width: MediaQuery.of(context).size.width,
+        // height: screenHeight / 3,
+        width: screenWidth,
         margin: EdgeInsets.all(5),
         padding: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
@@ -38,94 +49,164 @@ class _HomeOngoingAuctionsContainerState
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Flexible(
-              flex: 3,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    image: DecorationImage(
-                        image: AssetImage(
-                          'assets/images/' + 'liveauction2' + '.jpg',
+            Expanded(
+                flex: 4,
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 150,
+                      width: screenWidth,
+                      child: CarouselSlider(
+                        carouselController: carouselController,
+                        // Give the controller
+                        options: CarouselOptions(
+                          enlargeCenterPage: true,
+                          viewportFraction: 1,
+                          autoPlay: true,
                         ),
-                        fit: BoxFit.cover)),
-              ),
-            ),
+                        items: featuredImages.map((featuredImage) {
+                          return Container(
+                            width: screenWidth,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              image: DecorationImage(
+                                image: AssetImage(
+                                  featuredImage,
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        onPressed: () {
+                          // Use the controller to change the current page
+                          carouselController.previousPage();
+                        },
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: kprimarycolor,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        onPressed: () {
+                          // Use the controller to change the current page
+                          carouselController.nextPage();
+                        },
+                        icon: Icon(
+                          Icons.arrow_forward,
+                          color: kprimarycolor,
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
             SizedBox(
               height: 5,
             ),
-            Flexible(
+            Expanded(
               flex: 2,
-              child: Column(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Flexible(
-                        flex: 3,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  Flexible(
+                    flex: 3,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                            child:
+                                Text('Product 1', style: kCardTitleTextStyle)),
+                        Flexible(
+                            child: Text('Description',
+                                style: kCardSubTitleTextStyle)),
+                        Row(
                           children: [
-                            Text('Product 1', style: kCardTitleTextStyle),
-                            Text('Description', style: kCardSubTitleTextStyle),
-                            Row(
-                              children: [
-                                Text(
-                                  'Host:',
-                                  style: kCardSubTitleTextStyle,
-                                ),
-                                Text(
-                                  'Host Name',
-                                  style: kCardSubTitleTextStyle,
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Current Bid',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: kprimarycolor,
+                            Flexible(
+                              child: Text(
+                                'Host:',
+                                style: kCardSubTitleTextStyle,
                               ),
                             ),
-                            Text(
-                              '5000000',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green),
-                            )
+                            Flexible(
+                              child: Text(
+                                'Host Name',
+                                style: kCardSubTitleTextStyle,
+                              ),
+                            ),
                           ],
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Ends In:',
-                        style: TextStyle(color: kprimarycolor, fontSize: 18),
-                      ),
-                      Text(
-                        '01:14:28',
-                        style: TextStyle(color: Colors.red, fontSize: 19),
-                      ),
-                    ],
+                  Flexible(
+                    flex: 1,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Current Bid',
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: kprimarycolor,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Flexible(
+                          child: Text(
+                            '5000000',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        'Ends In:  ',
+                        style: TextStyle(
+                            color: kprimarycolor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Flexible(
+                      child: Text(
+                        '01:14:28',
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 19,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

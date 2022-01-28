@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/widgetmodels/home_ongoingauctions_container.dart';
 import 'package:eauc/widgetmodels/shaded_container.dart';
@@ -27,66 +28,67 @@ class _HomeState extends State<Home> {
         title: typing
             ? TextBox()
             : Text(
-                'HOME',
-                style: TextStyle(
-                    fontSize: 23,
-                    fontWeight: FontWeight.w900,
-                    color: kprimarycolor),
-              ),
+          'HOME',
+          style: TextStyle(
+              fontSize: 23,
+              fontWeight: FontWeight.w900,
+              color: kprimarycolor),
+        ),
         leading: typing
             ? IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  size: 25,
-                  color: kprimarycolor,
-                ),
-                onPressed: () {
-                  setState(() {
-                    typing = !typing;
-                  });
-                },
-              )
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: kprimarycolor,
+          ),
+          onPressed: () {
+            setState(() {
+              typing = !typing;
+            });
+          },
+        )
             : SizedBox(
-                width: 1,
-              ),
+          width: 1,
+        ),
         actions: [
           typing
               ? SizedBox(
-                  width: 1,
-                )
+            width: 1,
+          )
               : IconButton(
-                  icon: Icon(
-                    Icons.search,
-                    size: 30,
-                    color: kprimarycolor,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      typing = !typing;
-                    });
-                  },
-                ),
+            icon: Icon(
+              Icons.search,
+              size: 30,
+              color: kprimarycolor,
+            ),
+            onPressed: () {
+              setState(() {
+                typing = !typing;
+              });
+            },
+          ),
           typing
               ? Icon(
-                  Icons.filter_alt_outlined,
-                  color: kprimarycolor,
-                )
+            Icons.filter_alt_outlined,
+            color: kprimarycolor,
+          )
               : SizedBox(
-                  width: 5,
-                ),
+            width: 5,
+          ),
           typing
               ? SizedBox(
-                  width: 1,
-                )
+            width: 1,
+          )
               : Icon(
-                  Icons.settings,
-                  color: kprimarycolor,
-                ),
+            Icons.settings,
+            color: kprimarycolor,
+          ),
         ],
       ),
+      // extendBody: true,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(5.0),
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
@@ -179,6 +181,9 @@ class HomeLiveAuctions extends StatefulWidget {
 class _HomeLiveAuctionsState extends State<HomeLiveAuctions> {
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
       child: Column(
         children: [
@@ -192,7 +197,21 @@ class _HomeLiveAuctionsState extends State<HomeLiveAuctions> {
               Text('See All'),
             ],
           ),
-          HomeOngoingAuctionsContainer()
+          // HomeOngoingAuctionsContainer(),
+          CarouselSlider.builder(
+            options: CarouselOptions(
+              // enlargeCenterPage: true,
+              height: screenHeight * 0.35,
+              viewportFraction: 1,
+              autoPlay: false,
+              initialPage: 0,
+              enableInfiniteScroll: false,
+            ),
+            itemCount: 5,
+            itemBuilder:
+                (BuildContext context, int itemIndex, int pageViewIndex) =>
+                    HomeOngoingAuctionsContainer(),
+          )
         ],
       ),
     );
