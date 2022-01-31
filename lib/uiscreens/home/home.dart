@@ -1,7 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eauc/constants.dart';
-import 'package:eauc/uiscreens/home/home_ongoingauctions_container.dart';
-import 'package:eauc/widgetmodels/shaded_container.dart';
+import 'package:eauc/widgetmodels/custom_navigation_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
@@ -24,19 +22,12 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kbackgroundcolor,
+      drawer: CustomNavigationDrawer(),
       appBar: AppBar(
-        titleSpacing: 10,
-        backgroundColor: kbackgroundcolor,
-        elevation: 0,
-        centerTitle: true,
         title: typing
             ? TextBox()
             : Text(
                 'HOME',
-                style: TextStyle(
-                    fontSize: 23,
-                    fontWeight: FontWeight.w900,
-                    color: kprimarycolor),
               ),
         leading: typing
             ? IconButton(
@@ -51,9 +42,7 @@ class _HomeState extends State<Home> {
                   });
                 },
               )
-            : SizedBox(
-                width: 1,
-              ),
+            : null,
         actions: [
           typing
               ? SizedBox(
@@ -73,7 +62,8 @@ class _HomeState extends State<Home> {
                 ),
           typing
               ? Icon(
-                  Icons.filter_alt_outlined,
+            Icons.filter_alt_outlined,
+                  size: 30,
                   color: kprimarycolor,
                 )
               : SizedBox(
@@ -85,11 +75,12 @@ class _HomeState extends State<Home> {
                 )
               : Icon(
                   Icons.settings,
+                  size: 30,
                   color: kprimarycolor,
                 ),
         ],
       ),
-      // extendBody: true,
+      extendBody: true,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(5.0),
@@ -102,7 +93,10 @@ class _HomeState extends State<Home> {
                   height: 30,
                 ),
                 HomeLiveAuctions(),
-                // HomeUpcomingAuctions(),
+                SizedBox(
+                  height: 30,
+                ),
+                HomeUpcomingAuctions(),
                 // HomeProductCategoryList(),
               ],
             ),

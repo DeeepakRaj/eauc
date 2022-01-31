@@ -1,24 +1,17 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:eauc/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:eauc/constants.dart';
 
-class HomeOngoingAuctionsContainer extends StatefulWidget {
-  late String productName, productDesc, hostName, currentBid, endingTime;
-
-  // late List imagesList;
-  //TODO: Remove the comments for passing Image List Here
-  // HomeOngoingAuctionsContainer(this.imagesList, this.productName,this.productDesc,this.hostName,
-  //     this.currentBid,this.endingTime,{required Key key}):super(key: key);
-  HomeOngoingAuctionsContainer(this.productName, this.productDesc,
-      this.hostName, this.currentBid, this.endingTime);
+class HomeUpcomingAuctionsContainer extends StatefulWidget {
+  const HomeUpcomingAuctionsContainer({Key? key}) : super(key: key);
 
   @override
-  _HomeOngoingAuctionsContainerState createState() =>
-      _HomeOngoingAuctionsContainerState();
+  _HomeUpcomingAuctionsContainerState createState() =>
+      _HomeUpcomingAuctionsContainerState();
 }
 
-class _HomeOngoingAuctionsContainerState
-    extends State<HomeOngoingAuctionsContainer> {
+class _HomeUpcomingAuctionsContainerState
+    extends State<HomeUpcomingAuctionsContainer> {
   CarouselController carouselController = CarouselController();
   final featuredImages = [
     'assets/images/sampleimage1.jpg',
@@ -46,7 +39,7 @@ class _HomeOngoingAuctionsContainerState
             BoxShadow(
               color: Colors.grey,
               offset: Offset(0.0, 1.0), //(x,y)
-              blurRadius: 1.0,
+              blurRadius: 10.0,
             ),
           ],
         ),
@@ -131,19 +124,13 @@ class _HomeOngoingAuctionsContainerState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.productName,
+                          'Product 1//////////////////////////////////////////////',
                           style: kCardTitleTextStyle,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(
-                          height: 2,
-                        ),
                         Flexible(
-                            child: Text(widget.productDesc,
+                            child: Text('Description',
                                 style: kCardSubTitleTextStyle)),
-                        SizedBox(
-                          height: 2,
-                        ),
                         Row(
                           children: [
                             Flexible(
@@ -154,7 +141,7 @@ class _HomeOngoingAuctionsContainerState
                             ),
                             Flexible(
                               child: Text(
-                                widget.hostName,
+                                'Host Name',
                                 style: kCardSubTitleTextStyle,
                               ),
                             ),
@@ -170,16 +157,16 @@ class _HomeOngoingAuctionsContainerState
                       children: [
                         Flexible(
                           child: Text(
-                            'Current Bid',
+                            'Starting Price',
                             style: TextStyle(
-                                fontSize: 17,
+                                fontSize: 13,
                                 color: kprimarycolor,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
                         Flexible(
                           child: Text(
-                            widget.currentBid,
+                            '5000',
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -192,31 +179,34 @@ class _HomeOngoingAuctionsContainerState
                 ],
               ),
             ),
-            Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: Text(
-                      'Ends In:  ',
-                      style: TextStyle(
-                          color: kprimarycolor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
+            Expanded(
+              flex: 1,
+              child: Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        'Scheduled Start:  ',
+                        style: TextStyle(
+                            color: kprimarycolor,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  Flexible(
-                    child: Text(
-                      widget.endingTime,
-                      style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold),
+                    Flexible(
+                      child: Text(
+                        '22-09-2022 16:00',
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

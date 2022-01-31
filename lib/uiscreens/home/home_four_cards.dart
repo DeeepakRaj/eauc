@@ -14,7 +14,7 @@ class HomeFourCards extends StatelessWidget {
         children: [
           Text(
             'Dashboard',
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           Row(
             children: [
@@ -22,7 +22,7 @@ class HomeFourCards extends StatelessWidget {
                 child: ShadedContainer(
                     theTitle: 'Live Auction',
                     theRoute: 'Hi',
-                    imgName: 'liveauction2'),
+                    imgName: 'liveauctions'),
               ),
               SizedBox(
                 width: 10,
@@ -31,7 +31,7 @@ class HomeFourCards extends StatelessWidget {
                 child: ShadedContainer(
                     theTitle: 'Upcoming Auctions',
                     theRoute: 'Hi',
-                    imgName: 'upcomingauctions3'),
+                    imgName: 'upcomingauctions'),
               ),
             ],
           ),
@@ -42,18 +42,14 @@ class HomeFourCards extends StatelessWidget {
             children: [
               Expanded(
                 child: ShadedContainer(
-                    theTitle: 'Live Auction',
-                    theRoute: 'Hi',
-                    imgName: 'liveauction'),
+                    theTitle: 'Products', theRoute: 'Hi', imgName: 'products3'),
               ),
               SizedBox(
                 width: 10,
               ),
               Expanded(
                 child: ShadedContainer(
-                    theTitle: 'Live Auction',
-                    theRoute: 'Hi',
-                    imgName: 'liveauction'),
+                    theTitle: 'History', theRoute: 'Hi', imgName: 'history'),
               ),
             ],
           ),

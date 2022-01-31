@@ -1,13 +1,13 @@
 import 'package:eauc/constants.dart';
-import 'package:eauc/login_page.dart';
-import 'package:eauc/registration_page.dart';
-import 'package:eauc/splashscreen.dart';
+import 'package:eauc/uiscreens/login_page.dart';
+import 'package:eauc/uiscreens/registration_page.dart';
+import 'package:eauc/uiscreens/splashscreen.dart';
 import 'package:eauc/uiscreens/wrapper.dart';
 import 'package:flutter/material.dart';
-import 'uiscreens/products.dart';
+import 'uiscreens/products/products.dart';
 import 'uiscreens/home/home.dart';
-import 'uiscreens/hosted.dart';
-import 'uiscreens/auctions.dart';
+import 'uiscreens/hosted/hosted.dart';
+import 'uiscreens/auctions/auctions.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,8 +21,18 @@ class MyApp extends StatelessWidget {
       title: 'eAuc',
       theme: ThemeData.light().copyWith(
           primaryColor: kprimarycolor,
-          // primaryColor: Colors.red,
-          scaffoldBackgroundColor: Colors.white,
+          scaffoldBackgroundColor: kbackgroundcolor,
+          appBarTheme: AppBarTheme(
+            titleTextStyle: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.w900,
+                color: kprimarycolor),
+            color: kbackgroundcolor,
+            iconTheme: IconThemeData(color: kprimarycolor, size: 30),
+            titleSpacing: 10,
+            elevation: 0,
+            centerTitle: true,
+          ),
           textTheme: TextTheme(
             bodyText2: TextStyle(
               color: Colors.black,

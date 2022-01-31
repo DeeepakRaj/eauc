@@ -63,7 +63,7 @@ class ShadedContainer extends StatelessWidget {
                   theTitle,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: kprimarycolor,
+                      color: Color(0xFFA98C66),
                       fontSize: 18.0),
                 ),
               ),

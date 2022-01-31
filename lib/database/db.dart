@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-const apiUrl = 'http://127.0.0.1/';
+const apiUrl = 'https://eauc2022.000webhostapp.com/';
 
 class DB {
   Future<void> insertIntoDatabase(email, pwd, username, contact, addr, city,
@@ -21,5 +21,6 @@ class DB {
     });
     var data = jsonDecode(response.body);
     print("Response: " + response.body);
+    print(data);
   }
 }
