@@ -20,6 +20,36 @@ final kTextInputDecoration = InputDecoration(
         borderRadius: BorderRadius.circular(10.0),
         borderSide: BorderSide(color: Colors.red, width: 2.0)));
 
+final kSearchFieldDecoration = InputDecoration(
+  hintText: 'Search in All Auctions',
+  hintStyle: TextStyle(color: Colors.grey, fontSize: 18),
+  fillColor: Colors.white,
+  filled: true,
+  border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
+  errorBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(10.0),
+    borderSide: BorderSide(color: Colors.red, width: 2.0),
+  ),
+  prefixIcon: Icon(
+    Icons.search,
+    color: kprimarycolor,
+  ),
+  suffixIcon: Icon(
+    Icons.close,
+    color: Colors.grey,
+  ),
+  focusColor: kprimarycolor,
+  hoverColor: kprimarycolor,
+  prefixIconColor: kprimarycolor,
+  contentPadding: EdgeInsets.all(10.0),
+);
+
+final kSearchFieldTextStyle = TextStyle(
+  color: Colors.black,
+  fontSize: 18,
+);
+
 final kCardTitleTextStyle =
     TextStyle(fontWeight: FontWeight.w900, color: kprimarycolor, fontSize: 20);
 

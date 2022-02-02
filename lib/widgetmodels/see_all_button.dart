@@ -2,9 +2,6 @@ import 'package:eauc/constants.dart';
 import 'package:flutter/material.dart';
 
 class SeeAllButton extends StatelessWidget {
-  const SeeAllButton({
-    Key? key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

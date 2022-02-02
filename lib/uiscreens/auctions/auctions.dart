@@ -1,4 +1,7 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/uiscreens/auctions/all_auctions_page.dart';
+import 'package:eauc/uiscreens/auctions/live_auctions_page.dart';
+import 'package:eauc/uiscreens/auctions/upcoming_auctions_page.dart';
 import 'package:eauc/widgetmodels/custom_navigation_drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -16,12 +19,13 @@ class _AuctionsState extends State<Auctions> {
   @override
   void initState() {
     super.initState();
-    popupSelectedValue = '';
+    popupSelectedValue = popUpMenuValues[0];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text('AUCTIONS'),
         actions: [
@@ -114,11 +118,18 @@ class _AuctionsState extends State<Auctions> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(8),
-          child: Center(
-            child: Text('Auctions Page'),
-          ),
+          child: buildAuctionsPage(),
         ),
       ),
     );
+  }
+
+  Widget buildAuctionsPage() {
+    if (popupSelectedValue == popUpMenuValues[0])
+      return AllAuctionsPage();
+    else if (popupSelectedValue == popUpMenuValues[1])
+      return LiveAuctionsPage();
+    else
+      return UpcomingAuctionsPage();
   }
 }

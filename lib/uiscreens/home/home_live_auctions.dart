@@ -1,5 +1,6 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:eauc/constants.dart';
+import 'package:eauc/widgetmodels/header_row.dart';
 import 'package:eauc/widgetmodels/see_all_button.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -24,24 +25,11 @@ class _HomeLiveAuctionsState extends State<HomeLiveAuctions> {
     return Container(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Ongoing Auctions',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  //TODO: Navigate to Live Auctions tab in Auctions in bottom navigation bar
-                },
-                child: SeeAllButton(),
-              ),
-            ],
-          ),
+          HeaderRow(
+              headerText: 'Ongoing Auctions',
+              onTap: () {
+                //TODO: Navigate to Live Auctions tab in Auctions in bottom navigation bar
+              }),
           CarouselSlider.builder(
             options: CarouselOptions(
                 enlargeCenterPage: true,

@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:eauc/constants.dart';
+import 'package:eauc/widgetmodels/header_row.dart';
 import 'package:eauc/widgetmodels/see_all_button.dart';
 import 'package:flutter/material.dart';
 
@@ -24,21 +25,11 @@ class _HomeUpcomingAuctionsState extends State<HomeUpcomingAuctions> {
     return Container(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Upcoming Auctions',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              GestureDetector(
-                onTap: () {
-                  //TODO: Go to Upcoming Auctions tab in auctions in bottom navigation bar
-                },
-                child: SeeAllButton(),
-              )
-            ],
-          ),
+          HeaderRow(
+              headerText: 'Upcoming Auctions',
+              onTap: () {
+                //TODO: Go to Upcoming Auctions tab in auctions in bottom navigation bar
+              }),
           CarouselSlider.builder(
             options: CarouselOptions(
                 enlargeCenterPage: true,

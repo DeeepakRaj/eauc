@@ -16,6 +16,7 @@ dependencies:
   getwidget: ^2.0.4
   carousel_slider: ^4.0.0
   dots_indicator: ^2.0.0
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:

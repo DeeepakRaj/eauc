@@ -20,8 +20,10 @@ class ShadedContainer extends StatelessWidget {
             .pushNamedAndRemoveUntil(theRoute, (Route<dynamic> route) => false);
       },
       child: Container(
-        height: 150.0,
-        width: 160.0,
+        // height: MediaQuery.of(context).size.width*0.35,
+        // width: MediaQuery.of(context).size.width*0.30,
+        height: 150,
+        width: 160,
         margin: EdgeInsets.all(5),
         // padding: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
@@ -42,14 +44,16 @@ class ShadedContainer extends StatelessWidget {
               flex: 4,
               child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10)),
-                    image: DecorationImage(
-                        image: AssetImage(
-                          'assets/images/' + imgName + '.jpg',
-                        ),
-                        fit: BoxFit.cover)),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  image: DecorationImage(
+                    image: AssetImage(
+                      'assets/images/' + imgName + '.jpg',
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             SizedBox(

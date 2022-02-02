@@ -41,8 +41,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   void _signUpButtonPressed() {
     //TODO: Implement signup
-    DB().insertIntoDatabase('v@gmail.com', 'asas', '3dsdasa', '1234567890',
-        'fewew', 'ahnnds', 'fdjjsdna', 'enasdn', 'dinnsnd');
+    // DB().insertIntoDatabase('v@gmail.com', 'asas', '3dsdasa', '1234567890',
+    //     'fewew', 'ahnnds', 'fdjjsdna', 'enasdn', 'dinnsnd');
     Navigator.of(context).pushNamedAndRemoveUntil(
       Wrapper.routename,
       (Route<dynamic> route) => false,
