@@ -18,7 +18,7 @@ class AuctionsPageContainer extends StatelessWidget {
     return Container(
       // height: MediaQuery.of(context).size.height * 0.35,
       // width: MediaQuery.of(context).size.width * 0.45,
-      // height: 330,
+      // height: kAuctionsListViewHeight,
       width: 180,
       margin: EdgeInsets.all(5),
       padding: EdgeInsets.all(5.0),

@@ -1,0 +1,70 @@
+import 'package:eauc/constants.dart';
+import 'package:eauc/uiscreens/auctions/auctions_page_container.dart';
+import 'package:flutter/material.dart';
+
+class SearchResultsPage extends StatefulWidget {
+  static const routename = 'searchresultspage';
+
+  @override
+  _SearchResultsPageState createState() => _SearchResultsPageState();
+}
+
+class _SearchResultsPageState extends State<SearchResultsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+          title: Text('Search Results'),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Results Found: 78',
+                  style: kHeaderTextStyle,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
+                  shrinkWrap: true,
+                  itemCount: 10,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      height: kAuctionsListViewHeight,
+                      child: AuctionsPageContainer(
+                        productName: 'Product1',
+                        hostName: 'HostName',
+                        currentBid: '5000',
+                        type: 'Live',
+                        imageName: 'sampleimage1',
+                        time: '13/12/2022 13:23',
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

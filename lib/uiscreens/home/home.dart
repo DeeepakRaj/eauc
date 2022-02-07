@@ -86,6 +86,7 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.all(5.0),
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
+            physics: BouncingScrollPhysics(),
             child: Column(
               children: [
                 HomeFourCards(),

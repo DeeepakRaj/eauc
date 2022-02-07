@@ -1,6 +1,7 @@
 import 'package:eauc/constants.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/registration_page.dart';
+import 'package:eauc/uiscreens/search_results_page.dart';
 import 'package:eauc/uiscreens/splashscreen.dart';
 import 'package:eauc/uiscreens/wrapper.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
           primaryColor: kprimarycolor,
           scaffoldBackgroundColor: kbackgroundcolor,
+          pageTransitionsTheme: PageTransitionsTheme(builders: {
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          }),
           appBarTheme: AppBarTheme(
             titleTextStyle: TextStyle(
                 fontSize: 25,
@@ -51,6 +56,7 @@ class MyApp extends StatelessWidget {
         Home.routename: (context) => Home(),
         Auctions.routename: (context) => Auctions(),
         Hosted.routename: (context) => Hosted(),
+        SearchResultsPage.routename: (context) => SearchResultsPage(),
       },
     );
   }

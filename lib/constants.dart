@@ -7,6 +7,10 @@ const kinputfieldbgcolor = Color(0xFFEBF3FB);
 const kinputfieldlabelcolor = Color(0xFFB0AFAF);
 const knormalbuttoncolor = Color(0xFFF0A500);
 
+String numberRegExp = r'^[0-9]*$';
+
+double kAuctionsListViewHeight = 310;
+
 final kTextInputDecoration = InputDecoration(
     hintText: 'Email',
     hintStyle: TextStyle(color: kinputfieldlabelcolor, fontSize: 21.0),
@@ -45,9 +49,31 @@ final kSearchFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.all(10.0),
 );
 
+final kSmallTextFieldDecoration = InputDecoration(
+  hintText: 'Search in All Auctions',
+  hintStyle: TextStyle(color: Colors.grey, fontSize: 17),
+  fillColor: Colors.white,
+  filled: true,
+  border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
+  errorBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(10.0),
+    borderSide: BorderSide(color: Colors.red, width: 2.0),
+  ),
+  focusColor: kprimarycolor,
+  hoverColor: kprimarycolor,
+  prefixIconColor: kprimarycolor,
+  contentPadding: EdgeInsets.all(10.0),
+);
+
 final kSearchFieldTextStyle = TextStyle(
   color: Colors.black,
   fontSize: 18,
+);
+
+final kHeaderTextStyle = TextStyle(
+  fontSize: 22,
+  fontWeight: FontWeight.bold,
 );
 
 final kCardTitleTextStyle =
