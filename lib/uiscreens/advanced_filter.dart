@@ -175,6 +175,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                         hintStyle: TextStyle(color: Colors.grey),
                         floatingLabelStyle: TextStyle(color: Colors.black),
                       ),
+                      popupBackgroundColor: kbackgroundcolor,
                       showClearButton: true,
                       showSearchBox: true,
                       showSelectedItems: true,
@@ -182,6 +183,33 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       dropdownSearchBaseStyle: TextStyle(color: Colors.black),
+                      selectionListViewProps: SelectionListViewProps(
+                          scrollDirection: Axis.vertical,
+                          physics: ScrollPhysics()),
+                      searchFieldProps: TextFieldProps(
+                          style: TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                            hintText: 'Enter Category',
+                            hintStyle:
+                                TextStyle(color: Colors.grey, fontSize: 18),
+                            fillColor: Colors.white,
+                            filled: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    BorderSide(color: kprimarycolor, width: 3)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide:
+                                    BorderSide(color: kprimarycolor, width: 3)),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide(
+                                color: Colors.red,
+                                width: 2.0,
+                              ),
+                            ),
+                          )),
                       // popupItemDisabled: (String s) => s.startsWith('I'),
                       onChanged: print,
                       selectedItem: null,

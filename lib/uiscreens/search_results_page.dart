@@ -27,7 +27,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
         child: Padding(
           padding: EdgeInsets.all(8),
           child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
+            physics: ScrollPhysics(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,10 +41,13 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                   height: 10,
                 ),
                 GridView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
+                    childAspectRatio: 180 / 290,
                   ),
                   shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
                   itemCount: 10,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(

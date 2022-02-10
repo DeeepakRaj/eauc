@@ -58,7 +58,6 @@ class _AllAuctionsPageState extends State<AllAuctionsPage> {
                   color: kprimarycolor,
                 ),
                 onPressed: () {
-                  //TODO: Pop Up Menu
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {

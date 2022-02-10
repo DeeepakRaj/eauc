@@ -1,4 +1,5 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/registration_page.dart';
 import 'package:eauc/uiscreens/search_results_page.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
         Auctions.routename: (context) => Auctions(),
         Hosted.routename: (context) => Hosted(),
         SearchResultsPage.routename: (context) => SearchResultsPage(),
+        IndividualAuctionPage.routename: (context) => IndividualAuctionPage(),
       },
     );
   }
