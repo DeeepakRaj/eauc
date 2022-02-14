@@ -2,6 +2,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/uiscreens/search_results_page.dart';
+import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:flutter/material.dart';
 
@@ -397,7 +398,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
         },
       ),
       actions: [
-        TextButton(
+        CustomNormalButton(
           onPressed: () {
             // if(!_advFilterFormKey.currentState!.validate())
             //   return;
@@ -406,19 +407,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
             // }
             Navigator.pushNamed(context, SearchResultsPage.routename);
           },
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.all(15.0),
-            backgroundColor: knormalbuttoncolor,
-            primary: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: BorderSide.none),
-            textStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
-          ),
-          child: Text(
-            'Search',
-            textAlign: TextAlign.center,
-          ),
+          buttonText: 'Search',
         ),
       ],
     );

@@ -16,7 +16,6 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   final GlobalKey<FormState> _regPageFormKey = GlobalKey<FormState>();
   late bool obscurePwdText, obscureCPwdText;
-  ScrollController _scrollController = ScrollController();
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _mobileController = TextEditingController();
@@ -41,8 +40,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   void _signUpButtonPressed() {
     //TODO: Implement signup
-    // DB().insertIntoDatabase('v@gmail.com', 'asas', '3dsdasa', '1234567890',
-    //     'fewew', 'ahnnds', 'fdjjsdna', 'enasdn', 'dinnsnd');
+    DB().insertIntoDatabase('v@gmail.com', 'asas', 'fname', 'lname',
+        '1234567890', 'fewew', 'ahnnds', 'fdjjsdna', 'enasdn', 'dinnsnd');
     Navigator.of(context).pushNamedAndRemoveUntil(
       Wrapper.routename,
       (Route<dynamic> route) => false,
@@ -116,6 +115,50 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     height: 15.0,
                   ),
                   TextFormField(
+                    keyboardType: TextInputType.text,
+                    decoration: kTextInputDecoration.copyWith(
+                      hintText: 'First Name',
+                    ),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 21.0,
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'First Name is Required';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      //TODO: Store the value in a variable
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    decoration: kTextInputDecoration.copyWith(
+                      hintText: 'Last Name',
+                    ),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 21.0,
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Last Name is Required';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      //TODO: Store the value in a variable
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
                     keyboardType: TextInputType.phone,
                     controller: _mobileController,
                     maxLength: 10,
@@ -131,6 +174,119 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       }
                       if (!RegExp(r"[0-9]{10}?").hasMatch(value)) {
                         return 'Enter a valid mobile number';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      //TODO: Store the value in a variable
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    decoration: kTextInputDecoration.copyWith(
+                      hintText: 'Address',
+                    ),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 21.0,
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Address is Required';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      //TODO: Store the value in a variable
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    decoration: kTextInputDecoration.copyWith(
+                      hintText: 'Country',
+                    ),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 21.0,
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Country is Required';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      //TODO: Store the value in a variable
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    decoration: kTextInputDecoration.copyWith(
+                      hintText: 'State',
+                    ),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 21.0,
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'State is Required';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      //TODO: Store the value in a variable
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    decoration: kTextInputDecoration.copyWith(
+                      hintText: 'City',
+                    ),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 21.0,
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'City is Required';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      //TODO: Store the value in a variable
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: kTextInputDecoration.copyWith(
+                      hintText: 'Pin Code',
+                    ),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 21.0,
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Email is Required';
+                      }
+                      if (!RegExp(r"[0-9]{6}?").hasMatch(value)) {
+                        return 'Enter a valid pincode';
                       }
                       return null;
                     },

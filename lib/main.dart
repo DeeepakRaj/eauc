@@ -30,14 +30,19 @@ class MyApp extends StatelessWidget {
           }),
           appBarTheme: AppBarTheme(
             titleTextStyle: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.w900,
-                color: kprimarycolor),
+              fontSize: 25,
+              fontWeight: FontWeight.w900,
+              color: kprimarycolor,
+            ),
             color: kbackgroundcolor,
             iconTheme: IconThemeData(color: kprimarycolor, size: 30),
             titleSpacing: 10,
             elevation: 0,
             centerTitle: true,
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            focusColor: kprimarycolor,
+            hoverColor: kprimarycolor,
           ),
           textTheme: TextTheme(
             bodyText2: TextStyle(

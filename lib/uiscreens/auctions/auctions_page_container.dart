@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
+import 'package:eauc/widgetmodels/tag_container.dart';
 import 'package:flutter/material.dart';
 
 class AuctionsPageContainer extends StatelessWidget {
@@ -126,28 +127,7 @@ class AuctionsPageContainer extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: 3,
                   itemBuilder: (context, index) {
-                    return Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(3),
-                              color: Colors.blue.shade50,
-                              border: Border.all(color: Colors.blue.shade800)),
-                          child: Text(
-                            'Electronics',
-                            maxLines: 1,
-                            style: TextStyle(
-                              color: Colors.blue.shade800,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 3,
-                        )
-                      ],
-                    );
+                    return TagContainer('Electronics');
                   }),
             ),
             SizedBox(
@@ -225,3 +205,4 @@ class AuctionsPageContainer extends StatelessWidget {
     );
   }
 }
+
