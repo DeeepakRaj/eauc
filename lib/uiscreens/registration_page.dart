@@ -54,19 +54,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   void _signUpButtonPressed() {
     //TODO: Implement signup
-    DB().insertIntoDatabase(
-        _emailController.text,
-        _pwdController.text,
-        _firstnameController.text,
-        _lastnameController.text,
-        _mobileController.text,
-        _addressController.text,
-        _cityController.text,
-        _pincodeController.text,
-        _stateController.text,
-        _countryController.text);
+    // DB().insertIntoDatabase(
+    //     _emailController.text,
+    //     _pwdController.text,
+    //     _firstnameController.text,
+    //     _lastnameController.text,
+    //     _mobileController.text,
+    //     _addressController.text,
+    //     _cityController.text,
+    //     _pincodeController.text,
+    //     _stateController.text,
+    //     _countryController.text);
     Navigator.of(context).pushNamedAndRemoveUntil(
-      Wrapper.routename,
+      LoginPage.routename,
       (Route<dynamic> route) => false,
     );
   }
@@ -76,13 +76,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return Scaffold(
       backgroundColor: kbackgroundcolor,
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: Center(
-          child: Text('Registration',
-              style: TextStyle(color: Colors.black, fontSize: 12.0)),
-        ),
-        backgroundColor: kprimarycolor,
-      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10.0),
