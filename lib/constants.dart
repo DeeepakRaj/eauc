@@ -9,7 +9,8 @@ const knormalbuttoncolor = Color(0xFFF0A500);
 
 String numberRegExp = r'^[0-9]*$';
 
-double kAuctionsListViewHeight = 310;
+double kProductsListViewHeight = 310;
+double kAuctionsListViewHeight = 270;
 
 final kTextInputDecoration = InputDecoration(
     hintText: 'Email',

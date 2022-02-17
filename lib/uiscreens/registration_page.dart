@@ -18,7 +18,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late bool obscurePwdText, obscureCPwdText;
 
   TextEditingController _emailController = TextEditingController();
+  TextEditingController _firstnameController = TextEditingController();
+  TextEditingController _lastnameController = TextEditingController();
   TextEditingController _mobileController = TextEditingController();
+  TextEditingController _addressController = TextEditingController();
+  TextEditingController _countryController = TextEditingController();
+  TextEditingController _stateController = TextEditingController();
+  TextEditingController _cityController = TextEditingController();
+  TextEditingController _pincodeController = TextEditingController();
   TextEditingController _pwdController = TextEditingController();
   TextEditingController _cpwdController = TextEditingController();
 
@@ -32,7 +39,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void dispose() {
     _emailController.dispose();
+    _firstnameController.dispose();
+    _lastnameController.dispose();
     _mobileController.dispose();
+    _addressController.dispose();
+    _countryController.dispose();
+    _stateController.dispose();
+    _cityController.dispose();
+    _pincodeController.dispose();
     _pwdController.dispose();
     _cpwdController.dispose();
     super.dispose();
@@ -40,8 +54,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   void _signUpButtonPressed() {
     //TODO: Implement signup
-    DB().insertIntoDatabase('v@gmail.com', 'asas', 'fname', 'lname',
-        '1234567890', 'fewew', 'ahnnds', 'fdjjsdna', 'enasdn', 'dinnsnd');
+    DB().insertIntoDatabase(
+        _emailController.text,
+        _pwdController.text,
+        _firstnameController.text,
+        _lastnameController.text,
+        _mobileController.text,
+        _addressController.text,
+        _cityController.text,
+        _pincodeController.text,
+        _stateController.text,
+        _countryController.text);
     Navigator.of(context).pushNamedAndRemoveUntil(
       Wrapper.routename,
       (Route<dynamic> route) => false,
@@ -54,7 +77,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
       backgroundColor: kbackgroundcolor,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Center(child: Text('Registration')),
+        title: Center(
+          child: Text('Registration',
+              style: TextStyle(color: Colors.black, fontSize: 12.0)),
+        ),
         backgroundColor: kprimarycolor,
       ),
       body: SafeArea(
@@ -101,7 +127,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         return 'Email is Required';
                       }
                       if (!RegExp(
-                              r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                              r"[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
                           .hasMatch(value)) {
                         return 'Enter a valid Email';
                       }
@@ -116,6 +142,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
+                    controller: _firstnameController,
                     decoration: kTextInputDecoration.copyWith(
                       hintText: 'First Name',
                     ),
@@ -138,6 +165,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
+                    controller: _lastnameController,
                     decoration: kTextInputDecoration.copyWith(
                       hintText: 'Last Name',
                     ),
@@ -186,6 +214,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
+                    controller: _addressController,
                     decoration: kTextInputDecoration.copyWith(
                       hintText: 'Address',
                     ),
@@ -208,6 +237,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
+                    controller: _countryController,
                     decoration: kTextInputDecoration.copyWith(
                       hintText: 'Country',
                     ),
@@ -230,6 +260,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
+                    controller: _stateController,
                     decoration: kTextInputDecoration.copyWith(
                       hintText: 'State',
                     ),
@@ -252,6 +283,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
+                    controller: _cityController,
                     decoration: kTextInputDecoration.copyWith(
                       hintText: 'City',
                     ),
@@ -274,6 +306,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.number,
+                    controller: _pincodeController,
                     decoration: kTextInputDecoration.copyWith(
                       hintText: 'Pin Code',
                     ),
@@ -326,7 +359,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         return 'Password is Required';
                       }
                       if (!RegExp(
-                              r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                              r"[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
                           .hasMatch(value)) {
                         return 'Enter a valid password';
                       }
@@ -368,7 +401,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         return 'Password is Required';
                       }
                       if (!RegExp(
-                              r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                              r"[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
                           .hasMatch(value)) {
                         return 'Enter a valid password';
                       }
@@ -387,7 +420,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   CustomTextButton(
                     onPressed: () {
-                      if (_regPageFormKey.currentState!.validate())
+                      if (!_regPageFormKey.currentState!.validate())
                         return;
                       else {
                         _signUpButtonPressed();

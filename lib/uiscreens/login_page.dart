@@ -169,7 +169,11 @@ class _LoginPageState extends State<LoginPage> {
                       Flexible(
                         child: TextButton(
                           onPressed: () {
-                            //TODO: Sign up and go to home screen
+                            if (!_loginPageFormKey.currentState!.validate()) {
+                              return;
+                            } else {
+                              //TODO: Sign up and go to home screen
+                            }
                           },
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.all(25.0),

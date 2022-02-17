@@ -1,8 +1,22 @@
 import 'dart:convert';
 import 'package:eauc/databasemodels/registrationPageModel.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 const apiUrl = 'https://eauc2022.000webhostapp.com/';
+
+Future<bool> savedIdPreference(String emailid) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('emailid', emailid);
+  print(emailid);
+  return prefs.setString('emailid', emailid);
+}
+
+Future<String> getIdPreference() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? id = prefs.getString('emailid');
+  return id!;
+}
 
 class DB {
   Future<RegistrationPageModel> insertIntoDatabase(email, pwd, firstname,

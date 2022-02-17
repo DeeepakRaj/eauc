@@ -4,22 +4,22 @@ import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
 import 'package:eauc/widgetmodels/tag_container.dart';
 import 'package:flutter/material.dart';
 
-class AuctionsPageContainer extends StatefulWidget {
-  final String type, imageName, auctionName, hostName, currentBid, time;
+class ProductsPageContainer extends StatefulWidget {
+  final String type, imageName, productName, hostName, currentBid, time;
 
-  AuctionsPageContainer(
+  ProductsPageContainer(
       {required this.type,
       required this.imageName,
-      required this.auctionName,
+      required this.productName,
       required this.hostName,
       required this.currentBid,
       required this.time});
 
   @override
-  _AuctionsPageContainerState createState() => _AuctionsPageContainerState();
+  _ProductsPageContainerState createState() => _ProductsPageContainerState();
 }
 
-class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
+class _ProductsPageContainerState extends State<ProductsPageContainer> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -73,7 +73,7 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
               height: 5,
             ),
             AutoSizeText(
-              widget.auctionName,
+              widget.productName,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: kprimarycolor,
@@ -83,6 +83,42 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
               maxFontSize: 22,
               overflow: TextOverflow.ellipsis,
             ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     AutoSizeText(
+            //       productName+'//////////////////////////////////////////',
+            //       style: TextStyle(
+            //         fontWeight: FontWeight.bold,
+            //         color: kprimarycolor,
+            //       ),
+            //       minFontSize: 19,
+            //       maxLines: 1,
+            //       maxFontSize: 22,
+            //       overflow: TextOverflow.ellipsis,
+            //     ),
+            //     Container(
+            //       padding: EdgeInsets.all(2),
+            //       decoration: BoxDecoration(
+            //           borderRadius: BorderRadius.circular(3),
+            //           color: Colors.lightGreen.shade100,
+            //           border: Border.all(
+            //               color: Colors.green.shade500
+            //           )
+            //       ),
+            //       child: Text(
+            //         'Live',
+            //         maxLines: 1,
+            //         style: TextStyle(
+            //           color: Colors.green.shade500,
+            //           fontSize: 12,
+            //           fontWeight: FontWeight.bold
+            //         ),
+            //         overflow: TextOverflow.ellipsis,
+            //       ),
+            //     ),
+            //   ],
+            // ),
             SizedBox(
               height: 5,
             ),
@@ -92,14 +128,12 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
             ),
             Flexible(
               child: ListView.builder(
-                padding: EdgeInsets.zero,
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return TagContainer('Electronics');
-                },
-              ),
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return TagContainer('Electronics');
+                  }),
             ),
             SizedBox(
               height: 5,
@@ -133,6 +167,26 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
               height: 5,
             ),
             Text(
+              (widget.type == 'Live') ? 'Current Bid' : 'Base Price',
+              style: TextStyle(fontSize: 12),
+            ),
+            Flexible(
+              child: AutoSizeText(
+                widget.currentBid,
+                minFontSize: 25,
+                maxLines: 1,
+                maxFontSize: 27,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
               (widget.type == 'Live') ? 'Ending In' : 'Scheduled Start',
               style: TextStyle(fontSize: 12),
             ),
@@ -156,4 +210,3 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
     );
   }
 }
-
