@@ -1,3 +1,6 @@
+import 'package:animations/animations.dart';
+import 'package:eauc/uiscreens/createauction/create_auction_page.dart';
+import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -121,27 +124,32 @@ class _WrapperState extends State<Wrapper> {
               ),
             ),
           ),
-          Container(
-            height: 90,
-            width: 90,
-            child: FittedBox(
-              child: FloatingActionButton(
-                elevation: 0,
-                backgroundColor: kprimarycolor,
-                highlightElevation: 1,
-                splashColor: Colors.transparent,
-                shape: CircleBorder(
-                    side: BorderSide(color: Colors.white, width: 3)),
-                onPressed: () {
-                  print('Hi');
-                },
-                child: Icon(
-                  Icons.add,
-                  size: 30.0,
-                  color: Colors.white,
+          OpenContainer(
+            transitionDuration: Duration(milliseconds: 500),
+            openBuilder: (context, _) => CreateAuctionPage(),
+            closedShape: CircleBorder(),
+            closedBuilder: (context, openContainer) {
+              return Container(
+                height: 90,
+                width: 90,
+                child: FittedBox(
+                  child: FloatingActionButton(
+                    elevation: 0,
+                    backgroundColor: kprimarycolor,
+                    highlightElevation: 1,
+                    splashColor: Colors.transparent,
+                    shape: CircleBorder(
+                        side: BorderSide(color: Colors.white, width: 3)),
+                    onPressed: openContainer,
+                    child: Icon(
+                      Icons.add,
+                      size: 30.0,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
           // Material(
           //     type: MaterialType.transparency,

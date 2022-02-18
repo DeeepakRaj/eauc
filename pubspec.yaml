@@ -21,6 +21,7 @@ dependencies:
   date_time_picker: ^2.1.0
   shared_preferences: ^2.0.13
   sticky_headers: ^0.2.0
+  animations: ^2.0.2
 
 dev_dependencies:
   flutter_test:
