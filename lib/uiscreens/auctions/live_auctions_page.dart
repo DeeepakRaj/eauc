@@ -51,7 +51,7 @@ class _LiveAuctionsPageState extends State<LiveAuctionsPage> {
                       //TODO: Navigate to All Ongoing Auctions Page perhaps
                     }),
                 Container(
-                  height: 310,
+                  height: kAuctionsListViewHeight,
                   width: MediaQuery.of(context).size.width,
                   child: ListView.builder(
                       shrinkWrap: true,
@@ -78,7 +78,7 @@ class _LiveAuctionsPageState extends State<LiveAuctionsPage> {
                       //TODO: Navigate to All Ongoing Auctions Page perhaps
                     }),
                 Container(
-                  height: 310,
+                  height: kAuctionsListViewHeight,
                   width: MediaQuery.of(context).size.width,
                   child: ListView.builder(
                       shrinkWrap: true,

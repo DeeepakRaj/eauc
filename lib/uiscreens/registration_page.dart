@@ -66,7 +66,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     //     _stateController.text,
     //     _countryController.text);
     Navigator.of(context).pushNamedAndRemoveUntil(
-      LoginPage.routename,
+      Wrapper.routename,
       (Route<dynamic> route) => false,
     );
   }
@@ -309,7 +309,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Email is Required';
+                        return 'PinCode is Required';
                       }
                       if (!RegExp(r"[0-9]{6}?").hasMatch(value)) {
                         return 'Enter a valid pincode';
@@ -413,11 +413,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   CustomTextButton(
                     onPressed: () {
-                      if (!_regPageFormKey.currentState!.validate())
-                        return;
-                      else {
-                        _signUpButtonPressed();
-                      }
+                      // if (!_regPageFormKey.currentState!.validate())
+                      //   return;
+                      // else {
+                      //   _signUpButtonPressed();
+                      // }
+                      _signUpButtonPressed();
                     },
                     buttonText: 'SIGN UP',
                   ),

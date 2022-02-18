@@ -128,6 +128,8 @@ class _WrapperState extends State<Wrapper> {
               child: FloatingActionButton(
                 elevation: 0,
                 backgroundColor: kprimarycolor,
+                highlightElevation: 1,
+                splashColor: Colors.transparent,
                 shape: CircleBorder(
                     side: BorderSide(color: Colors.white, width: 3)),
                 onPressed: () {

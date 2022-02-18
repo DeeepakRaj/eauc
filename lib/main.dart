@@ -23,6 +23,9 @@ class MyApp extends StatelessWidget {
       title: 'eAuc',
       theme: ThemeData.light().copyWith(
           primaryColor: kprimarycolor,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          hoverColor: Colors.transparent,
           scaffoldBackgroundColor: kbackgroundcolor,
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),

@@ -27,74 +27,113 @@ class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
           },
         ),
       ),
-      // body: StickyHeader(
-      //   header: TextFormField(
-      //     decoration: kSearchFieldDecoration.copyWith(
-      //         hintText: 'Search in Products'
-      //     ),
-      //     textInputAction: TextInputAction.search,
-      //     style: kSearchFieldTextStyle,
-      //     cursorColor: kprimarycolor,
-      //     onChanged: (value){
-      //       //TODO: Build search list view
-      //     },
-      //   ),
-      //   content: ,
-      // ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(8),
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                AuctionInfoContainer(),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Products',
-                  style: kHeaderTextStyle.copyWith(fontSize: 35),
-                  textAlign: TextAlign.left,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                  decoration: kSearchFieldDecoration.copyWith(
-                      hintText: 'Search in Products'),
-                  textInputAction: TextInputAction.search,
-                  style: kSearchFieldTextStyle,
-                  cursorColor: kprimarycolor,
-                  onChanged: (value) {
-                    //TODO: Build search list view
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                ListView.separated(
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(),
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    itemCount: 5,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return IapProductContainer(
-                        auctionType: 'Live',
-                        imageName: 'sampleimage1',
-                        productName: 'Product 1',
-                        productDesc: 'Description',
-                        productTags: ['Electronics', 'Ancient Items', 'Coins'],
-                        productPriceOrBid: '500000',
-                      );
-                    }),
-              ],
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            AuctionInfoContainer(),
+            SizedBox(
+              height: 10,
             ),
-          ),
+            StickyHeader(
+              header: Container(
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                color: kbackgroundcolor,
+                child: Column(
+                  children: [
+                    Text(
+                      'Products',
+                      style: kHeaderTextStyle.copyWith(fontSize: 35),
+                      textAlign: TextAlign.left,
+                    ),
+                    TextFormField(
+                      decoration: kSearchFieldDecoration.copyWith(
+                          hintText: 'Search in Products'),
+                      textInputAction: TextInputAction.search,
+                      style: kSearchFieldTextStyle,
+                      cursorColor: kprimarycolor,
+                      onChanged: (value) {
+                        //TODO: Build search list view
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              content: ListView.separated(
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(),
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: 5,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return IapProductContainer(
+                      auctionType: 'Live',
+                      imageName: 'sampleimage1',
+                      productName: 'Product 1',
+                      productDesc: 'Description',
+                      productTags: ['Electronics', 'Ancient Items', 'Coins'],
+                      productPriceOrBid: '500000',
+                    );
+                  }),
+            ),
+          ],
         ),
       ),
+      // body: SafeArea(
+      //   child: Padding(
+      //     padding: EdgeInsets.all(8),
+      //     child: SingleChildScrollView(
+      //       physics: BouncingScrollPhysics(),
+      //       child: Column(
+      //         children: [
+      //           AuctionInfoContainer(),
+      //           SizedBox(
+      //             height: 20,
+      //           ),
+      //           Text(
+      //             'Products',
+      //             style: kHeaderTextStyle.copyWith(fontSize: 35),
+      //             textAlign: TextAlign.left,
+      //           ),
+      //           SizedBox(
+      //             height: 10,
+      //           ),
+      //           TextFormField(
+      //             decoration: kSearchFieldDecoration.copyWith(
+      //                 hintText: 'Search in Products'),
+      //             textInputAction: TextInputAction.search,
+      //             style: kSearchFieldTextStyle,
+      //             cursorColor: kprimarycolor,
+      //             onChanged: (value) {
+      //               //TODO: Build search list view
+      //             },
+      //           ),
+      //           SizedBox(
+      //             height: 10,
+      //           ),
+      //           ListView.separated(
+      //               separatorBuilder: (BuildContext context, int index) =>
+      //                   const Divider(),
+      //               physics: NeverScrollableScrollPhysics(),
+      //               scrollDirection: Axis.vertical,
+      //               itemCount: 5,
+      //               shrinkWrap: true,
+      //               itemBuilder: (context, index) {
+      //                 return IapProductContainer(
+      //                   auctionType: 'Live',
+      //                   imageName: 'sampleimage1',
+      //                   productName: 'Product 1',
+      //                   productDesc: 'Description',
+      //                   productTags: ['Electronics', 'Ancient Items', 'Coins'],
+      //                   productPriceOrBid: '500000',
+      //                 );
+      //               }),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
