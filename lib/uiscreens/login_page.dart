@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                           TextFormField(
                             keyboardType: TextInputType.emailAddress,
                             controller: _emailController,
-                            decoration: kTextInputDecoration.copyWith(
+                            decoration: kInputFieldDecoration.copyWith(
                                 hintText: 'Email'),
                             style: TextStyle(
                               color: Colors.black,
@@ -115,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                             keyboardType: TextInputType.visiblePassword,
                             controller: _pwdController,
                             obscureText: obscurePwdText,
-                            decoration: kTextInputDecoration.copyWith(
+                            decoration: kInputFieldDecoration.copyWith(
                               hintText: 'Password',
                               suffixIcon: IconButton(
                                 icon: Icon(

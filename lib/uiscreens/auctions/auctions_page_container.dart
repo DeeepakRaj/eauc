@@ -24,6 +24,7 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
   Widget build(BuildContext context) {
     return OpenContainer(
       closedColor: kbackgroundcolor,
+      transitionType: ContainerTransitionType.fade,
       transitionDuration: Duration(milliseconds: 500),
       openBuilder: (context, _) => IndividualAuctionPage(),
       closedShape: RoundedRectangleBorder(),
@@ -76,16 +77,19 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
                 SizedBox(
                   height: 5,
                 ),
-                AutoSizeText(
-                  widget.auctionName,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: kprimarycolor,
+                Hero(
+                  tag: 'auctionnameherotag',
+                  child: AutoSizeText(
+                    widget.auctionName,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: kprimarycolor,
+                    ),
+                    minFontSize: 19,
+                    maxLines: 1,
+                    maxFontSize: 22,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  minFontSize: 19,
-                  maxLines: 1,
-                  maxFontSize: 22,
-                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(
                   height: 5,

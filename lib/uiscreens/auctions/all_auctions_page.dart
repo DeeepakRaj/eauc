@@ -97,7 +97,7 @@ class _AllAuctionsPageState extends State<AllAuctionsPage> {
                       itemCount: 15,
                       itemBuilder: (context, index) {
                         return AuctionsPageContainer(
-                          auctionName: 'Product1',
+                          auctionName: 'Coins Auction',
                           hostName: 'HostName',
                           currentBid: '5000',
                           type: 'Live',
@@ -124,7 +124,7 @@ class _AllAuctionsPageState extends State<AllAuctionsPage> {
                     itemCount: 15,
                     itemBuilder: (context, index) {
                       return AuctionsPageContainer(
-                        auctionName: 'Product1',
+                        auctionName: 'Coins Auction',
                         hostName: 'HostName',
                         currentBid: '5000',
                         type: 'Upcoming',

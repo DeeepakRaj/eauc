@@ -108,13 +108,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   TextFormField(
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
-                    decoration: kTextInputDecoration.copyWith(
+                    decoration: kInputFieldDecoration.copyWith(
                       hintText: 'Email',
                     ),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 21.0,
-                    ),
+                    style: kInputFieldTextStyle,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Email is Required';
@@ -136,13 +133,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   TextFormField(
                     keyboardType: TextInputType.text,
                     controller: _firstnameController,
-                    decoration: kTextInputDecoration.copyWith(
+                    decoration: kInputFieldDecoration.copyWith(
                       hintText: 'First Name',
                     ),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 21.0,
-                    ),
+                    style: kInputFieldTextStyle,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'First Name is Required';
@@ -159,13 +153,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   TextFormField(
                     keyboardType: TextInputType.text,
                     controller: _lastnameController,
-                    decoration: kTextInputDecoration.copyWith(
+                    decoration: kInputFieldDecoration.copyWith(
                       hintText: 'Last Name',
                     ),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 21.0,
-                    ),
+                    style: kInputFieldTextStyle,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Last Name is Required';
@@ -184,11 +175,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     controller: _mobileController,
                     maxLength: 10,
                     decoration:
-                        kTextInputDecoration.copyWith(hintText: 'Mobile'),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 21.0,
-                    ),
+                        kInputFieldDecoration.copyWith(hintText: 'Mobile'),
+                    style: kInputFieldTextStyle,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Mobile Number is Required';
@@ -208,13 +196,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   TextFormField(
                     keyboardType: TextInputType.text,
                     controller: _addressController,
-                    decoration: kTextInputDecoration.copyWith(
+                    decoration: kInputFieldDecoration.copyWith(
                       hintText: 'Address',
                     ),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 21.0,
-                    ),
+                    style: kInputFieldTextStyle,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Address is Required';
@@ -231,13 +216,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   TextFormField(
                     keyboardType: TextInputType.text,
                     controller: _countryController,
-                    decoration: kTextInputDecoration.copyWith(
+                    decoration: kInputFieldDecoration.copyWith(
                       hintText: 'Country',
                     ),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 21.0,
-                    ),
+                    style: kInputFieldTextStyle,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Country is Required';
@@ -254,13 +236,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   TextFormField(
                     keyboardType: TextInputType.text,
                     controller: _stateController,
-                    decoration: kTextInputDecoration.copyWith(
+                    decoration: kInputFieldDecoration.copyWith(
                       hintText: 'State',
                     ),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 21.0,
-                    ),
+                    style: kInputFieldTextStyle,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'State is Required';
@@ -277,13 +256,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   TextFormField(
                     keyboardType: TextInputType.text,
                     controller: _cityController,
-                    decoration: kTextInputDecoration.copyWith(
+                    decoration: kInputFieldDecoration.copyWith(
                       hintText: 'City',
                     ),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 21.0,
-                    ),
+                    style: kInputFieldTextStyle,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'City is Required';
@@ -300,13 +276,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   TextFormField(
                     keyboardType: TextInputType.number,
                     controller: _pincodeController,
-                    decoration: kTextInputDecoration.copyWith(
+                    decoration: kInputFieldDecoration.copyWith(
                       hintText: 'Pin Code',
                     ),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 21.0,
-                    ),
+                    style: kInputFieldTextStyle,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'PinCode is Required';
@@ -327,7 +300,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     keyboardType: TextInputType.visiblePassword,
                     controller: _pwdController,
                     obscureText: obscurePwdText,
-                    decoration: kTextInputDecoration.copyWith(
+                    decoration: kInputFieldDecoration.copyWith(
                       hintText: 'Password',
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -343,10 +316,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         },
                       ),
                     ),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 21.0,
-                    ),
+                    style: kInputFieldTextStyle,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Password is Required';
@@ -369,7 +339,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: obscureCPwdText,
                     controller: _cpwdController,
-                    decoration: kTextInputDecoration.copyWith(
+                    decoration: kInputFieldDecoration.copyWith(
                       hintText: 'Confirm Password',
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -385,10 +355,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         },
                       ),
                     ),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 21.0,
-                    ),
+                    style: kInputFieldTextStyle,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Password is Required';

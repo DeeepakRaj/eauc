@@ -81,7 +81,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                       height: 5,
                     ),
                     TextFormField(
-                      decoration: kSmallTextFieldDecoration.copyWith(
+                      decoration: kSmallInputFieldDecoration.copyWith(
                           hintText: 'Type Search Keyword'),
                       style: kSearchFieldTextStyle,
                       cursorColor: kprimarycolor,
@@ -104,7 +104,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                       height: 5,
                     ),
                     TextFormField(
-                      decoration: kSmallTextFieldDecoration.copyWith(
+                      decoration: kSmallInputFieldDecoration.copyWith(
                           hintText: 'Type Hostname'),
                       style: kSearchFieldTextStyle,
                       cursorColor: kprimarycolor,
@@ -142,7 +142,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                                   () => _auctiontype = newValue.toString());
                             },
                             value: _auctiontype,
-                            decoration: kSmallTextFieldDecoration,
+                            decoration: kSmallInputFieldDecoration,
                           ),
                         )
                       ],
@@ -171,7 +171,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                       ],
                       //TODO: Customize this whole widget
                       dropdownSearchDecoration:
-                          kSmallTextFieldDecoration.copyWith(
+                      kSmallInputFieldDecoration.copyWith(
                         hintText: 'Select Product Category',
                         hintStyle: TextStyle(color: Colors.grey),
                         floatingLabelStyle: TextStyle(color: Colors.black),
@@ -234,7 +234,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                       children: [
                         Flexible(
                           child: TextFormField(
-                            decoration: kSmallTextFieldDecoration.copyWith(
+                            decoration: kSmallInputFieldDecoration.copyWith(
                                 hintText: ''),
                             keyboardType: TextInputType.numberWithOptions(
                               decimal: false,
@@ -269,7 +269,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                         ),
                         Flexible(
                           child: TextFormField(
-                            decoration: kSmallTextFieldDecoration.copyWith(
+                            decoration: kSmallInputFieldDecoration.copyWith(
                                 hintText: ''),
                             keyboardType: TextInputType.numberWithOptions(
                               decimal: false,
@@ -325,7 +325,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                       height: 5,
                     ),
                     DateTimePicker(
-                      decoration: kSmallTextFieldDecoration.copyWith(
+                      decoration: kSmallInputFieldDecoration.copyWith(
                         hintText: 'From',
                       ),
                       style: TextStyle(color: Colors.black),
@@ -363,8 +363,8 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                       height: 5,
                     ),
                     DateTimePicker(
-                      decoration: kSmallTextFieldDecoration.copyWith(
-                        hintText: 'From',
+                      decoration: kSmallInputFieldDecoration.copyWith(
+                        hintText: 'To',
                       ),
                       style: TextStyle(color: Colors.black),
                       type: DateTimePickerType.dateTime,

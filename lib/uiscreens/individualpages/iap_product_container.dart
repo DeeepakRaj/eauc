@@ -140,7 +140,7 @@ class _IapProductContainerState extends State<IapProductContainer> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      decoration: kSmallTextFieldDecoration.copyWith(
+                      decoration: kSmallInputFieldDecoration.copyWith(
                         prefixIcon: Icon(
                           Icons.monetization_on,
                         ),

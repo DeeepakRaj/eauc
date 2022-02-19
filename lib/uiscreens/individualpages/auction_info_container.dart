@@ -20,12 +20,15 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            'Coins Auction',
-            style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w800,
-                color: kprimarycolor),
+          Hero(
+            tag: 'auctionnameherotag',
+            child: Text(
+              'Coins Auction',
+              style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w800,
+                  color: kprimarycolor),
+            ),
           ),
           SizedBox(
             height: 10,

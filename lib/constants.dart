@@ -12,7 +12,7 @@ String numberRegExp = r'^[0-9]*$';
 double kProductsListViewHeight = 310;
 double kAuctionsListViewHeight = 270;
 
-final kTextInputDecoration = InputDecoration(
+final kInputFieldDecoration = InputDecoration(
     hintText: 'Email',
     hintStyle: TextStyle(color: kinputfieldlabelcolor, fontSize: 21.0),
     fillColor: Colors.white,
@@ -50,7 +50,7 @@ final kSearchFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.all(10.0),
 );
 
-final kSmallTextFieldDecoration = InputDecoration(
+final kSmallInputFieldDecoration = InputDecoration(
   hintText: 'Search in All Auctions',
   hintStyle: TextStyle(color: Colors.grey, fontSize: 17),
   fillColor: Colors.white,
@@ -65,6 +65,11 @@ final kSmallTextFieldDecoration = InputDecoration(
   hoverColor: kprimarycolor,
   prefixIconColor: kprimarycolor,
   contentPadding: EdgeInsets.all(10.0),
+);
+
+final kInputFieldTextStyle = TextStyle(
+  color: Colors.black,
+  fontSize: 21.0,
 );
 
 final kSearchFieldTextStyle = TextStyle(
