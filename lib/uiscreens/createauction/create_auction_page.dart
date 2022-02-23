@@ -1,6 +1,6 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eauc/constants.dart';
-import 'package:eauc/uiscreens/createauction/create_product_page.dart';
+import 'package:eauc/uiscreens/createauction/add_product_page.dart';
 import 'package:eauc/uiscreens/createauction/product_class.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
     try {
       addedProduct = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const CreateProductPage()),
+        MaterialPageRoute(builder: (context) => const AddProductPage()),
       );
       setState(() {
         products.add(addedProduct);
@@ -298,7 +298,8 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                       children: [
                         Text(
                           'Click on + to add products',
-                          style: kCardSubTitleTextStyle.copyWith(fontSize: 20),
+                          style: kCardSubTitleTextStyle.copyWith(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         GestureDetector(
                           onTap: () {
@@ -307,14 +308,14 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                           child: Container(
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                              color: kbackgroundcolor,
+                              color: kprimarycolor,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
                             ),
                             child: Icon(
                               Icons.add,
                               size: 60,
-                              color: kprimarycolor,
+                              color: Colors.white,
                             ),
                           ),
                         )

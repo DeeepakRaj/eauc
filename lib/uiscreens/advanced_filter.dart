@@ -5,6 +5,7 @@ import 'package:eauc/uiscreens/search_results_page.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AdvancedFilter extends StatefulWidget {
   final double screenWidth;
@@ -236,10 +237,10 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                           child: TextFormField(
                             decoration: kSmallInputFieldDecoration.copyWith(
                                 hintText: ''),
-                            keyboardType: TextInputType.numberWithOptions(
-                              decimal: false,
-                              signed: false,
-                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
                             style: kSearchFieldTextStyle,
                             cursorColor: kprimarycolor,
                             validator: (value) {
@@ -271,10 +272,10 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                           child: TextFormField(
                             decoration: kSmallInputFieldDecoration.copyWith(
                                 hintText: ''),
-                            keyboardType: TextInputType.numberWithOptions(
-                              decimal: false,
-                              signed: false,
-                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
                             style: kSearchFieldTextStyle,
                             cursorColor: kprimarycolor,
                             validator: (value) {
