@@ -5,6 +5,8 @@ import 'package:eauc/uiscreens/createauction/product_class.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
 import 'package:flutter/material.dart';
 
+import 'edit_product_page.dart';
+
 class CreateAuctionPage extends StatefulWidget {
   const CreateAuctionPage({Key? key}) : super(key: key);
 
@@ -25,6 +27,24 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
       );
       setState(() {
         products.add(addedProduct);
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _editProduct(BuildContext context, Product product, int index) async {
+    try {
+      addedProduct = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EditProductPage(
+                  product: product,
+                )),
+      );
+      setState(() {
+        products.removeAt(index);
+        products.insert(index, addedProduct);
       });
     } catch (e) {
       print(e);
@@ -59,12 +79,12 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                     children: [
                       Text(
                         'Create ',
-                        style: TextStyle(fontSize: 50, color: Colors.black),
+                        style: TextStyle(fontSize: 30, color: Colors.black),
                       ),
                       Text(
                         'Auction',
                         style: TextStyle(
-                          fontSize: 50,
+                          fontSize: 30,
                           fontWeight: FontWeight.w800,
                           color: kprimarycolor,
                         ),
@@ -236,7 +256,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                                         );
                                       });
                                 } else {
-                                  // TODO: Navigate to edit page;
+                                  _editProduct(context, products[index], index);
                                 }
                               },
                               onDismissed: (direction) {
@@ -268,7 +288,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                                   children: [
                                     Text(products[index].productDesc),
                                     Text(
-                                      '500000',
+                                      products[index].productPrice,
                                       style: TextStyle(
                                           fontSize: 25, color: Colors.green),
                                     )

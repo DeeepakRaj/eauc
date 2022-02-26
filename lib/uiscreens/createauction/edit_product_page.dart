@@ -1,27 +1,27 @@
 import 'dart:io';
+
 import 'package:animations/animations.dart';
 import 'package:eauc/constants.dart';
-import 'package:eauc/sizeconfig.dart';
 import 'package:eauc/uiscreens/createauction/full_screen_image.dart';
+import 'package:eauc/uiscreens/createauction/product_class.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'product_class.dart';
 
-class AddProductPage extends StatefulWidget {
-  const AddProductPage({Key? key}) : super(key: key);
+class EditProductPage extends StatefulWidget {
+  final Product product;
+
+  EditProductPage({required this.product});
 
   @override
-  _AddProductPageState createState() => _AddProductPageState();
+  _EditProductPageState createState() => _EditProductPageState();
 }
 
-class _AddProductPageState extends State<AddProductPage> {
-  final GlobalKey<FormState> _addprodPageFormKey = GlobalKey<FormState>();
+class _EditProductPageState extends State<EditProductPage> {
+  final GlobalKey<FormState> _editprodPageFormKey = GlobalKey<FormState>();
   late String name = '';
-  Product _product = Product();
-  List _selectedCategories = [];
 
   bool _selectionMode = false;
   Map<XFile, bool> moreImagesMap = {};
@@ -54,17 +54,20 @@ class _AddProductPageState extends State<AddProductPage> {
   @override
   void initState() {
     super.initState();
+    _primaryImage = widget.product.primaryImage;
+    widget.product.moreImages.forEach((element) {
+      moreImagesMap[element] = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
           _selectionMode
               ? 'Selected ${moreImagesMap.values.where((element) => element == true).length} Item(s)'
-              : 'Add Product',
+              : 'Edit Product',
         ),
         leading: _selectionMode
             ? IconButton(
@@ -108,7 +111,7 @@ class _AddProductPageState extends State<AddProductPage> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
-            key: _addprodPageFormKey,
+            key: _editprodPageFormKey,
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -195,14 +198,13 @@ class _AddProductPageState extends State<AddProductPage> {
                                     closedBuilder: (context, openContainer) {
                                       return GestureDetector(
                                         onLongPress: () {
-                                          print(moreImagesMap);
+                                          print(index);
                                           setState(() {
                                             _selectionMode = !_selectionMode;
                                             moreImagesMap.update(
                                                 moreImagesMap.keys
                                                     .elementAt(index),
                                                 (value) => !value);
-                                            print(moreImagesMap);
                                           });
                                         },
                                         onTap: () {
@@ -212,7 +214,6 @@ class _AddProductPageState extends State<AddProductPage> {
                                                   moreImagesMap.keys
                                                       .elementAt(index),
                                                   (value) => !value);
-                                              print(moreImagesMap);
                                             });
                                           } else {
                                             openContainer();
@@ -268,6 +269,7 @@ class _AddProductPageState extends State<AddProductPage> {
                     height: 10,
                   ),
                   TextFormField(
+                    initialValue: widget.product.productName,
                     decoration: kInputFieldDecoration.copyWith(
                         hintText: 'Product Name'),
                     style: kInputFieldTextStyle,
@@ -278,13 +280,14 @@ class _AddProductPageState extends State<AddProductPage> {
                       }
                     },
                     onChanged: (value) {
-                      _product.productName = value;
+                      widget.product.productName = value;
                     },
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   TextFormField(
+                    initialValue: widget.product.productDesc,
                     decoration: kInputFieldDecoration.copyWith(
                         hintText: 'Product Description or Specifications'),
                     style: kInputFieldTextStyle,
@@ -294,13 +297,14 @@ class _AddProductPageState extends State<AddProductPage> {
                       if (value!.isEmpty) return 'Description is Required';
                     },
                     onChanged: (value) {
-                      _product.productDesc = value;
+                      widget.product.productDesc = value;
                     },
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   TextFormField(
+                    initialValue: widget.product.productPrice,
                     decoration: kInputFieldDecoration.copyWith(
                         hintText: 'Set Base Price'),
                     style: kInputFieldTextStyle,
@@ -315,7 +319,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       }
                     },
                     onChanged: (value) {
-                      _product.productPrice = value;
+                      widget.product.productPrice = value;
                     },
                   ),
                   SizedBox(
@@ -353,10 +357,9 @@ class _AddProductPageState extends State<AddProductPage> {
                         fontSize: 16,
                       ),
                     ),
-                    initialValue: _selectedCategories,
+                    initialValue: widget.product.productTags,
                     onConfirm: (results) {
-                      _selectedCategories = results;
-                      _product.productTags =
+                      widget.product.productTags =
                           results.map((e) => e.toString()).toList();
                     },
                   ),
@@ -366,9 +369,9 @@ class _AddProductPageState extends State<AddProductPage> {
                   CustomNormalButton(
                       buttonText: 'ADD',
                       onPressed: () {
-                        _product.primaryImage = _primaryImage!;
-                        _product.moreImages = moreImagesMap.keys.toList();
-                        Navigator.pop(context, _product);
+                        widget.product.primaryImage = _primaryImage!;
+                        widget.product.moreImages = moreImagesMap.keys.toList();
+                        Navigator.pop(context, widget.product);
                       }),
                 ],
               ),

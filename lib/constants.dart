@@ -14,11 +14,11 @@ double kAuctionsListViewHeight = 270;
 
 final kInputFieldDecoration = InputDecoration(
     hintText: 'Email',
-    hintStyle: TextStyle(color: kinputfieldlabelcolor, fontSize: 21.0),
+    hintStyle: TextStyle(color: kinputfieldlabelcolor, fontSize: 17.0),
     fillColor: Colors.white,
     focusColor: Color(0xFFEBEBFB),
     filled: true,
-    contentPadding: EdgeInsets.all(30.0),
+    contentPadding: EdgeInsets.all(20.0),
     border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
     errorBorder: OutlineInputBorder(
@@ -78,7 +78,7 @@ final kSearchFieldTextStyle = TextStyle(
 );
 
 final kHeaderTextStyle = TextStyle(
-  fontSize: 22,
+  fontSize: 18,
   fontWeight: FontWeight.bold,
 );
 

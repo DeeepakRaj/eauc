@@ -25,7 +25,7 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
             child: Text(
               'Coins Auction',
               style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: kprimarycolor),
             ),
@@ -46,7 +46,7 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
           Text(
             'Hosted By:',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 15,
               fontWeight: FontWeight.w800,
               color: Colors.black,
             ),
@@ -59,7 +59,7 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
             selectedColor: Colors.white,
             leading: Icon(
               Icons.account_circle,
-              size: 50,
+              size: 40,
             ),
             iconColor: Colors.cyan,
             title: Text(
@@ -76,7 +76,7 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
           ListTile(
             leading: Icon(
               Icons.access_time,
-              size: 50,
+              size: 40,
             ),
             iconColor: Colors.cyan,
             title: Text(
@@ -88,7 +88,7 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
             subtitle: Text(
               '12:14:50',
               style: TextStyle(
-                  color: Colors.red, fontWeight: FontWeight.bold, fontSize: 20),
+                  color: Colors.red, fontWeight: FontWeight.bold, fontSize: 18),
             ),
           ),
           SizedBox(
