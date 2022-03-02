@@ -51,7 +51,12 @@ class _HomeLiveAuctionsState extends State<HomeLiveAuctions> {
                 //TODO: Go to Individual Auction Event Page
               },
               child: HomeOngoingAuctionsContainer(
-                  'Product 1', 'Description', 'Hostname', '30000', '01:24:28'),
+                'Product 1',
+                'Description',
+                'Hostname',
+                '30000',
+                '01:24:28',
+              ),
             ),
           ),
           Center(

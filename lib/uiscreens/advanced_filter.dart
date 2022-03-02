@@ -6,6 +6,7 @@ import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class AdvancedFilter extends StatefulWidget {
   final double screenWidth;
@@ -27,6 +28,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
       _basepricefrom,
       _basepriceto;
   DateTime? _datefrom, _dateto;
+  List _selectedCategories = [];
 
   @override
   void initState() {
@@ -162,59 +164,42 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                     SizedBox(
                       height: 5,
                     ),
-                    DropdownSearch<String>(
-                      mode: Mode.DIALOG,
+                    MultiSelectDialogField(
                       items: [
-                        "Brazil",
-                        "Italia (Disabled)",
-                        "Tunisia",
-                        'Canada'
+                        //TODO: Build categories here
+                        MultiSelectItem('Electronics', 'Electronics'),
+                        MultiSelectItem('Sports', 'Sports'),
+                        MultiSelectItem('Ancient', 'Ancient'),
+                        MultiSelectItem('Currency', 'Currency'),
                       ],
-                      //TODO: Customize this whole widget
-                      dropdownSearchDecoration:
-                      kSmallInputFieldDecoration.copyWith(
-                        hintText: 'Select Product Category',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        floatingLabelStyle: TextStyle(color: Colors.black),
+                      listType: MultiSelectListType.LIST,
+                      searchable: true,
+                      title: Text(
+                        "Select Category",
+                        style: TextStyle(color: Colors.blue.shade800),
                       ),
-                      popupBackgroundColor: kbackgroundcolor,
-                      showClearButton: true,
-                      showSearchBox: true,
-                      showSelectedItems: true,
-                      popupShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                      selectedColor: Colors.blue.shade800,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                      dropdownSearchBaseStyle: TextStyle(color: Colors.black),
-                      selectionListViewProps: SelectionListViewProps(
-                          scrollDirection: Axis.vertical,
-                          physics: ScrollPhysics()),
-                      searchFieldProps: TextFieldProps(
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            hintText: 'Enter Category',
-                            hintStyle:
-                                TextStyle(color: Colors.grey, fontSize: 18),
-                            fillColor: Colors.white,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide:
-                                    BorderSide(color: kprimarycolor, width: 3)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide:
-                                    BorderSide(color: kprimarycolor, width: 3)),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(
-                                color: Colors.red,
-                                width: 2.0,
-                              ),
-                            ),
-                          )),
-                      // popupItemDisabled: (String s) => s.startsWith('I'),
-                      onChanged: print,
-                      selectedItem: null,
+                      searchTextStyle: TextStyle(color: Colors.black),
+                      backgroundColor: kbackgroundcolor,
+                      buttonIcon: Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.blue.shade800,
+                      ),
+                      buttonText: Text(
+                        'Select Product Categories',
+                        style: TextStyle(
+                          color: Colors.blue.shade800,
+                          fontSize: 16,
+                        ),
+                      ),
+                      initialValue: _selectedCategories,
+                      onConfirm: (results) {
+                        _selectedCategories = results;
+                      },
                     ),
                     SizedBox(
                       height: 15,

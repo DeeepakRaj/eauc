@@ -22,6 +22,7 @@ class _WrapperState extends State<Wrapper> {
   final List<Widget> screens = <Widget>[
     Home(),
     Auctions(),
+    Container(),
     Products(),
     Hosted(),
   ];
