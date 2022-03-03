@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:eauc/uiscreens/wrapper.dart';
@@ -67,7 +68,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     //     _countryController.text);
     Navigator.of(context).pushNamedAndRemoveUntil(
       Wrapper.routename,
-      (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
     );
   }
 
@@ -116,9 +117,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       if (value!.isEmpty) {
                         return 'Email is Required';
                       }
-                      if (!RegExp(
-                              r"[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                          .hasMatch(value)) {
+                      if (!RegExp(emailRegExp).hasMatch(value)) {
                         return 'Enter a valid Email';
                       }
                       return null;
@@ -175,7 +174,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     controller: _mobileController,
                     maxLength: 10,
                     decoration:
-                        kInputFieldDecoration.copyWith(hintText: 'Mobile'),
+                    kInputFieldDecoration.copyWith(hintText: 'Mobile'),
                     style: kInputFieldTextStyle,
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -296,6 +295,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   SizedBox(
                     height: 15.0,
                   ),
+                  AutoSizeText(
+                    'Password must contain:',
+                    minFontSize: 12,
+                    maxFontSize: 15,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade600),
+                  ),
+                  AutoSizeText(
+                    ' - Minimum 8 total characters\n - Minimum 1 Upper case\n - Minimum 1 Lower case\n - Minimum 1 Numeric number\n - Minimum 1 Special character ( ! @ # & * ~ ) ',
+                    minFontSize: 12,
+                    maxFontSize: 15,
+                    style: TextStyle(color: Colors.grey.shade600),
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
                   TextFormField(
                     keyboardType: TextInputType.visiblePassword,
                     controller: _pwdController,
@@ -321,9 +337,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       if (value!.isEmpty) {
                         return 'Password is Required';
                       }
-                      if (!RegExp(
-                              r"[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                          .hasMatch(value)) {
+                      if (!RegExp(passwordRegExp).hasMatch(value)) {
                         return 'Enter a valid password';
                       }
                       return null;
@@ -360,9 +374,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       if (value!.isEmpty) {
                         return 'Password is Required';
                       }
-                      if (!RegExp(
-                              r"[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                          .hasMatch(value)) {
+                      if (!RegExp(passwordRegExp).hasMatch(value)) {
                         return 'Enter a valid password';
                       }
                       if (_pwdController.text.toString() !=
@@ -380,12 +392,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   CustomTextButton(
                     onPressed: () {
-                      // if (!_regPageFormKey.currentState!.validate())
-                      //   return;
-                      // else {
-                      //   _signUpButtonPressed();
-                      // }
-                      _signUpButtonPressed();
+                      if (!_regPageFormKey.currentState!.validate())
+                        return;
+                      else {
+                        _signUpButtonPressed();
+                      }
                     },
                     buttonText: 'SIGN UP',
                   ),
@@ -396,7 +407,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     onTap: () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                         LoginPage.routename,
-                        (Route<dynamic> route) => false,
+                            (Route<dynamic> route) => false,
                       );
                     },
                     child: Text(

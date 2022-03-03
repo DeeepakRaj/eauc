@@ -20,6 +20,7 @@ class TagContainer extends StatelessWidget {
             maxLines: 1,
             style: TextStyle(
               color: Colors.blue.shade800,
+              fontSize: 11,
             ),
             overflow: TextOverflow.ellipsis,
           ),

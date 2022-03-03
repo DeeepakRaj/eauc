@@ -97,9 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                               if (value!.isEmpty) {
                                 return 'Email is Required';
                               }
-                              if (!RegExp(
-                                      r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                                  .hasMatch(value)) {
+                              if (!RegExp(emailRegExp).hasMatch(value)) {
                                 return 'Enter a valid Email';
                               }
                               return null;
@@ -138,6 +136,9 @@ class _LoginPageState extends State<LoginPage> {
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Password is Required';
+                              }
+                              if (!RegExp(passwordRegExp).hasMatch(value)) {
+                                return 'Enter a valid Password';
                               }
                               return null;
                             },

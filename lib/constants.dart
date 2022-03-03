@@ -8,6 +8,10 @@ const kinputfieldlabelcolor = Color(0xFFB0AFAF);
 const knormalbuttoncolor = Color(0xFFF0A500);
 
 String numberRegExp = r'^[0-9]*$';
+String emailRegExp =
+    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+String passwordRegExp =
+    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
 
 double kProductsListViewHeight = 310;
 double kAuctionsListViewHeight = 270;
