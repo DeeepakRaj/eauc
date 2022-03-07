@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:eauc/uiscreens/wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../database/db.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../constants.dart';
+import 'package:http/http.dart' as http;
 
 class RegistrationPage extends StatefulWidget {
   static const routename = '/registrationpage';
@@ -53,23 +56,51 @@ class _RegistrationPageState extends State<RegistrationPage> {
     super.dispose();
   }
 
-  void _signUpButtonPressed() {
-    //TODO: Implement signup
-    // DB().insertIntoDatabase(
-    //     _emailController.text,
-    //     _pwdController.text,
-    //     _firstnameController.text,
-    //     _lastnameController.text,
-    //     _mobileController.text,
-    //     _addressController.text,
-    //     _cityController.text,
-    //     _pincodeController.text,
-    //     _stateController.text,
-    //     _countryController.text);
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      Wrapper.routename,
+  void _signUpButtonPressed() async {
+    var url = apiUrl + "signup.php";
+    var response = await http.post(Uri.parse(url), body: {
+      "email": _emailController.text,
+      "pwd": _pwdController.text,
+      "firstname": _firstnameController.text,
+      "lastname": _lastnameController.text,
+      "contact": _mobileController.text,
+      "addr": _addressController.text,
+      "city": _cityController.text,
+      "pincode": _pincodeController.text,
+      "states": _stateController.text,
+      "country": _countryController.text,
+    });
+    var data = jsonDecode(response.body);
+    if (data == 'account already exists') {
+      Fluttertoast.showToast(
+        msg: 'Account Already Exists. Please Login',
+        toastLength: Toast.LENGTH_LONG,
+      );
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        LoginPage.routename,
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      if (data == 'true') {
+        Fluttertoast.showToast(
+          msg: 'Account Created',
+          toastLength: Toast.LENGTH_LONG,
+        );
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          LoginPage.routename,
           (Route<dynamic> route) => false,
-    );
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: 'Error. Please Try Again',
+          toastLength: Toast.LENGTH_LONG,
+        );
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          RegistrationPage.routename,
+          (Route<dynamic> route) => false,
+        );
+      }
+    }
   }
 
   @override
@@ -77,6 +108,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return Scaffold(
       backgroundColor: kbackgroundcolor,
       resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        title: Text('REGISTER'),
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10.0),
@@ -87,18 +121,27 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Image.asset(
+                    'assets/images/registrationpageimg2.jpg',
+                    fit: BoxFit.fitHeight,
+                    height: MediaQuery.of(context).size.height * 0.30,
+                    width: double.infinity,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Text(
                     'Register to',
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                        fontSize: 40.0,
+                        fontSize: 25.0,
                         color: kblacktextcolor,
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
                     'eAuc',
                     style: TextStyle(
-                      fontSize: 57.0,
+                      fontSize: 45.0,
                       fontWeight: FontWeight.w900,
                       color: kprimarycolor,
                     ),
@@ -392,11 +435,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   CustomTextButton(
                     onPressed: () {
-                      if (!_regPageFormKey.currentState!.validate())
-                        return;
-                      else {
-                        _signUpButtonPressed();
-                      }
+                      // if (!_regPageFormKey.currentState!.validate())
+                      //   return;
+                      // else {
+                      //   _signUpButtonPressed();
+                      // }
+                      // _signUpButtonPressed();
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        Wrapper.routename,
+                        (Route<dynamic> route) => false,
+                      );
                     },
                     buttonText: 'SIGN UP',
                   ),

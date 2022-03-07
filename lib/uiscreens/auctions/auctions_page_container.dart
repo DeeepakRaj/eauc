@@ -130,7 +130,7 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
                         maxFontSize: 16,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: kprimarycolor,
+                          color: ksecondarycolor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

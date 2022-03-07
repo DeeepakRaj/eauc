@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:eauc/uiscreens/registration_page.dart';
+import 'package:eauc/widgetmodels/customtextbutton.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,170 +38,151 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: false,
       appBar: AppBar(
-        title: Center(child: Text('Login')),
+        title: Center(child: Text('LOGIN')),
       ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10.0),
           child: Form(
             key: _loginPageFormKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Flexible(
-                    flex: 2,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            'Welcome to',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 40.0,
-                                color: kblacktextcolor,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Flexible(
-                          child: Text(
-                            'eAuc',
-                            style: TextStyle(
-                              fontSize: 57.0,
-                              fontWeight: FontWeight.w900,
-                              color: kprimarycolor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
-                SizedBox(
-                  height: 15.0,
-                ),
-                Flexible(
-                  flex: 3,
-                  child: Container(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            controller: _emailController,
-                            decoration: kInputFieldDecoration.copyWith(
-                                hintText: 'Email'),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 21.0,
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Email is Required';
-                              }
-                              if (!RegExp(emailRegExp).hasMatch(value)) {
-                                return 'Enter a valid Email';
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              //TODO: Store the value in a variable
-                            },
-                          ),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          TextFormField(
-                            keyboardType: TextInputType.visiblePassword,
-                            controller: _pwdController,
-                            obscureText: obscurePwdText,
-                            decoration: kInputFieldDecoration.copyWith(
-                              hintText: 'Password',
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  obscurePwdText
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: Colors.grey,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    obscurePwdText = !obscurePwdText;
-                                  });
-                                },
-                              ),
-                            ),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 21.0,
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Password is Required';
-                              }
-                              if (!RegExp(passwordRegExp).hasMatch(value)) {
-                                return 'Enter a valid Password';
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              //TODO: Store the value in a variable
-                            },
-                          ),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          Text(
-                            'Forgot Password?',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontSize: 17.0),
-                          )
-                        ],
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Image.asset(
+                    'assets/images/loginpageimg2.jpg',
+                    fit: BoxFit.fitHeight,
+                    height: MediaQuery.of(context).size.height * 0.30,
+                    width: double.infinity,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Welcome to',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 25.0,
+                            color: kblacktextcolor,
+                            fontWeight: FontWeight.bold),
                       ),
+                      Text(
+                        'eAuc',
+                        style: TextStyle(
+                          fontSize: 45.0,
+                          fontWeight: FontWeight.w900,
+                          color: kprimarycolor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          controller: _emailController,
+                          decoration:
+                              kInputFieldDecoration.copyWith(hintText: 'Email'),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 21.0,
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Email is Required';
+                            }
+                            if (!RegExp(emailRegExp).hasMatch(value)) {
+                              return 'Enter a valid Email';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            //TODO: Store the value in a variable
+                          },
+                        ),
+                        SizedBox(
+                          height: 15.0,
+                        ),
+                        TextFormField(
+                          keyboardType: TextInputType.visiblePassword,
+                          controller: _pwdController,
+                          obscureText: obscurePwdText,
+                          decoration: kInputFieldDecoration.copyWith(
+                            hintText: 'Password',
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                obscurePwdText
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  obscurePwdText = !obscurePwdText;
+                                });
+                              },
+                            ),
+                          ),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 21.0,
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Password is Required';
+                            }
+                            if (!RegExp(passwordRegExp).hasMatch(value)) {
+                              return 'Enter a valid Password';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            //TODO: Store the value in a variable
+                          },
+                        ),
+                        SizedBox(
+                          height: 15.0,
+                        ),
+                        Text(
+                          'Forgot Password?',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(fontSize: 12.0),
+                        )
+                      ],
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                Flexible(
-                  flex: 2,
-                  child: Column(
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Flexible(
-                        child: TextButton(
+                      CustomTextButton(
                           onPressed: () {
                             if (!_loginPageFormKey.currentState!.validate()) {
                               return;
                             } else {
-                              //TODO: Sign up and go to home screen
+                              _loginButtonPressed();
                             }
                           },
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.all(25.0),
-                            backgroundColor: knormalbuttoncolor,
-                            primary: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide.none),
-                            textStyle: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w900),
-                          ),
-                          child: Text(
-                            'LOGIN',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
+                          buttonText: 'LOGIN'),
                       SizedBox(
                         height: 20,
                       ),
-                      Flexible(
-                          child: GestureDetector(
+                      GestureDetector(
                         onTap: () {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                             RegistrationPage.routename,
@@ -211,15 +197,57 @@ class _LoginPageState extends State<LoginPage> {
                               color: kprimarycolor,
                               fontSize: 20.0),
                         ),
-                      )),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _loginButtonPressed() async {
+    var url = apiUrl + "signup.php";
+    var response = await http.post(Uri.parse(url), body: {
+      "email": _emailController.text,
+      "pwd": _pwdController.text,
+    });
+    var data = jsonDecode(response.body);
+    if (data == 'account not exist') {
+      Fluttertoast.showToast(
+        msg: 'Account Does Not Exist. Please Create Account',
+        toastLength: Toast.LENGTH_LONG,
+      );
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        RegistrationPage.routename,
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      if (data == 'true') {
+        Fluttertoast.showToast(
+          msg: 'Logged In Successfully',
+          toastLength: Toast.LENGTH_LONG,
+        );
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          LoginPage.routename,
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: 'Error. Please Try Again',
+          toastLength: Toast.LENGTH_LONG,
+        );
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          LoginPage.routename,
+          (Route<dynamic> route) => false,
+        );
+      }
+    }
   }
 }

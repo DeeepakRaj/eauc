@@ -14,7 +14,7 @@ class Auctions extends StatefulWidget {
 
 class _AuctionsState extends State<Auctions> {
   late String popupSelectedValue = '';
-  List<String> popUpMenuValues = ['All', 'Live', 'Upcoming'];
+  List<String> popUpMenuValues = ['All', 'Live', 'Upcoming', 'My Hosted'];
 
   @override
   void initState() {
@@ -39,7 +39,6 @@ class _AuctionsState extends State<Auctions> {
               switch (result) {
                 case 'All':
                   {
-                    print('filter 1 clicked');
                     setState(() {
                       popupSelectedValue = popUpMenuValues[0];
                     });
@@ -47,7 +46,6 @@ class _AuctionsState extends State<Auctions> {
                   }
                 case 'Live':
                   {
-                    print('filter 2 clicked');
                     setState(() {
                       popupSelectedValue = popUpMenuValues[1];
                     });
@@ -55,7 +53,13 @@ class _AuctionsState extends State<Auctions> {
                   }
                 case 'Upcoming':
                   {
-                    print('Clear filters');
+                    setState(() {
+                      popupSelectedValue = popUpMenuValues[2];
+                    });
+                    break;
+                  }
+                case 'My Hosted':
+                  {
                     setState(() {
                       popupSelectedValue = popUpMenuValues[2];
                     });

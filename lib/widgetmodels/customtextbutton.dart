@@ -12,7 +12,7 @@ class CustomTextButton extends StatelessWidget {
     return TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          padding: EdgeInsets.all(25.0),
+          padding: EdgeInsets.all(15.0),
           backgroundColor: knormalbuttoncolor,
           primary: Colors.white,
           shape: RoundedRectangleBorder(

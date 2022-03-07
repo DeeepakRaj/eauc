@@ -52,6 +52,8 @@ class _WrapperState extends State<Wrapper> {
         alignment: Alignment.bottomCenter,
         children: [
           Container(
+            padding: EdgeInsets.zero,
+            height: 60,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                   topRight: Radius.circular(20), topLeft: Radius.circular(20)),
@@ -66,7 +68,7 @@ class _WrapperState extends State<Wrapper> {
                 topRight: Radius.circular(20.0),
               ),
               child: BottomNavigationBar(
-                iconSize: 30,
+                iconSize: 25,
                 type: BottomNavigationBarType.fixed,
                 currentIndex: currentTabIndex,
                 onTap: _onItemTapped,
@@ -131,8 +133,8 @@ class _WrapperState extends State<Wrapper> {
             closedShape: CircleBorder(),
             closedBuilder: (context, openContainer) {
               return Container(
-                height: 90,
-                width: 90,
+                height: 80,
+                width: 80,
                 child: FittedBox(
                   child: FloatingActionButton(
                     elevation: 0,

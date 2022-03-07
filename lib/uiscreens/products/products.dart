@@ -1,7 +1,11 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/uiscreens/advanced_filter.dart';
+import 'package:eauc/uiscreens/products/products_page_container.dart';
 import 'package:eauc/widgetmodels/custom_navigation_drawer.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+
+import 'expandable_categories_container.dart';
 
 class Products extends StatefulWidget {
   static const routename = '/productspage';
@@ -11,24 +15,11 @@ class Products extends StatefulWidget {
 }
 
 class _ProductsState extends State<Products> {
-  Map<String, String> categoriesMap = {
-    'electronics': 'Electronics',
-    'furniture': 'Furniture',
-    'sports': 'Sports',
-    'books': 'Books',
-    'antiqueitems': 'Antique',
-    'currency': 'Currency',
-    'videogames': 'Games',
-    'music': 'Music',
-    'art': 'Art',
-    'moviecollectibles': 'Movie Memorabilia',
-    'toys': 'Toys',
-    'automobiles': 'Automobiles',
-    'fashion': 'Fashion'
-  };
-
   @override
   Widget build(BuildContext context) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('PRODUCTS'),
@@ -42,119 +33,114 @@ class _ProductsState extends State<Products> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(
-                  padding: EdgeInsets.all(10),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset(0.0, 1.0), //(x,y)
-                        blurRadius: 1.0,
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ExpandableNotifier(
-                        child: ScrollOnExpand(
-                          scrollOnExpand: true,
-                          scrollOnCollapse: false,
-                          child: ExpandablePanel(
-                            theme: const ExpandableThemeData(
-                              headerAlignment:
-                                  ExpandablePanelHeaderAlignment.center,
-                            ),
-                            header: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text(
-                                'Browse by Category',
-                                style: kCardTitleTextStyle,
-                              ),
-                            ),
-                            collapsed: Center(
-                              child: Container(
-                                height: 60,
-                                child: Wrap(
-                                  spacing: 40,
-                                  runSpacing: 30,
-                                  alignment: WrapAlignment.spaceEvenly,
-                                  crossAxisAlignment: WrapCrossAlignment.start,
-                                  textDirection: TextDirection.ltr,
-                                  children: categoriesMap.entries.map((e) {
-                                    return Container(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Image.asset(
-                                            'assets/images/' + e.key + '.jpg',
-                                            height: 40,
-                                            width: 40,
-                                          ),
-                                          Text(
-                                            e.value,
-                                            style: TextStyle(
-                                                color: Colors.brown,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-                            expanded: Center(
-                              child: Wrap(
-                                spacing: 40,
-                                runSpacing: 30,
-                                alignment: WrapAlignment.spaceEvenly,
-                                crossAxisAlignment: WrapCrossAlignment.start,
-                                textDirection: TextDirection.ltr,
-                                children: categoriesMap.entries.map((e) {
-                                  return Container(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Image.asset(
-                                          'assets/images/' + e.key + '.jpg',
-                                          height: 40,
-                                          width: 40,
-                                        ),
-                                        Flexible(
-                                            child: Text(
-                                          e.value,
-                                          style: TextStyle(
-                                              color: Colors.brown,
-                                              fontWeight: FontWeight.bold),
-                                        ))
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                            builder: (_, collapsed, expanded) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                    left: 10, right: 10, bottom: 10),
-                                child: Expandable(
-                                  collapsed: collapsed,
-                                  expanded: expanded,
-                                  theme: const ExpandableThemeData(
-                                      crossFadePoint: 0),
-                                ),
-                              );
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      flex: 10,
+                      child: TextFormField(
+                        cursorColor: kprimarycolor,
+                        style: kSearchFieldTextStyle,
+                        decoration: kSearchFieldDecoration.copyWith(
+                          hintText: 'Search in All Auctions',
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              //TODO: Clear the search field
                             },
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                )
+                        onChanged: (value) {
+                          //TODO: Build search list
+                        },
+                      ),
+                    ),
+                    Flexible(
+                      flex: 1,
+                      child: IconButton(
+                        splashRadius: 1,
+                        icon: Icon(
+                          Icons.filter_alt_outlined,
+                          color: kprimarycolor,
+                        ),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AdvancedFilter(
+                                  screenWidth: screenWidth,
+                                  screenHeight: screenHeight,
+                                );
+                              });
+                        },
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ExpandableCategoriesContainer(),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'Ending Recently',
+                  style: kHeaderTextStyle,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  width: double.infinity,
+                  height: kProductsListViewHeight,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        return ProductsPageContainer(
+                          productName: 'Product Name',
+                          imageName: 'sampleimage1',
+                          hostName: 'HostName',
+                          currentBid: '50000',
+                          type: 'Live',
+                          time: '12:14:15',
+                        );
+                      }),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'Live Auctions',
+                  style: kHeaderTextStyle,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  width: double.infinity,
+                  height: kProductsListViewHeight,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        return ProductsPageContainer(
+                          productName: 'Product Name',
+                          imageName: 'sampleimage1',
+                          hostName: 'HostName',
+                          currentBid: '50000',
+                          type: 'Upcoming',
+                          time: '12:14:15',
+                        );
+                      }),
+                ),
               ],
             ),
           ),

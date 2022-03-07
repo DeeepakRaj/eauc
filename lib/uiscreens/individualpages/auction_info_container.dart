@@ -61,7 +61,7 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
               Icons.account_circle,
               size: 40,
             ),
-            iconColor: Colors.cyan,
+            iconColor: ksecondarycolor,
             title: Text(
               'Titan Coins',
               style:
@@ -70,7 +70,7 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
             tileColor: kprimarycolor,
             subtitle: Text(
               'Company Details or name',
-              style: TextStyle(color: Colors.brown),
+              style: TextStyle(color: ksecondarycolor),
             ),
           ),
           ListTile(
@@ -78,7 +78,7 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
               Icons.access_time,
               size: 40,
             ),
-            iconColor: Colors.cyan,
+            iconColor: ksecondarycolor,
             title: Text(
               'Ending In',
               style:

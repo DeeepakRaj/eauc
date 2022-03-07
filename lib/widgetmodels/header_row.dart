@@ -14,11 +14,7 @@ class HeaderRow extends StatelessWidget {
       children: [
         Text(
           headerText,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+          style: kHeaderTextStyle),
         GestureDetector(
           onTap: onTap,
           child: Row(

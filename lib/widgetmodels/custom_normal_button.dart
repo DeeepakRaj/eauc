@@ -18,7 +18,7 @@ class CustomNormalButton extends StatelessWidget {
         primary: Colors.white,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0), side: BorderSide.none),
-        textStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
+        textStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
       ),
       child: Text(
         buttonText,

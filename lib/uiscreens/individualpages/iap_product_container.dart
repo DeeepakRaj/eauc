@@ -107,7 +107,7 @@ class _IapProductContainerState extends State<IapProductContainer> {
                                   padding: EdgeInsets.all(4),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(3),
-                                    color: Colors.orange,
+                                    color: ksecondarycolor,
                                   ),
                                   child: Text(
                                     'CURRENT BID',
@@ -129,7 +129,7 @@ class _IapProductContainerState extends State<IapProductContainer> {
                             Text(
                               widget.productPriceOrBid,
                               style: TextStyle(
-                                color: Colors.orange.shade800,
+                                color: Colors.brown,
                                 fontSize: 27,
                                 fontWeight: FontWeight.bold,
                               ),

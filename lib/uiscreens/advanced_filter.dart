@@ -317,7 +317,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                       style: TextStyle(color: Colors.black),
                       type: DateTimePickerType.dateTime,
                       dateMask: 'dd-MM-yyyy HH:mm',
-                      initialValue: DateTime.now().toString(),
+                      initialValue: '',
                       firstDate: DateTime.now(),
                       lastDate: DateTime(2100),
                       icon: Icon(Icons.event),
