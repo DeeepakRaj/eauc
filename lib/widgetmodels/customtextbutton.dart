@@ -4,7 +4,7 @@ import 'package:eauc/constants.dart';
 class CustomTextButton extends StatelessWidget {
   CustomTextButton({required this.onPressed, required this.buttonText});
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String buttonText;
 
   @override
@@ -13,7 +13,8 @@ class CustomTextButton extends StatelessWidget {
         onPressed: onPressed,
         style: TextButton.styleFrom(
           padding: EdgeInsets.all(15.0),
-          backgroundColor: knormalbuttoncolor,
+          backgroundColor:
+              (onPressed == null) ? Colors.grey.shade400 : knormalbuttoncolor,
           primary: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0), side: BorderSide.none),

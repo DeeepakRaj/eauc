@@ -3,6 +3,7 @@ import 'package:eauc/constants.dart';
 import 'package:eauc/uiscreens/createauction/add_product_page.dart';
 import 'package:eauc/uiscreens/createauction/product_class.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
+import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:flutter/material.dart';
 
 import 'edit_product_page.dart';
@@ -65,35 +66,25 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
             },
           ),
         ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+          child: CustomTextButton(
+              onPressed: (products.length == 0)
+                  ? null
+                  : () {
+                      //TODO: Create Auction into Database
+                    },
+              buttonText: 'CREATE'),
+        ),
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.all(10),
             child: SingleChildScrollView(
-              physics: ScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               scrollDirection: Axis.vertical,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Create ',
-                        style: TextStyle(fontSize: 30, color: Colors.black),
-                      ),
-                      Text(
-                        'Auction',
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w800,
-                          color: kprimarycolor,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
                   Text(
                     'Auction Details',
                     style: kHeaderTextStyle,
@@ -120,6 +111,13 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                     style: kInputFieldTextStyle,
                     cursorColor: kprimarycolor,
                     onChanged: (value) {},
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Auction Duration',
+                    style: kHeaderTextStyle,
                   ),
                   SizedBox(
                     height: 10,
@@ -341,6 +339,9 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                         )
                       ],
                     ),
+                  ),
+                  SizedBox(
+                    height: 20,
                   )
                 ],
               ),

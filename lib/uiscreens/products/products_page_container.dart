@@ -167,7 +167,7 @@ class _ProductsPageContainerState extends State<ProductsPageContainer> {
               height: 5,
             ),
             Text(
-              (widget.type == 'Live') ? 'Current Bid' : 'Base Price',
+              (widget.type == 'Live') ? 'Current Bid' : 'Opening Bid',
               style: TextStyle(fontSize: 12),
             ),
             Flexible(
@@ -178,7 +178,7 @@ class _ProductsPageContainerState extends State<ProductsPageContainer> {
                 maxFontSize: 27,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Colors.green,
+                  color: ksecondarycolor,
                   fontWeight: FontWeight.bold,
                 ),
               ),

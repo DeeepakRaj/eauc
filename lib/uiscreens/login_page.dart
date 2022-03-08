@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:eauc/uiscreens/registration_page.dart';
+import 'package:eauc/uiscreens/wrapper.dart';
 import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -213,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _loginButtonPressed() async {
-    var url = apiUrl + "signup.php";
+    var url = apiUrl + "signin.php";
     var response = await http.post(Uri.parse(url), body: {
       "email": _emailController.text,
       "pwd": _pwdController.text,
@@ -235,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
           toastLength: Toast.LENGTH_LONG,
         );
         Navigator.of(context).pushNamedAndRemoveUntil(
-          LoginPage.routename,
+          Wrapper.routename,
           (Route<dynamic> route) => false,
         );
       } else {

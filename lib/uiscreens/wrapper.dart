@@ -7,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import '../constants.dart';
 import 'auctions/auctions.dart';
 import 'home/home.dart';
-import 'hosted/hosted.dart';
+import 'profile/profile.dart';
 import 'products/products.dart';
 
 class Wrapper extends StatefulWidget {
@@ -24,7 +24,7 @@ class _WrapperState extends State<Wrapper> {
     Auctions(),
     Container(),
     Products(),
-    Hosted(),
+    Profile(),
   ];
 
   final PageStorageBucket pageStorageBucket = PageStorageBucket();
@@ -121,7 +121,7 @@ class _WrapperState extends State<Wrapper> {
                       Icons.person,
                       color: Colors.white,
                     ),
-                    label: 'Hosted',
+                    label: 'Profile',
                   ),
                 ],
               ),

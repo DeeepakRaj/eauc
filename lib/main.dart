@@ -1,6 +1,7 @@
 import 'package:eauc/constants.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
 import 'package:eauc/uiscreens/login_page.dart';
+import 'package:eauc/uiscreens/profile/pinned_auctions_page.dart';
 import 'package:eauc/uiscreens/registration_page.dart';
 import 'package:eauc/uiscreens/search_results_page.dart';
 import 'package:eauc/uiscreens/splashscreen.dart';
@@ -8,7 +9,7 @@ import 'package:eauc/uiscreens/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'uiscreens/products/products.dart';
 import 'uiscreens/home/home.dart';
-import 'uiscreens/hosted/hosted.dart';
+import 'uiscreens/profile/profile.dart';
 import 'uiscreens/auctions/auctions.dart';
 
 void main() {
@@ -64,9 +65,10 @@ class MyApp extends StatelessWidget {
         Products.routename: (context) => Products(),
         Home.routename: (context) => Home(),
         Auctions.routename: (context) => Auctions(),
-        Hosted.routename: (context) => Hosted(),
+        Profile.routename: (context) => Profile(),
         SearchResultsPage.routename: (context) => SearchResultsPage(),
         IndividualAuctionPage.routename: (context) => IndividualAuctionPage(),
+        PinnedAuctionsPage.routename: (context) => PinnedAuctionsPage(),
       },
     );
   }

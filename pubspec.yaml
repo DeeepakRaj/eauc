@@ -27,6 +27,7 @@ dependencies:
   expandable: ^5.0.1
   multi_select_flutter: ^4.0.0
   fluttertoast: ^8.0.9
+  responsive_grid_list: ^1.2.4
 
 dev_dependencies:
   flutter_test:

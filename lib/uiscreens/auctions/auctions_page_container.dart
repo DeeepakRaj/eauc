@@ -34,7 +34,7 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
           child: Container(
             // height: MediaQuery.of(context).size.height * 0.35,
             // width: MediaQuery.of(context).size.width * 0.45,
-            height: kProductsListViewHeight,
+            height: kAuctionsListViewHeight,
             width: 180,
             margin: EdgeInsets.all(5),
             padding: EdgeInsets.all(5.0),
@@ -77,19 +77,16 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
                 SizedBox(
                   height: 5,
                 ),
-                Hero(
-                  tag: 'auctionnameherotag',
-                  child: AutoSizeText(
-                    widget.auctionName,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: kprimarycolor,
-                    ),
-                    minFontSize: 19,
-                    maxLines: 1,
-                    maxFontSize: 22,
-                    overflow: TextOverflow.ellipsis,
+                AutoSizeText(
+                  widget.auctionName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: kprimarycolor,
                   ),
+                  minFontSize: 19,
+                  maxLines: 1,
+                  maxFontSize: 22,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(
                   height: 5,
@@ -130,7 +127,7 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
                         maxFontSize: 16,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: ksecondarycolor,
+                          color: kprimarycolor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

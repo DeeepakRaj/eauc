@@ -1,6 +1,7 @@
 import 'package:eauc/constants.dart';
 import 'package:eauc/uiscreens/auctions/all_auctions_page.dart';
 import 'package:eauc/uiscreens/auctions/live_auctions_page.dart';
+import 'package:eauc/uiscreens/auctions/my_hosted_auctions_page.dart';
 import 'package:eauc/uiscreens/auctions/upcoming_auctions_page.dart';
 import 'package:eauc/widgetmodels/custom_navigation_drawer.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +14,13 @@ class Auctions extends StatefulWidget {
 }
 
 class _AuctionsState extends State<Auctions> {
-  late String popupSelectedValue = '';
-  List<String> popUpMenuValues = ['All', 'Live', 'Upcoming', 'My Hosted'];
+  late String _popupSelectedValue = '';
+  List<String> _popUpMenuValues = ['All', 'Live', 'Upcoming', 'My Hosted'];
 
   @override
   void initState() {
     super.initState();
-    popupSelectedValue = popUpMenuValues[0];
+    _popupSelectedValue = _popUpMenuValues[0];
   }
 
   @override
@@ -36,85 +37,27 @@ class _AuctionsState extends State<Auctions> {
             elevation: 6,
             icon: Icon(Icons.filter_list),
             onSelected: (String result) {
-              switch (result) {
-                case 'All':
-                  {
-                    setState(() {
-                      popupSelectedValue = popUpMenuValues[0];
-                    });
-                    break;
-                  }
-                case 'Live':
-                  {
-                    setState(() {
-                      popupSelectedValue = popUpMenuValues[1];
-                    });
-                    break;
-                  }
-                case 'Upcoming':
-                  {
-                    setState(() {
-                      popupSelectedValue = popUpMenuValues[2];
-                    });
-                    break;
-                  }
-                case 'My Hosted':
-                  {
-                    setState(() {
-                      popupSelectedValue = popUpMenuValues[2];
-                    });
-                    break;
-                  }
-                default:
-                  {
-                    setState(() {
-                      popupSelectedValue = popUpMenuValues[0];
-                    });
-                    break;
-                  }
-              }
+              _popupSelectedValue = result;
             },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem<String>(
-                value: popUpMenuValues[0],
-                child: Text(
-                  popUpMenuValues[0],
-                  style: TextStyle(
-                      color: (popupSelectedValue == popUpMenuValues[0])
-                          ? kprimarycolor
-                          : Colors.black,
-                      fontWeight: (popupSelectedValue == popUpMenuValues[0])
-                          ? FontWeight.bold
-                          : FontWeight.normal),
+            itemBuilder: (BuildContext context) {
+              return List.generate(
+                _popUpMenuValues.length,
+                (index) => PopupMenuItem<String>(
+                  value: _popUpMenuValues[index],
+                  child: Text(
+                    _popUpMenuValues[index],
+                    style: TextStyle(
+                        color: (_popupSelectedValue == _popUpMenuValues[index])
+                            ? kprimarycolor
+                            : Colors.black,
+                        fontWeight:
+                            (_popupSelectedValue == _popUpMenuValues[index])
+                                ? FontWeight.bold
+                                : FontWeight.normal),
+                  ),
                 ),
-              ),
-              PopupMenuItem<String>(
-                value: popUpMenuValues[1],
-                child: Text(
-                  popUpMenuValues[1],
-                  style: TextStyle(
-                      color: (popupSelectedValue == popUpMenuValues[1])
-                          ? kprimarycolor
-                          : Colors.black,
-                      fontWeight: (popupSelectedValue == popUpMenuValues[1])
-                          ? FontWeight.bold
-                          : FontWeight.normal),
-                ),
-              ),
-              PopupMenuItem<String>(
-                value: popUpMenuValues[2],
-                child: Text(
-                  popUpMenuValues[2],
-                  style: TextStyle(
-                      color: (popupSelectedValue == popUpMenuValues[2])
-                          ? kprimarycolor
-                          : Colors.black,
-                      fontWeight: (popupSelectedValue == popUpMenuValues[2])
-                          ? FontWeight.bold
-                          : FontWeight.normal),
-                ),
-              ),
-            ],
+              );
+            },
           ),
         ],
       ),
@@ -129,11 +72,13 @@ class _AuctionsState extends State<Auctions> {
   }
 
   Widget buildAuctionsPage() {
-    if (popupSelectedValue == popUpMenuValues[0])
+    if (_popupSelectedValue == _popUpMenuValues[0])
       return AllAuctionsPage();
-    else if (popupSelectedValue == popUpMenuValues[1])
+    else if (_popupSelectedValue == _popUpMenuValues[1])
       return LiveAuctionsPage();
-    else
+    else if (_popupSelectedValue == _popUpMenuValues[2])
       return UpcomingAuctionsPage();
+    else
+      return MyHostedAuctionsPage();
   }
 }
