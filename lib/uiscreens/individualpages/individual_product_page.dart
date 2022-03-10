@@ -105,18 +105,28 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                               showModalBottomSheet(
                                   context: context,
                                   builder: (builder) {
-                                    return Container(
-                                      color: Colors.white,
-                                      child: Column(
-                                        children: [
-                                          AuctionInfoContainer(),
-                                          SizedBox(
-                                            height: 10,
+                                    return Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Container(
+                                        color: Colors.white,
+                                        child: Scrollbar(
+                                          isAlwaysShown: true,
+                                          child: SingleChildScrollView(
+                                            physics: BouncingScrollPhysics(),
+                                            child: Column(
+                                              children: [
+                                                AuctionInfoContainer(),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                CustomNormalButton(
+                                                    buttonText: 'Go to Auction',
+                                                    onPressed: () {})
+                                              ],
+                                            ),
                                           ),
-                                          CustomNormalButton(
-                                              buttonText: 'Go to Auction',
-                                              onPressed: () {})
-                                        ],
+                                        ),
                                       ),
                                     );
                                   });

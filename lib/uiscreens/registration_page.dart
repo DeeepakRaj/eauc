@@ -435,16 +435,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   CustomTextButton(
                     onPressed: () {
-                      // if (!_regPageFormKey.currentState!.validate())
-                      //   return;
-                      // else {
-                      //   _signUpButtonPressed();
-                      // }
+                      if (!_regPageFormKey.currentState!.validate())
+                        return;
+                      else {
+                        _signUpButtonPressed();
+                      }
                       // _signUpButtonPressed();
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                        Wrapper.routename,
-                        (Route<dynamic> route) => false,
-                      );
+                      // Navigator.of(context).pushNamedAndRemoveUntil(
+                      //   Wrapper.routename,
+                      //   (Route<dynamic> route) => false,
+                      // );
                     },
                     buttonText: 'SIGN UP',
                   ),

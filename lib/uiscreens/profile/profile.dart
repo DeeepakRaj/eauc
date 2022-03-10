@@ -1,3 +1,6 @@
+import 'package:eauc/uiscreens/profile/history_page.dart';
+import 'package:eauc/uiscreens/profile/hosted_auctions_page.dart';
+import 'package:eauc/uiscreens/profile/my_account_page.dart';
 import 'package:eauc/uiscreens/profile/pinned_auctions_page.dart';
 import 'package:eauc/widgetmodels/custom_navigation_drawer.dart';
 import 'package:eauc/widgetmodels/shaded_container.dart';
@@ -47,11 +50,20 @@ class _ProfileState extends State<Profile> {
                 mainAxisSpacing: 10,
                 crossAxisCount: 2,
                 children: <Widget>[
-                  ShadedContainer2(
-                    theTitle: 'My Account',
-                    cardColor: Colors.white,
-                    textColor: Colors.white,
-                    imgName: 'usericon',
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyAccountPage()),
+                      );
+                    },
+                    child: ShadedContainer2(
+                      theTitle: 'My Account',
+                      cardColor: Colors.white,
+                      textColor: Colors.white,
+                      imgName: 'usericon',
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -67,18 +79,35 @@ class _ProfileState extends State<Profile> {
                         textColor: Colors.white,
                         imgName: 'pinicon'),
                   ),
-                  ShadedContainer2(
-                      theTitle: 'Hosted Auctions',
-                      cardColor: Colors.white,
-                      textColor: Colors.white,
-                      imgName: 'auctionicon'),
-                  ShadedContainer2(
-                      theTitle: 'History',
-                      cardColor: Colors.white,
-                      textColor: Colors.white,
-                      imgName: 'historyicon'),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HostedAuctionsPage()),
+                      );
+                    },
+                    child: ShadedContainer2(
+                        theTitle: 'Hosted Auctions',
+                        cardColor: Colors.white,
+                        textColor: Colors.white,
+                        imgName: 'auctionicon'),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HistoryPage()),
+                      );
+                    },
+                    child: ShadedContainer2(
+                        theTitle: 'History',
+                        cardColor: Colors.white,
+                        textColor: Colors.white,
+                        imgName: 'historyicon'),
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),
