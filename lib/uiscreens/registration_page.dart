@@ -6,6 +6,7 @@ import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:eauc/uiscreens/wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../constants.dart';
 import 'package:http/http.dart' as http;
@@ -318,6 +319,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   TextFormField(
                     keyboardType: TextInputType.number,
                     controller: _pincodeController,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
                     decoration: kInputFieldDecoration.copyWith(
                       hintText: 'Pin Code',
                     ),
@@ -435,16 +439,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   CustomTextButton(
                     onPressed: () {
-                      if (!_regPageFormKey.currentState!.validate())
-                        return;
-                      else {
-                        _signUpButtonPressed();
-                      }
+                      // if (!_regPageFormKey.currentState!.validate())
+                      //   return;
+                      // else {
+                      //   _signUpButtonPressed();
+                      // }
                       // _signUpButtonPressed();
-                      // Navigator.of(context).pushNamedAndRemoveUntil(
-                      //   Wrapper.routename,
-                      //   (Route<dynamic> route) => false,
-                      // );
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        Wrapper.routename,
+                        (Route<dynamic> route) => false,
+                      );
                     },
                     buttonText: 'SIGN UP',
                   ),

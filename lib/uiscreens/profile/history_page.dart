@@ -59,49 +59,53 @@ class _HistoryPageState extends State<HistoryPage> {
                     shrinkWrap: true,
                     itemCount: 10,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        tileColor: Colors.white,
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              flex: 2,
-                              child: Image.asset(
-                                'assets/images/trophyicon.jpg',
+                      return Card(
+                        margin: EdgeInsets.zero,
+                        color: Colors.white,
+                        child: ListTile(
+                          tileColor: Colors.white,
+                          trailing: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                flex: 2,
+                                child: Image.asset(
+                                  'assets/images/trophyicon.jpg',
+                                ),
                               ),
-                            ),
-                            Flexible(
-                                flex: 1,
-                                child: Text(
-                                  '12-05-2022',
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                          ],
-                        ),
-                        isThreeLine: true,
-                        title: Text(
-                          'Product Name',
-                          style: kCardTitleTextStyle,
-                        ),
-                        subtitle: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Auction Name',
-                              style: kCardSubTitleTextStyle,
-                            ),
-                            Text(
-                              '#50000',
-                              style: TextStyle(
-                                  color: ksecondarycolor,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ],
+                              Flexible(
+                                  flex: 1,
+                                  child: Text(
+                                    '12-05-2022',
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                            ],
+                          ),
+                          isThreeLine: true,
+                          title: Text(
+                            'Product Name',
+                            style: kCardTitleTextStyle,
+                          ),
+                          subtitle: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Auction Name',
+                                style: kCardSubTitleTextStyle,
+                              ),
+                              Text(
+                                '#50000',
+                                style: TextStyle(
+                                    color: ksecondarycolor,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
                         ),
                       );
                     }))

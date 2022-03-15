@@ -2,7 +2,9 @@ import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
+import 'package:eauc/widgetmodels/blinking_live_indicator.dart';
 import 'package:eauc/widgetmodels/tag_container.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AuctionsPageContainer extends StatefulWidget {
@@ -77,16 +79,22 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
                 SizedBox(
                   height: 5,
                 ),
-                AutoSizeText(
-                  widget.auctionName,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: kprimarycolor,
-                  ),
-                  minFontSize: 19,
-                  maxLines: 1,
-                  maxFontSize: 22,
-                  overflow: TextOverflow.ellipsis,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AutoSizeText(
+                      widget.auctionName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: kprimarycolor,
+                      ),
+                      minFontSize: 19,
+                      maxLines: 1,
+                      maxFontSize: 22,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    BlinkingLiveIndicator(),
+                  ],
                 ),
                 SizedBox(
                   height: 5,

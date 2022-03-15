@@ -2,6 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/uiscreens/individualpages/auction_info_container.dart';
+import 'package:eauc/uiscreens/individualpages/ipp_bidding_container.dart';
+import 'package:eauc/uiscreens/individualpages/ipp_bidding_container_host.dart';
 import 'package:eauc/uiscreens/products/products_page_container.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:eauc/widgetmodels/tag_container.dart';
@@ -102,34 +104,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                           padding: EdgeInsets.all(8),
                           child: GestureDetector(
                             onTap: () {
-                              showModalBottomSheet(
-                                  context: context,
-                                  builder: (builder) {
-                                    return Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 8.0),
-                                      child: Container(
-                                        color: Colors.white,
-                                        child: Scrollbar(
-                                          isAlwaysShown: true,
-                                          child: SingleChildScrollView(
-                                            physics: BouncingScrollPhysics(),
-                                            child: Column(
-                                              children: [
-                                                AuctionInfoContainer(),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                CustomNormalButton(
-                                                    buttonText: 'Go to Auction',
-                                                    onPressed: () {})
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  });
+                              _buildBottomSheet();
                             },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,117 +181,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
             color: Colors.transparent,
             thickness: 2,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              elevation: 10,
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: ksecondarycolor,
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(4)),
-                    ),
-                    child: Text(
-                      'Current Bid',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    '400000',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.brown,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: IntrinsicHeight(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  color: kbackgroundcolor,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10)),
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  '+',
-                                  style: TextStyle(
-                                      fontSize: 40,
-                                      color: kprimarycolor,
-                                      fontWeight: FontWeight.bold),
-                                ))),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Center(
-                              child: Text(
-                                '500',
-                                style: TextStyle(
-                                    fontSize: 25,
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  color: kbackgroundcolor,
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      bottomRight: Radius.circular(10)),
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  '-',
-                                  style: TextStyle(
-                                      fontSize: 40,
-                                      color: kprimarycolor,
-                                      fontWeight: FontWeight.bold),
-                                ))),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomNormalButton(
-                      buttonText: 'PLACE BID',
-                      onPressed: () {
-                        // TODO: Change current bid in the database
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
+          IppBiddingContainerHost(productId: 'ID'),
           Container(
             color: Colors.white,
             padding: EdgeInsets.all(10),
@@ -394,28 +259,35 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
     );
   }
 
-  Widget _buildBottomSheet() {
-    return BottomSheet(
-      onClosing: () {},
-      builder: (context) {
-        return Container(
-          height: 200,
-          width: double.infinity,
-          color: Colors.grey.shade200,
-          alignment: Alignment.center,
-          child: ElevatedButton(
-            child: Text("Close Bottom Sheet"),
-            style: ElevatedButton.styleFrom(
-              onPrimary: Colors.white,
-              primary: Colors.green,
+  void _buildBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Container(
+              color: Colors.white,
+              child: Scrollbar(
+                isAlwaysShown: true,
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      AuctionInfoContainer(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomNormalButton(
+                          buttonText: 'Go to Auction',
+                          onPressed: () {
+                            //TODO: Go to individual auction page
+                          })
+                    ],
+                  ),
+                ),
+              ),
             ),
-            onPressed: () {
-              _showBottomSheet = false;
-              setState(() {});
-            },
-          ),
-        );
-      },
-    );
+          );
+        });
   }
 }

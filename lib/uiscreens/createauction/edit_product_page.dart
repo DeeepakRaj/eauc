@@ -22,6 +22,7 @@ class EditProductPage extends StatefulWidget {
 class _EditProductPageState extends State<EditProductPage> {
   final GlobalKey<FormState> _editprodPageFormKey = GlobalKey<FormState>();
   late String name = '';
+  List _selectedCategories = [];
 
   bool _selectionMode = false;
   Map<XFile, bool> moreImagesMap = {};
@@ -55,6 +56,7 @@ class _EditProductPageState extends State<EditProductPage> {
   void initState() {
     super.initState();
     _primaryImage = widget.product.primaryImage;
+    _selectedCategories = widget.product.productTags;
     widget.product.moreImages.forEach((element) {
       moreImagesMap[element] = false;
     });
@@ -357,8 +359,9 @@ class _EditProductPageState extends State<EditProductPage> {
                         fontSize: 16,
                       ),
                     ),
-                    initialValue: widget.product.productTags,
+                    initialValue: _selectedCategories,
                     onConfirm: (results) {
+                      _selectedCategories = results;
                       widget.product.productTags =
                           results.map((e) => e.toString()).toList();
                     },

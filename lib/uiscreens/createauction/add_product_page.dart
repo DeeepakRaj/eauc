@@ -355,9 +355,11 @@ class _AddProductPageState extends State<AddProductPage> {
                     ),
                     initialValue: _selectedCategories,
                     onConfirm: (results) {
-                      _selectedCategories = results;
-                      _product.productTags =
-                          results.map((e) => e.toString()).toList();
+                      setState(() {
+                        _selectedCategories = results;
+                        _product.productTags =
+                            results.map((e) => e.toString()).toList();
+                      });
                     },
                   ),
                   SizedBox(
