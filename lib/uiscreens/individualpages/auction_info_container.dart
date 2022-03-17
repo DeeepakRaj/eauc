@@ -1,4 +1,6 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/widgetmodels/blinking_live_indicator.dart';
+import 'package:eauc/widgetmodels/blinking_live_indicator_large.dart';
 import 'package:flutter/material.dart';
 
 class AuctionInfoContainer extends StatefulWidget {
@@ -24,6 +26,15 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: 1,
+              ),
+              BlinkingLiveIndicatorLarge(),
+            ],
+          ),
           Flexible(
             child: Text(
               'Coins AuctionCoins AuctionCoins AuctionCoins AuctionCoins AuctionCoins Auction',
