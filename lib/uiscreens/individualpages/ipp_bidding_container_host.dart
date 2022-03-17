@@ -58,21 +58,167 @@ class _IppBiddingContainerHostState extends State<IppBiddingContainerHost> {
               ],
             ),
           ),
-          Card(
-            color: kbackgroundcolor,
-            child: ListWheelScrollView(
-              physics: ScrollPhysics(),
-              itemExtent: 50,
-              children: [
-                Container(
-                  color: Colors.white,
-                  child: Row(
-                    children: [Text('')],
+          SizedBox(
+            height: 10,
+          ),
+          Table(
+            children: [
+              TableRow(
+                  decoration: BoxDecoration(
+                    color: Colors.brown.shade300,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(5),
+                        topRight: Radius.circular(5)),
                   ),
-                )
-              ],
-            ),
-          )
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'No.',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'User.',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Bid.',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ]),
+            ],
+          ),
+          Container(
+              height: 200,
+              color: kbackgroundcolor,
+              child: Table(
+                children: [
+                  TableRow(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'No.',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'User.',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Bid.',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ]),
+                  TableRow(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'No.',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'User.',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Bid.',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ]),
+                  TableRow(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'No.',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'User.',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Bid.',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ]),
+                ],
+              ))
         ],
       ),
     );

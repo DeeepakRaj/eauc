@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
 
 class FullScreenImage extends StatefulWidget {
-  final XFile photo;
+  final File photo;
 
   FullScreenImage({required this.photo});
 
@@ -32,7 +32,7 @@ class _FullScreenImageState extends State<FullScreenImage> {
           )),
       body: PhotoView(
         imageProvider: FileImage(
-          File(widget.photo.path),
+          widget.photo,
         ),
       ),
     );

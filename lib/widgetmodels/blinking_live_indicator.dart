@@ -33,7 +33,7 @@ class _BlinkingLiveIndicatorState extends State<BlinkingLiveIndicator>
                 '•',
                 style: TextStyle(
                     color: Colors.green.shade700,
-                    fontSize: 12,
+                    fontSize: 10,
                     fontWeight: FontWeight.bold),
               )),
           SizedBox(
@@ -43,7 +43,7 @@ class _BlinkingLiveIndicatorState extends State<BlinkingLiveIndicator>
             'LIVE',
             style: TextStyle(
                 color: Colors.green.shade700,
-                fontSize: 12,
+                fontSize: 8,
                 fontWeight: FontWeight.bold),
           )
         ],

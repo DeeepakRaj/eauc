@@ -25,10 +25,10 @@ class _EditProductPageState extends State<EditProductPage> {
   List _selectedCategories = [];
 
   bool _selectionMode = false;
-  Map<XFile, bool> moreImagesMap = {};
+  Map<File, bool> moreImagesMap = {};
 
   final ImagePicker _picker = ImagePicker();
-  XFile? _primaryImage;
+  File? _primaryImage;
 
   void _selectPrimaryImage() async {
     final _temperoryimage = await _picker.pickImage(source: ImageSource.camera);
@@ -36,7 +36,7 @@ class _EditProductPageState extends State<EditProductPage> {
       return;
     else {
       setState(() {
-        _primaryImage = _temperoryimage;
+        _primaryImage = File(_temperoryimage.path);
       });
     }
   }
@@ -47,7 +47,7 @@ class _EditProductPageState extends State<EditProductPage> {
       return;
     else {
       setState(() {
-        moreImagesMap[_temperoryimage] = false;
+        moreImagesMap[File(_temperoryimage.path)] = false;
       });
     }
   }
@@ -235,9 +235,8 @@ class _EditProductPageState extends State<EditProductPage> {
                                                       .height *
                                                   0.10,
                                               child: Image.file(
-                                                File(moreImagesMap.keys
-                                                    .elementAt(index)
-                                                    .path),
+                                                moreImagesMap.keys
+                                                    .elementAt(index),
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -457,7 +456,7 @@ class _EditProductPageState extends State<EditProductPage> {
         width: double.infinity,
         height: MediaQuery.of(context).size.height * 0.30,
         child: Image.file(
-          File(_primaryImage!.path),
+          _primaryImage!,
         ),
       );
     }

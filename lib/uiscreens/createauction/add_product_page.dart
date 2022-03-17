@@ -24,10 +24,10 @@ class _AddProductPageState extends State<AddProductPage> {
   List _selectedCategories = [];
 
   bool _selectionMode = false;
-  Map<XFile, bool> moreImagesMap = {};
+  Map<File, bool> moreImagesMap = {};
 
   final ImagePicker _picker = ImagePicker();
-  XFile? _primaryImage;
+  File? _primaryImage;
 
   void _selectPrimaryImage() async {
     final _temperoryimage = await _picker.pickImage(source: ImageSource.camera);
@@ -35,7 +35,7 @@ class _AddProductPageState extends State<AddProductPage> {
       return;
     else {
       setState(() {
-        _primaryImage = _temperoryimage;
+        _primaryImage = File(_temperoryimage.path);
       });
     }
   }
@@ -46,7 +46,7 @@ class _AddProductPageState extends State<AddProductPage> {
       return;
     else {
       setState(() {
-        moreImagesMap[_temperoryimage] = false;
+        moreImagesMap[File(_temperoryimage.path)] = false;
       });
     }
   }
@@ -195,7 +195,6 @@ class _AddProductPageState extends State<AddProductPage> {
                                     closedBuilder: (context, openContainer) {
                                       return GestureDetector(
                                         onLongPress: () {
-                                          print(moreImagesMap);
                                           setState(() {
                                             _selectionMode = !_selectionMode;
                                             moreImagesMap.update(
@@ -232,9 +231,8 @@ class _AddProductPageState extends State<AddProductPage> {
                                                       .height *
                                                   0.10,
                                               child: Image.file(
-                                                File(moreImagesMap.keys
-                                                    .elementAt(index)
-                                                    .path),
+                                                moreImagesMap.keys
+                                                    .elementAt(index),
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -453,7 +451,7 @@ class _AddProductPageState extends State<AddProductPage> {
         width: double.infinity,
         height: MediaQuery.of(context).size.height * 0.30,
         child: Image.file(
-          File(_primaryImage!.path),
+          _primaryImage!,
         ),
       );
     }

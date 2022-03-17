@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/uiscreens/createauction/add_product_page.dart';
@@ -5,6 +7,8 @@ import 'package:eauc/uiscreens/createauction/product_class.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
 import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 
 import 'edit_product_page.dart';
 
@@ -19,6 +23,34 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
   DateTime? _datefrom, _dateto;
   late Product addedProduct;
   List<Product> products = [];
+
+  void _createAuction() async {
+    var url = apiUrl + "createAuction.php";
+    print(_datefrom.toString());
+    var response = await http.post(Uri.parse(url), body: {
+      "auction_name": 'dhnne',
+      "auction_desc": 'sgbb',
+      "start_Date": _datefrom.toString(),
+      "end_Date": _dateto.toString(),
+      "email": 'dsd@hmail.com',
+      "products_length": '20',
+    });
+    var data = jsonDecode(response.body);
+    print(data);
+    if (data == "true") {
+      Fluttertoast.showToast(msg: 'Success');
+      var data = jsonDecode(response.body);
+      print(data);
+      if (data == "true") {
+        Fluttertoast.showToast(
+            msg: "Auction Hosted Successfully", toastLength: Toast.LENGTH_LONG);
+      } else {
+        Fluttertoast.showToast(
+            msg: "Auction Hosted Unsuccessfully",
+            toastLength: Toast.LENGTH_LONG);
+      }
+    }
+  }
 
   void _navigateAndDisplaySelection(BuildContext context) async {
     try {
@@ -40,8 +72,8 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
         context,
         MaterialPageRoute(
             builder: (context) => EditProductPage(
-                  product: product,
-                )),
+              product: product,
+            )),
       );
       setState(() {
         products.removeAt(index);
@@ -72,7 +104,8 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
               onPressed: (products.length == 0)
                   ? null
                   : () {
-                      //TODO: Create Auction into Database
+                //TODO: Create Auction into Database
+                _createAuction();
                     },
               buttonText: 'CREATE'),
         ),
@@ -206,103 +239,103 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                   ),
                   (products.isNotEmpty)
                       ? ListView.separated(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return Dismissible(
-                              key: Key(products[index].productName),
-                              background: slideRightBackground(),
-                              secondaryBackground: slideLeftBackground(),
-                              confirmDismiss: (direction) async {
-                                if (direction == DismissDirection.endToStart) {
-                                  return await showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          content: Text(
-                                            "Are you sure you want to delete this product?",
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: Text(
-                                                "Cancel",
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: Text(
-                                                "Delete",
-                                                style: TextStyle(
-                                                    color: Colors.red),
-                                              ),
-                                              onPressed: () {
-                                                // TODO: Delete the item from DB etc..
-                                                Navigator.of(context).pop();
-                                                setState(() {
-                                                  products.removeAt(index);
-                                                });
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      });
-                                } else {
-                                  _editProduct(context, products[index], index);
-                                }
-                              },
-                              onDismissed: (direction) {
-                                setState(() {
-                                  products.removeAt(index);
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return Dismissible(
+                        key: Key(products[index].productName),
+                        background: slideRightBackground(),
+                        secondaryBackground: slideLeftBackground(),
+                        confirmDismiss: (direction) async {
+                          if (direction == DismissDirection.endToStart) {
+                            return await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: Text(
+                                      "Are you sure you want to delete this product?",
+                                      style:
+                                      TextStyle(color: Colors.black),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                              color: Colors.black),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text(
+                                          "Delete",
+                                          style: TextStyle(
+                                              color: Colors.red),
+                                        ),
+                                        onPressed: () {
+                                          // TODO: Delete the item from DB etc..
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            products.removeAt(index);
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  );
                                 });
-                              },
-                              child: ListTile(
-                                tileColor: Colors.white,
-                                style: ListTileStyle.list,
-                                // shape: RoundedRectangleBorder(
-                                //     side: BorderSide(
-                                //         color: Colors.grey,
-                                //         width: 2
-                                //     ),
-                                //     borderRadius: BorderRadius.all(Radius.circular(10))
-                                // ),
-                                isThreeLine: true,
-                                leading: Text(
-                                  '${index + 1}',
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                title: Text(
-                                  products[index].productName,
-                                  style: kCardTitleTextStyle,
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(products[index].productDesc),
-                                    Text(
-                                      products[index].productPrice,
-                                      style: TextStyle(
-                                          fontSize: 25, color: Colors.green),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          separatorBuilder: (context, index) => Divider(
-                            height: 1,
+                          } else {
+                            _editProduct(context, products[index], index);
+                          }
+                        },
+                        onDismissed: (direction) {
+                          setState(() {
+                            products.removeAt(index);
+                          });
+                        },
+                        child: ListTile(
+                          tileColor: Colors.white,
+                          style: ListTileStyle.list,
+                          // shape: RoundedRectangleBorder(
+                          //     side: BorderSide(
+                          //         color: Colors.grey,
+                          //         width: 2
+                          //     ),
+                          //     borderRadius: BorderRadius.all(Radius.circular(10))
+                          // ),
+                          isThreeLine: true,
+                          leading: Text(
+                            '${index + 1}',
+                            style: TextStyle(fontSize: 18),
                           ),
-                          itemCount: products.length,
-                        )
-                      : SizedBox(
-                          height: 5,
+                          title: Text(
+                            products[index].productName,
+                            style: kCardTitleTextStyle,
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(products[index].productDesc),
+                              Text(
+                                products[index].productPrice,
+                                style: TextStyle(
+                                    fontSize: 25, color: Colors.green),
+                              )
+                            ],
+                          ),
                         ),
+                      );
+                    },
+                    separatorBuilder: (context, index) => Divider(
+                      height: 1,
+                    ),
+                    itemCount: products.length,
+                  )
+                      : SizedBox(
+                    height: 5,
+                  ),
                   Container(
                     margin: EdgeInsets.only(top: 5),
                     padding: EdgeInsets.all(5),
@@ -328,7 +361,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                             decoration: BoxDecoration(
                               color: kprimarycolor,
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                              BorderRadius.all(Radius.circular(10)),
                             ),
                             child: Icon(
                               Icons.add,
