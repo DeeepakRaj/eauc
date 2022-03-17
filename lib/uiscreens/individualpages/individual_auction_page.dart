@@ -31,7 +31,10 @@ class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
         physics: BouncingScrollPhysics(),
         child: Column(
           children: [
-            AuctionInfoContainer(),
+            AuctionInfoContainer(
+              auctionID: 'auctionID1',
+              place: 'individualauctionplace',
+            ),
             SizedBox(
               height: 10,
             ),

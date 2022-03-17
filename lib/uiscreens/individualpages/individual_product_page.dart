@@ -121,17 +121,17 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                                   children: [
                                     Flexible(
                                       child: Text(
-                                        'DescriptionDescriptionDescriptionDescriptionDescription',
+                                        'HostHostHostHostHost',
                                         overflow: TextOverflow.ellipsis,
-                                        style: kCardSubTitleTextStyle.copyWith(
-                                            fontSize: 12),
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black),
                                       ),
                                     ),
                                     SizedBox(
                                       width: 5,
                                     ),
                                     Text(
-                                      'more',
+                                      '...more',
                                       style: TextStyle(
                                           fontSize: 12,
                                           color: ksecondarycolor,
@@ -262,29 +262,41 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
   void _buildBottomSheet() {
     showModalBottomSheet(
         context: context,
+        backgroundColor: Colors.transparent,
         builder: (builder) {
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            padding: EdgeInsets.all(5),
             child: Container(
-              color: Colors.white,
-              child: Scrollbar(
-                isAlwaysShown: true,
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      AuctionInfoContainer(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomNormalButton(
-                          buttonText: 'Go to Auction',
-                          onPressed: () {
-                            //TODO: Go to individual auction page
-                          })
-                    ],
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.4,
+                        vertical: 4),
+                    child: Divider(
+                      height: 2,
+                      color: Colors.grey,
+                      thickness: 3,
+                    ),
                   ),
-                ),
+                  Flexible(
+                    child: Scrollbar(
+                      isAlwaysShown: true,
+                      child: SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
+                        child: AuctionInfoContainer(
+                          auctionID: 'auctionID1',
+                          place: 'individualproductpage',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           );

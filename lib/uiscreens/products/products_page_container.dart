@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
+import 'package:eauc/uiscreens/individualpages/individual_product_page.dart';
 import 'package:eauc/widgetmodels/tag_container.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,8 @@ class _ProductsPageContainerState extends State<ProductsPageContainer> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, IndividualAuctionPage.routename);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => IndividualProductPage()));
       },
       child: Container(
         // height: MediaQuery.of(context).size.height * 0.35,

@@ -2,7 +2,9 @@ import 'package:eauc/constants.dart';
 import 'package:flutter/material.dart';
 
 class AuctionInfoContainer extends StatefulWidget {
-  const AuctionInfoContainer({Key? key}) : super(key: key);
+  final String auctionID, place;
+
+  AuctionInfoContainer({required this.auctionID, required this.place});
 
   @override
   _AuctionInfoContainerState createState() => _AuctionInfoContainerState();
@@ -20,20 +22,23 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
       margin: EdgeInsets.all(2),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Flexible(
+            child: Text(
+              'Coins AuctionCoins AuctionCoins AuctionCoins AuctionCoins AuctionCoins Auction',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: kprimarycolor),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Flexible(
-                child: Text(
-                  'Coins AuctionCoins AuctionCoins AuctionCoins AuctionCoins AuctionCoins Auction',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                      color: kprimarycolor),
-                ),
-              ),
               ChoiceChip(
                 label: _isPinned ? Text('Pinned') : Text('Pin Auction'),
                 labelStyle: _isPinned
@@ -70,6 +75,29 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
                   });
                 },
               ),
+              SizedBox(
+                width: 10,
+              ),
+              (widget.place == 'individualproductpage')
+                  ? Chip(
+                      label: Text('Go to Auction'),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          side: BorderSide(color: Colors.green, width: 2)),
+                      backgroundColor: Colors.green,
+                      labelStyle: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                      avatar: Icon(
+                        Icons.add_to_home_screen,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    )
+                  : SizedBox(
+                      width: 1,
+                    ),
             ],
           ),
           SizedBox(
