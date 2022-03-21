@@ -83,6 +83,7 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
                 onSelected: (value) {
                   setState(() {
                     _isPinned = value;
+                    // TODO: pinned or not function
                   });
                 },
               ),

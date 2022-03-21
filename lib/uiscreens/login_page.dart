@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/registration_page.dart';
 import 'package:eauc/uiscreens/wrapper.dart';
 import 'package:eauc/widgetmodels/customtextbutton.dart';
@@ -235,6 +236,9 @@ class _LoginPageState extends State<LoginPage> {
           msg: 'Logged In Successfully',
           toastLength: Toast.LENGTH_LONG,
         );
+
+        savedIdPreference(_emailController.text);
+
         Navigator.of(context).pushNamedAndRemoveUntil(
           Wrapper.routename,
           (Route<dynamic> route) => false,
