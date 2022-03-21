@@ -9,6 +9,8 @@ const knormalbuttoncolor = Color(0xFFF0A500);
 // const kbrowntextcolor = Color(0xFFB26E63);
 const ksecondarycolor = Color(0xFFBF9954);
 
+const String apiUrl = 'https://eauc2022.000webhostapp.com/';
+
 String numberRegExp = r'^[0-9]*$';
 String emailRegExp =
     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
