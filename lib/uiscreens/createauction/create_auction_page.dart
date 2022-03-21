@@ -13,7 +13,7 @@ import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'edit_product_page.dart';
 
 class CreateAuctionPage extends StatefulWidget {
@@ -28,6 +28,17 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
   late Product addedProduct;
   List<Product> products = [];
   late String emailid;
+  String emailid = "";
+
+  TextEditingController _auctionName = TextEditingController();
+  TextEditingController _auctionDescription = TextEditingController();
+
+  @override
+  void dispose() {
+    _auctionName.dispose();
+    _auctionDescription.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -43,35 +54,55 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
           this.emailid = value;
         });
       }
+    getIdPreference().then((String id){
+      setState(() {
+        this.emailid = id;
+      });
     });
   }
 
   void _createAuction() async {
     var url = apiUrl + "createAuction.php";
-    print(_datefrom.toString());
-    var response = await http.post(Uri.parse(url), body: {
-      "auction_name": 'dhnne',
-      "auction_desc": 'sgbb',
-      "start_Date": _datefrom.toString(),
-      "end_Date": _dateto.toString(),
-      "email": 'dsd@hmail.com',
-      "products_length": '20',
-    });
-    var data = jsonDecode(response.body);
-    print(data);
-    if (data == "true") {
-      Fluttertoast.showToast(msg: 'Success');
-      var data = jsonDecode(response.body);
-      print(data);
-      if (data == "true") {
-        Fluttertoast.showToast(
-            msg: "Auction Hosted Successfully", toastLength: Toast.LENGTH_LONG);
-      } else {
-        Fluttertoast.showToast(
-            msg: "Auction Hosted Unsuccessfully",
-            toastLength: Toast.LENGTH_LONG);
-      }
+
+    var auctionData = Map<String, dynamic>();
+
+    auctionData["auction_name"] = _auctionName.text;
+    auctionData["auction_desc"] = _auctionDescription.text;
+    auctionData["start_Date"] = _datefrom.toString();
+    auctionData["end_Date"] = _dateto.toString();
+    auctionData["email"] = emailid;
+    auctionData["products_length"] = products.length.toString();
+
+
+    for (var i = 0; i < products.length; i++) {
+       auctionData['productName'+(i).toString()] = products[i].productName;
+       auctionData['productDesc'+(i).toString()] = products[i].productDesc;
+       auctionData['productPrice'+(i).toString()] = products[i].productPrice.toString();
+       auctionData['productTags'+(i).toString()] = products[i].productTags.join(",").toString();
+       auctionData['productImage'+(i).toString()] = base64Encode(products[i].primaryImage.readAsBytesSync());
+
+       var images = [];
+
+       for (var j = 0; j < products[i].moreImages.length; j++) {
+         images.add(base64Encode(products[i].moreImages[j].readAsBytesSync()));
+       }
+
+       auctionData['moreProductImages'+(i).toString()] = images.join(",").toString();
     }
+
+    var response = await http.post(Uri.parse(url), body: auctionData);
+
+    var data = jsonDecode(response.body);
+    //print(data);
+    if (data == "true") {
+      Fluttertoast.showToast(msg: "Auction Hosted Successfully",toastLength: Toast.LENGTH_LONG);
+    }
+    else {
+      Fluttertoast.showToast(msg: "Auction Hosted Unsuccessfully",toastLength: Toast.LENGTH_LONG);
+    }
+
+    //print(response.statusCode);
+
   }
 
   void _navigateAndDisplaySelection(BuildContext context) async {
@@ -94,8 +125,8 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
         context,
         MaterialPageRoute(
             builder: (context) => EditProductPage(
-              product: product,
-            )),
+                  product: product,
+                )),
       );
       setState(() {
         products.removeAt(index);
@@ -126,8 +157,8 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
               onPressed: (products.length == 0)
                   ? null
                   : () {
-                //TODO: Create Auction into Database
-                _createAuction();
+                      //TODO: Create Auction into Database
+                  _createAuction();
                     },
               buttonText: 'CREATE'),
         ),
@@ -154,6 +185,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                     style: kInputFieldTextStyle,
                     cursorColor: kprimarycolor,
                     onChanged: (value) {},
+                    controller: _auctionName,
                   ),
                   SizedBox(
                     height: 10,
@@ -166,6 +198,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                     style: kInputFieldTextStyle,
                     cursorColor: kprimarycolor,
                     onChanged: (value) {},
+                    controller: _auctionDescription,
                   ),
                   SizedBox(
                     height: 10,
@@ -261,103 +294,103 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                   ),
                   (products.isNotEmpty)
                       ? ListView.separated(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Dismissible(
-                        key: Key(products[index].productName),
-                        background: slideRightBackground(),
-                        secondaryBackground: slideLeftBackground(),
-                        confirmDismiss: (direction) async {
-                          if (direction == DismissDirection.endToStart) {
-                            return await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    content: Text(
-                                      "Are you sure you want to delete this product?",
-                                      style:
-                                      TextStyle(color: Colors.black),
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: Text(
-                                          "Cancel",
-                                          style: TextStyle(
-                                              color: Colors.black),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      TextButton(
-                                        child: Text(
-                                          "Delete",
-                                          style: TextStyle(
-                                              color: Colors.red),
-                                        ),
-                                        onPressed: () {
-                                          // TODO: Delete the item from DB etc..
-                                          Navigator.of(context).pop();
-                                          setState(() {
-                                            products.removeAt(index);
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  );
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Dismissible(
+                              key: Key(products[index].productName),
+                              background: slideRightBackground(),
+                              secondaryBackground: slideLeftBackground(),
+                              confirmDismiss: (direction) async {
+                                if (direction == DismissDirection.endToStart) {
+                                  return await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: Text(
+                                            "Are you sure you want to delete this product?",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text(
+                                                "Cancel",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text(
+                                                "Delete",
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                              onPressed: () {
+                                                // TODO: Delete the item from DB etc..
+                                                Navigator.of(context).pop();
+                                                setState(() {
+                                                  products.removeAt(index);
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                } else {
+                                  _editProduct(context, products[index], index);
+                                }
+                              },
+                              onDismissed: (direction) {
+                                setState(() {
+                                  products.removeAt(index);
                                 });
-                          } else {
-                            _editProduct(context, products[index], index);
-                          }
-                        },
-                        onDismissed: (direction) {
-                          setState(() {
-                            products.removeAt(index);
-                          });
-                        },
-                        child: ListTile(
-                          tileColor: Colors.white,
-                          style: ListTileStyle.list,
-                          // shape: RoundedRectangleBorder(
-                          //     side: BorderSide(
-                          //         color: Colors.grey,
-                          //         width: 2
-                          //     ),
-                          //     borderRadius: BorderRadius.all(Radius.circular(10))
-                          // ),
-                          isThreeLine: true,
-                          leading: Text(
-                            '${index + 1}',
-                            style: TextStyle(fontSize: 18),
+                              },
+                              child: ListTile(
+                                tileColor: Colors.white,
+                                style: ListTileStyle.list,
+                                // shape: RoundedRectangleBorder(
+                                //     side: BorderSide(
+                                //         color: Colors.grey,
+                                //         width: 2
+                                //     ),
+                                //     borderRadius: BorderRadius.all(Radius.circular(10))
+                                // ),
+                                isThreeLine: true,
+                                leading: Text(
+                                  '${index + 1}',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                title: Text(
+                                  products[index].productName,
+                                  style: kCardTitleTextStyle,
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(products[index].productDesc),
+                                    Text(
+                                      products[index].productPrice,
+                                      style: TextStyle(
+                                          fontSize: 25, color: Colors.green),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (context, index) => Divider(
+                            height: 1,
                           ),
-                          title: Text(
-                            products[index].productName,
-                            style: kCardTitleTextStyle,
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(products[index].productDesc),
-                              Text(
-                                products[index].productPrice,
-                                style: TextStyle(
-                                    fontSize: 25, color: Colors.green),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) => Divider(
-                      height: 1,
-                    ),
-                    itemCount: products.length,
-                  )
+                          itemCount: products.length,
+                        )
                       : SizedBox(
-                    height: 5,
-                  ),
+                          height: 5,
+                        ),
                   Container(
                     margin: EdgeInsets.only(top: 5),
                     padding: EdgeInsets.all(5),
@@ -383,7 +416,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                             decoration: BoxDecoration(
                               color: kprimarycolor,
                               borderRadius:
-                              BorderRadius.all(Radius.circular(10)),
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                             child: Icon(
                               Icons.add,
