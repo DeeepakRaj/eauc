@@ -1,7 +1,9 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/auctions/auctions_page_container.dart';
 import 'package:eauc/widgetmodels/header_row.dart';
 import 'package:flutter/material.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 
 class UpcomingAuctionsPage extends StatefulWidget {
   const UpcomingAuctionsPage({Key? key}) : super(key: key);
@@ -11,6 +13,25 @@ class UpcomingAuctionsPage extends StatefulWidget {
 }
 
 class _UpcomingAuctionsPageState extends State<UpcomingAuctionsPage> {
+  late String emailid;
+
+  @override
+  void initState() {
+    super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

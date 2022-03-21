@@ -14,7 +14,6 @@ String emailRegExp =
     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 String passwordRegExp =
     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-String apiUrl = 'https://eauc2022.000webhostapp.com/';
 
 double kProductsListViewHeight = 310;
 double kAuctionsListViewHeight = 270;

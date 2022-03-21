@@ -1,6 +1,8 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/search_results_page.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:eauc/widgetmodels/customtextbutton.dart';
@@ -20,6 +22,7 @@ class AdvancedFilter extends StatefulWidget {
 
 class _AdvancedFilterState extends State<AdvancedFilter> {
   final GlobalKey<FormState> _advFilterFormKey = GlobalKey<FormState>();
+  late String emailid;
   List<String> auctionTypes = ['All', 'Live', 'Upcoming'];
   String? _auctiontype,
       _keyword,
@@ -33,6 +36,18 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
   @override
   void initState() {
     super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
     _auctiontype = auctionTypes[0];
   }
 

@@ -1,5 +1,7 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/widgetmodels/blinking_live_indicator.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/widgetmodels/blinking_live_indicator_large.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +16,24 @@ class AuctionInfoContainer extends StatefulWidget {
 
 class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
   bool _isPinned = false;
+  late String emailid;
+
+  @override
+  void initState() {
+    super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

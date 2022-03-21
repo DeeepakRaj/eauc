@@ -1,9 +1,13 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/advanced_filter.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/products/products_page_container.dart';
+import 'package:eauc/uiscreens/products/shimmering_products.dart';
 import 'package:eauc/widgetmodels/custom_navigation_drawer.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'expandable_categories_container.dart';
 
@@ -17,10 +21,23 @@ class Products extends StatefulWidget {
 class _ProductsState extends State<Products> {
   late String _popupSelectedValue = '';
   List<String> _popUpMenuValues = ['All', 'My Products'];
+  late String emailid;
 
   @override
   void initState() {
     super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
     _popupSelectedValue = _popUpMenuValues[0];
   }
 
@@ -69,6 +86,7 @@ class _ProductsState extends State<Products> {
         child: Padding(
           padding: EdgeInsets.all(10),
           child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,

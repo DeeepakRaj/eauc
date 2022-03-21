@@ -1,8 +1,10 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/individualpages/individual_product_page.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:eauc/widgetmodels/tag_container.dart';
 import 'package:flutter/material.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 
 class IapProductContainer extends StatefulWidget {
   final String imageName,
@@ -25,6 +27,25 @@ class IapProductContainer extends StatefulWidget {
 }
 
 class _IapProductContainerState extends State<IapProductContainer> {
+  late String emailid;
+
+  @override
+  void initState() {
+    super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -166,12 +187,12 @@ class _IapProductContainerState extends State<IapProductContainer> {
                                 ),
                                 child: Center(
                                     child: Text(
-                                  '+',
-                                  style: TextStyle(
-                                      fontSize: 40,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ))),
+                                      '+',
+                                      style: TextStyle(
+                                          fontSize: 40,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ))),
                           ),
                           Expanded(
                             flex: 3,
@@ -199,12 +220,12 @@ class _IapProductContainerState extends State<IapProductContainer> {
                                 ),
                                 child: Center(
                                     child: Text(
-                                  '-',
-                                  style: TextStyle(
-                                      fontSize: 40,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ))),
+                                      '-',
+                                      style: TextStyle(
+                                          fontSize: 40,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ))),
                           ),
                         ],
                       ),

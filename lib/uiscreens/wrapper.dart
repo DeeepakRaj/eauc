@@ -1,5 +1,7 @@
 import 'package:animations/animations.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/createauction/create_auction_page.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -19,6 +21,7 @@ class Wrapper extends StatefulWidget {
 
 class _WrapperState extends State<Wrapper> {
   int currentTabIndex = 0;
+  late String emailid;
   final List<Widget> screens = <Widget>[
     Home(),
     Auctions(),
@@ -33,7 +36,18 @@ class _WrapperState extends State<Wrapper> {
   @override
   void initState() {
     super.initState();
-    print('Inside wrapper');
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
   }
 
   void _onItemTapped(int index) {
