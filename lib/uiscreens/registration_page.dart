@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/login_page.dart';
