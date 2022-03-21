@@ -1,6 +1,8 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/auctions/all_auctions_page.dart';
 import 'package:eauc/uiscreens/auctions/live_auctions_page.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/auctions/my_hosted_auctions_page.dart';
 import 'package:eauc/uiscreens/auctions/upcoming_auctions_page.dart';
 import 'package:eauc/widgetmodels/custom_navigation_drawer.dart';
@@ -16,11 +18,25 @@ class Auctions extends StatefulWidget {
 class _AuctionsState extends State<Auctions> {
   late String _popupSelectedValue = '';
   List<String> _popUpMenuValues = ['All', 'Live', 'Upcoming', 'My Hosted'];
+  late String emailid;
 
   @override
   void initState() {
     super.initState();
     _popupSelectedValue = _popUpMenuValues[0];
+
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
   }
 
   @override

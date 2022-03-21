@@ -1,6 +1,8 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/auctions/auctions_page_container.dart';
 import 'package:flutter/material.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 class PinnedAuctionsPage extends StatefulWidget {
@@ -11,6 +13,25 @@ class PinnedAuctionsPage extends StatefulWidget {
 }
 
 class _PinnedAuctionsPageState extends State<PinnedAuctionsPage> {
+  late String emailid;
+
+  @override
+  void initState() {
+    super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,14 +80,14 @@ class _PinnedAuctionsPageState extends State<PinnedAuctionsPage> {
                       direction: Axis.horizontal,
                       children: List.generate(
                           6,
-                          (index) => AuctionsPageContainer(
-                                auctionName: 'Product1',
-                                hostName: 'HostName',
-                                currentBid: '5000',
-                                type: 'Live',
-                                imageName: 'sampleimage1',
-                                time: '13/12/2022 13:23',
-                              ))),
+                              (index) => AuctionsPageContainer(
+                            auctionName: 'Product1',
+                            hostName: 'HostName',
+                            currentBid: '5000',
+                            type: 'Live',
+                            imageName: 'sampleimage1',
+                            time: '13/12/2022 13:23',
+                          ))),
                 ),
               )
             ],

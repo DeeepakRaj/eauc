@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/createauction/add_product_page.dart';
 import 'package:eauc/uiscreens/createauction/product_class.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
+import 'package:eauc/widgetmodels/custom_normal_button.dart';
+import 'package:eauc/widgetmodels/custom_outlined_button.dart';
 import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -24,6 +27,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
   DateTime? _datefrom, _dateto;
   late Product addedProduct;
   List<Product> products = [];
+  late String emailid;
   String emailid = "";
 
   TextEditingController _auctionName = TextEditingController();
@@ -39,6 +43,17 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
   @override
   void initState() {
     super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
     getIdPreference().then((String id){
       setState(() {
         this.emailid = id;
@@ -132,7 +147,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
               Icons.arrow_back_ios,
             ),
             onPressed: () {
-              Navigator.pop(context);
+              _showConfirmationDialog();
             },
           ),
         ),
@@ -479,5 +494,48 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
         alignment: Alignment.centerRight,
       ),
     );
+  }
+
+  void _showConfirmationDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            insetPadding: EdgeInsets.all(10),
+            contentPadding: EdgeInsets.all(10),
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            backgroundColor: kbackgroundcolor,
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            actionsAlignment: MainAxisAlignment.spaceAround,
+            title: Text(
+              'Are you sure?',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 25,
+                color: kprimarycolor,
+              ),
+            ),
+            content: Text(
+              'Are you sure you want to exit Create Auction Page? All the unsaved changes will be lost',
+              style: kHeaderTextStyle.copyWith(color: Colors.red),
+            ),
+            actions: [
+              CustomOutlinedButton(
+                onPressed: () {},
+                buttonText: 'Cancel',
+              ),
+              CustomNormalButton(
+                  buttonText: 'Yes',
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pop();
+                  })
+            ],
+          );
+        });
   }
 }

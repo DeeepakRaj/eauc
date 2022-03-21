@@ -1,7 +1,9 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:eauc/widgetmodels/shaded_container2.dart';
 import 'package:flutter/material.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -14,6 +16,24 @@ class MyAccountPage extends StatefulWidget {
 
 class _MyAccountPageState extends State<MyAccountPage> {
   final GlobalKey<FormState> _myaccountformkey = GlobalKey<FormState>();
+  late String emailid;
+
+  @override
+  void initState() {
+    super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

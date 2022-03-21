@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:eauc/constants.dart';
+import 'package:eauc/uiscreens/login_page.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/createauction/full_screen_image.dart';
 import 'package:eauc/uiscreens/createauction/product_class.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
@@ -21,7 +23,7 @@ class EditProductPage extends StatefulWidget {
 
 class _EditProductPageState extends State<EditProductPage> {
   final GlobalKey<FormState> _editprodPageFormKey = GlobalKey<FormState>();
-  late String name = '';
+  late String name = '', emailid;
   List _selectedCategories = [];
 
   bool _selectionMode = false;
@@ -55,6 +57,18 @@ class _EditProductPageState extends State<EditProductPage> {
   @override
   void initState() {
     super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
     _primaryImage = widget.product.primaryImage;
     _selectedCategories = widget.product.productTags;
     widget.product.moreImages.forEach((element) {

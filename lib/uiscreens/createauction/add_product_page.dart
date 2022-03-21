@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:animations/animations.dart';
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/sizeconfig.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/createauction/full_screen_image.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'product_class.dart';
@@ -19,7 +22,7 @@ class AddProductPage extends StatefulWidget {
 
 class _AddProductPageState extends State<AddProductPage> {
   final GlobalKey<FormState> _addprodPageFormKey = GlobalKey<FormState>();
-  late String name = '';
+  late String name = '', emailid;
   Product _product = Product();
   List _selectedCategories = [];
 
@@ -30,7 +33,9 @@ class _AddProductPageState extends State<AddProductPage> {
   File? _primaryImage;
 
   void _selectPrimaryImage() async {
-    final _temperoryimage = await _picker.pickImage(source: ImageSource.camera);
+    final _temperoryimage = await _picker.pickImage(
+      source: ImageSource.camera,
+    );
     if (_temperoryimage == null)
       return;
     else {
@@ -54,6 +59,18 @@ class _AddProductPageState extends State<AddProductPage> {
   @override
   void initState() {
     super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
   }
 
   @override
@@ -154,7 +171,13 @@ class _AddProductPageState extends State<AddProductPage> {
                               onTap: _selectionMode
                                   ? null
                                   : () {
-                                      _selectMultipleImages();
+                                      if (moreImagesMap.length == 2) {
+                                        Fluttertoast.showToast(
+                                          msg: 'Maximum 2 images can be added',
+                                        );
+                                      } else {
+                                        _selectMultipleImages();
+                                      }
                                     },
                               child: Container(
                                 height:
@@ -164,7 +187,7 @@ class _AddProductPageState extends State<AddProductPage> {
                                 color: Colors.grey.shade500,
                                 child: Center(
                                   child: Icon(
-                                    Icons.add,
+                                    Icons.add_photo_alternate,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -366,9 +389,15 @@ class _AddProductPageState extends State<AddProductPage> {
                   CustomNormalButton(
                       buttonText: 'ADD',
                       onPressed: () {
-                        _product.primaryImage = _primaryImage!;
-                        _product.moreImages = moreImagesMap.keys.toList();
-                        Navigator.pop(context, _product);
+                        if (_primaryImage == null) {
+                          Fluttertoast.showToast(
+                              msg: 'Primary Image is Required',
+                              toastLength: Toast.LENGTH_LONG);
+                        } else {
+                          _product.primaryImage = _primaryImage!;
+                          _product.moreImages = moreImagesMap.keys.toList();
+                          Navigator.pop(context, _product);
+                        }
                       }),
                 ],
               ),

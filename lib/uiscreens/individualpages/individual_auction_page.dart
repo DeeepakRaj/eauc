@@ -1,6 +1,8 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:flutter/material.dart';
 import 'package:sticky_headers/sticky_headers.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 
 import 'auction_info_container.dart';
 import 'iap_product_container.dart';
@@ -13,6 +15,25 @@ class IndividualAuctionPage extends StatefulWidget {
 }
 
 class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
+  late String emailid;
+
+  @override
+  void initState() {
+    super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +83,7 @@ class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
                 ),
                 content: ListView.separated(
                     separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(),
+                    const Divider(),
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     itemCount: 5,

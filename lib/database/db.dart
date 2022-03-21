@@ -14,8 +14,13 @@ Future<bool> savedIdPreference(String emailid) async {
 
 Future<String> getIdPreference() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? id = prefs.getString('emailid');
-  return id!;
+  String? id;
+  try {
+    id = prefs.getString('emailid');
+    return id!;
+  } catch (e) {
+    return 'No Email Attached';
+  }
 }
 
 class DB {

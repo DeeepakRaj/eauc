@@ -1,5 +1,7 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:flutter/material.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 
 class IppBiddingContainerHost extends StatefulWidget {
   final String productId;
@@ -12,6 +14,25 @@ class IppBiddingContainerHost extends StatefulWidget {
 }
 
 class _IppBiddingContainerHostState extends State<IppBiddingContainerHost> {
+  late String emailid;
+
+  @override
+  void initState() {
+    super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -29,7 +50,7 @@ class _IppBiddingContainerHostState extends State<IppBiddingContainerHost> {
                   decoration: BoxDecoration(
                     color: ksecondarycolor,
                     borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(4)),
+                    BorderRadius.vertical(top: Radius.circular(4)),
                   ),
                   child: Text(
                     'Current Bid',

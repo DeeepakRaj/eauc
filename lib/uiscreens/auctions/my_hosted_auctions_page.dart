@@ -1,8 +1,9 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/advanced_filter.dart';
 import 'package:eauc/widgetmodels/header_row.dart';
 import 'package:flutter/material.dart';
-
+import 'package:eauc/uiscreens/login_page.dart';
 import 'auctions_page_container.dart';
 
 class MyHostedAuctionsPage extends StatefulWidget {
@@ -13,6 +14,25 @@ class MyHostedAuctionsPage extends StatefulWidget {
 }
 
 class _MyHostedAuctionsPageState extends State<MyHostedAuctionsPage> {
+  late String emailid;
+
+  @override
+  void initState() {
+    super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;

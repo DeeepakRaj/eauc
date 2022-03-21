@@ -1,6 +1,8 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:flutter/material.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 
 class IppBiddingContainer extends StatefulWidget {
   final String productId;
@@ -12,6 +14,25 @@ class IppBiddingContainer extends StatefulWidget {
 }
 
 class _IppBiddingContainerState extends State<IppBiddingContainer> {
+  late String emailid;
+
+  @override
+  void initState() {
+    super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -70,12 +91,12 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
                           ),
                           child: Center(
                               child: Text(
-                            '+',
-                            style: TextStyle(
-                                fontSize: 40,
-                                color: kprimarycolor,
-                                fontWeight: FontWeight.bold),
-                          ))),
+                                '+',
+                                style: TextStyle(
+                                    fontSize: 40,
+                                    color: kprimarycolor,
+                                    fontWeight: FontWeight.bold),
+                              ))),
                     ),
                     Expanded(
                       flex: 3,
@@ -100,12 +121,12 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
                           ),
                           child: Center(
                               child: Text(
-                            '-',
-                            style: TextStyle(
-                                fontSize: 40,
-                                color: kprimarycolor,
-                                fontWeight: FontWeight.bold),
-                          ))),
+                                '-',
+                                style: TextStyle(
+                                    fontSize: 40,
+                                    color: kprimarycolor,
+                                    fontWeight: FontWeight.bold),
+                              ))),
                     ),
                   ],
                 ),
