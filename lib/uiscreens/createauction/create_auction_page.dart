@@ -13,6 +13,7 @@ import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'edit_product_page.dart';
 
@@ -28,7 +29,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
   late Product addedProduct;
   List<Product> products = [];
   late String emailid;
-  String emailid = "";
+  bool _loading = false;
 
   TextEditingController _auctionName = TextEditingController();
   TextEditingController _auctionDescription = TextEditingController();
@@ -54,16 +55,14 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
           this.emailid = value;
         });
       }
-    getIdPreference().then((String id){
-      setState(() {
-        this.emailid = id;
-      });
     });
   }
 
   void _createAuction() async {
     var url = apiUrl + "createAuction.php";
-
+    setState(() {
+      _loading = true;
+    });
     var auctionData = Map<String, dynamic>();
 
     auctionData["auction_name"] = _auctionName.text;
@@ -72,7 +71,6 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
     auctionData["end_Date"] = _dateto.toString();
     auctionData["email"] = emailid;
     auctionData["products_length"] = products.length.toString();
-
 
     for (var i = 0; i < products.length; i++) {
        auctionData['productName'+(i).toString()] = products[i].productName;
@@ -83,26 +81,28 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
 
        var images = [];
 
-       for (var j = 0; j < products[i].moreImages.length; j++) {
-         images.add(base64Encode(products[i].moreImages[j].readAsBytesSync()));
-       }
+      for (var j = 0; j < products[i].moreImages.length; j++) {
+        images.add(base64Encode(products[i].moreImages[j].readAsBytesSync()));
+      }
 
-       auctionData['moreProductImages'+(i).toString()] = images.join(",").toString();
+      auctionData['moreProductImages' + (i).toString()] =
+          images.join(",").toString();
     }
 
     var response = await http.post(Uri.parse(url), body: auctionData);
 
     var data = jsonDecode(response.body);
+    setState(() {
+      _loading = false;
+    });
     //print(data);
     if (data == "true") {
-      Fluttertoast.showToast(msg: "Auction Hosted Successfully",toastLength: Toast.LENGTH_LONG);
+      Fluttertoast.showToast(
+          msg: "Auction Hosted Successfully", toastLength: Toast.LENGTH_LONG);
+    } else {
+      Fluttertoast.showToast(
+          msg: "Error. Please Try Again", toastLength: Toast.LENGTH_LONG);
     }
-    else {
-      Fluttertoast.showToast(msg: "Auction Hosted Unsuccessfully",toastLength: Toast.LENGTH_LONG);
-    }
-
-    //print(response.statusCode);
-
   }
 
   void _navigateAndDisplaySelection(BuildContext context) async {
@@ -135,307 +135,6 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
     } catch (e) {
       print(e);
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Create Auction'),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-            ),
-            onPressed: () {
-              _showConfirmationDialog();
-            },
-          ),
-        ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
-          child: CustomTextButton(
-              onPressed: (products.length == 0)
-                  ? null
-                  : () {
-                      //TODO: Create Auction into Database
-                  _createAuction();
-                    },
-              buttonText: 'CREATE'),
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Auction Details',
-                    style: kHeaderTextStyle,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    decoration: kInputFieldDecoration.copyWith(
-                      hintText: 'Auction Name',
-                    ),
-                    style: kInputFieldTextStyle,
-                    cursorColor: kprimarycolor,
-                    onChanged: (value) {},
-                    controller: _auctionName,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    decoration: kInputFieldDecoration.copyWith(
-                      hintText: 'Auction Description',
-                    ),
-                    maxLines: 4,
-                    style: kInputFieldTextStyle,
-                    cursorColor: kprimarycolor,
-                    onChanged: (value) {},
-                    controller: _auctionDescription,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Auction Duration',
-                    style: kHeaderTextStyle,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: Text(
-                      'From:',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  DateTimePicker(
-                    decoration: kInputFieldDecoration.copyWith(
-                      hintText: 'From',
-                    ),
-                    style: TextStyle(color: Colors.black),
-                    type: DateTimePickerType.dateTime,
-                    dateMask: 'dd-MM-yyyy HH:mm',
-                    initialValue: '',
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2100),
-                    icon: Icon(Icons.event),
-                    dateLabelText: 'Date',
-                    timeLabelText: 'Hour',
-                    onChanged: (val) {
-                      _datefrom = DateTime.parse(val);
-                    },
-                    validator: (val) {
-                      if (_datefrom == null || _datefrom.toString().isEmpty) {
-                        if (_dateto != null || _dateto!.toString().isNotEmpty)
-                          return 'Please leave either both fields blank or none';
-                      }
-                      return null;
-                    },
-                    onSaved: (val) => print(val),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: Text(
-                      'To:',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  DateTimePicker(
-                    decoration: kInputFieldDecoration.copyWith(
-                      hintText: 'To',
-                    ),
-                    style: TextStyle(color: Colors.black),
-                    type: DateTimePickerType.dateTime,
-                    dateMask: 'dd-MM-yyyy HH:mm',
-                    initialValue: '',
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2100),
-                    icon: Icon(Icons.event),
-                    dateLabelText: 'Date',
-                    timeLabelText: 'Hour',
-                    onChanged: (val) {
-                      _dateto = DateTime.parse(val);
-                    },
-                    validator: (val) {
-                      if (_dateto == null || _dateto.toString().isEmpty) {
-                        if (_datefrom != null ||
-                            _datefrom!.toString().isNotEmpty)
-                          return 'Please leave either both fields blank or none';
-                      } else if (_datefrom!.isAfter(_dateto!))
-                        return 'Please enter a valid range';
-                      return null;
-                    },
-                    onSaved: (val) => print(val),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    'Products',
-                    style: kHeaderTextStyle,
-                  ),
-                  (products.isNotEmpty)
-                      ? ListView.separated(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return Dismissible(
-                              key: Key(products[index].productName),
-                              background: slideRightBackground(),
-                              secondaryBackground: slideLeftBackground(),
-                              confirmDismiss: (direction) async {
-                                if (direction == DismissDirection.endToStart) {
-                                  return await showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          content: Text(
-                                            "Are you sure you want to delete this product?",
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: Text(
-                                                "Cancel",
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: Text(
-                                                "Delete",
-                                                style: TextStyle(
-                                                    color: Colors.red),
-                                              ),
-                                              onPressed: () {
-                                                // TODO: Delete the item from DB etc..
-                                                Navigator.of(context).pop();
-                                                setState(() {
-                                                  products.removeAt(index);
-                                                });
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      });
-                                } else {
-                                  _editProduct(context, products[index], index);
-                                }
-                              },
-                              onDismissed: (direction) {
-                                setState(() {
-                                  products.removeAt(index);
-                                });
-                              },
-                              child: ListTile(
-                                tileColor: Colors.white,
-                                style: ListTileStyle.list,
-                                // shape: RoundedRectangleBorder(
-                                //     side: BorderSide(
-                                //         color: Colors.grey,
-                                //         width: 2
-                                //     ),
-                                //     borderRadius: BorderRadius.all(Radius.circular(10))
-                                // ),
-                                isThreeLine: true,
-                                leading: Text(
-                                  '${index + 1}',
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                title: Text(
-                                  products[index].productName,
-                                  style: kCardTitleTextStyle,
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(products[index].productDesc),
-                                    Text(
-                                      products[index].productPrice,
-                                      style: TextStyle(
-                                          fontSize: 25, color: Colors.green),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          separatorBuilder: (context, index) => Divider(
-                            height: 1,
-                          ),
-                          itemCount: products.length,
-                        )
-                      : SizedBox(
-                          height: 5,
-                        ),
-                  Container(
-                    margin: EdgeInsets.only(top: 5),
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Click on + to add products',
-                          style: kCardSubTitleTextStyle.copyWith(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            _navigateAndDisplaySelection(context);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              color: kprimarycolor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            child: Icon(
-                              Icons.add,
-                              size: 60,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  )
-                ],
-              ),
-            ),
-          ),
-        ));
   }
 
   Widget slideRightBackground() {
@@ -537,5 +236,316 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
             ],
           );
         });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ModalProgressHUD(
+      inAsyncCall: _loading,
+      progressIndicator: CircularProgressIndicator(
+        color: kprimarycolor,
+        strokeWidth: 3,
+      ),
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text('Create Auction'),
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+              ),
+              onPressed: () {
+                _showConfirmationDialog();
+              },
+            ),
+          ),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+            child: CustomTextButton(
+                onPressed: (products.length == 0)
+                    ? null
+                    : () {
+                        //TODO: Create Auction into Database
+                        _createAuction();
+                      },
+                buttonText: 'CREATE'),
+          ),
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Auction Details',
+                      style: kHeaderTextStyle,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      decoration: kInputFieldDecoration.copyWith(
+                        hintText: 'Auction Name',
+                      ),
+                      style: kInputFieldTextStyle,
+                      cursorColor: kprimarycolor,
+                      onChanged: (value) {},
+                      controller: _auctionName,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      decoration: kInputFieldDecoration.copyWith(
+                        hintText: 'Auction Description',
+                      ),
+                      maxLines: 4,
+                      style: kInputFieldTextStyle,
+                      cursorColor: kprimarycolor,
+                      onChanged: (value) {},
+                      controller: _auctionDescription,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Auction Duration',
+                      style: kHeaderTextStyle,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Text(
+                        'From:',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    DateTimePicker(
+                      decoration: kInputFieldDecoration.copyWith(
+                        hintText: 'From',
+                      ),
+                      style: TextStyle(color: Colors.black),
+                      type: DateTimePickerType.dateTime,
+                      dateMask: 'dd-MM-yyyy HH:mm',
+                      initialValue: '',
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
+                      icon: Icon(Icons.event),
+                      dateLabelText: 'Date',
+                      timeLabelText: 'Hour',
+                      onChanged: (val) {
+                        _datefrom = DateTime.parse(val);
+                      },
+                      validator: (val) {
+                        if (_datefrom == null || _datefrom.toString().isEmpty) {
+                          if (_dateto != null || _dateto!.toString().isNotEmpty)
+                            return 'Please leave either both fields blank or none';
+                        }
+                        return null;
+                      },
+                      onSaved: (val) => print(val),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Text(
+                        'To:',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    DateTimePicker(
+                      decoration: kInputFieldDecoration.copyWith(
+                        hintText: 'To',
+                      ),
+                      style: TextStyle(color: Colors.black),
+                      type: DateTimePickerType.dateTime,
+                      dateMask: 'dd-MM-yyyy HH:mm',
+                      initialValue: '',
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
+                      icon: Icon(Icons.event),
+                      dateLabelText: 'Date',
+                      timeLabelText: 'Hour',
+                      onChanged: (val) {
+                        _dateto = DateTime.parse(val);
+                      },
+                      validator: (val) {
+                        if (_dateto == null || _dateto.toString().isEmpty) {
+                          if (_datefrom != null ||
+                              _datefrom!.toString().isNotEmpty)
+                            return 'Please leave either both fields blank or none';
+                        } else if (_datefrom!.isAfter(_dateto!))
+                          return 'Please enter a valid range';
+                        return null;
+                      },
+                      onSaved: (val) => print(val),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Products',
+                      style: kHeaderTextStyle,
+                    ),
+                    (products.isNotEmpty)
+                        ? ListView.separated(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Dismissible(
+                                key: Key(products[index].productName),
+                                background: slideRightBackground(),
+                                secondaryBackground: slideLeftBackground(),
+                                confirmDismiss: (direction) async {
+                                  if (direction ==
+                                      DismissDirection.endToStart) {
+                                    return await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            content: Text(
+                                              "Are you sure you want to delete this product?",
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text(
+                                                  "Cancel",
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: Text(
+                                                  "Delete",
+                                                  style: TextStyle(
+                                                      color: Colors.red),
+                                                ),
+                                                onPressed: () {
+                                                  // TODO: Delete the item from DB etc..
+                                                  Navigator.of(context).pop();
+                                                  setState(() {
+                                                    products.removeAt(index);
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  } else {
+                                    _editProduct(
+                                        context, products[index], index);
+                                  }
+                                },
+                                onDismissed: (direction) {
+                                  setState(() {
+                                    products.removeAt(index);
+                                  });
+                                },
+                                child: ListTile(
+                                  tileColor: Colors.white,
+                                  style: ListTileStyle.list,
+                                  // shape: RoundedRectangleBorder(
+                                  //     side: BorderSide(
+                                  //         color: Colors.grey,
+                                  //         width: 2
+                                  //     ),
+                                  //     borderRadius: BorderRadius.all(Radius.circular(10))
+                                  // ),
+                                  isThreeLine: true,
+                                  leading: Text(
+                                    '${index + 1}',
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                  title: Text(
+                                    products[index].productName,
+                                    style: kCardTitleTextStyle,
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(products[index].productDesc),
+                                      Text(
+                                        products[index].productPrice,
+                                        style: TextStyle(
+                                            fontSize: 25, color: Colors.green),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) => Divider(
+                              height: 1,
+                            ),
+                            itemCount: products.length,
+                          )
+                        : SizedBox(
+                            height: 5,
+                          ),
+                    Container(
+                      margin: EdgeInsets.only(top: 5),
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Click on + to add products',
+                            style: kCardSubTitleTextStyle.copyWith(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              _navigateAndDisplaySelection(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: kprimarycolor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 60,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )),
+    );
   }
 }
