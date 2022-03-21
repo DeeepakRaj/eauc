@@ -1,6 +1,8 @@
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/auctions/auctions_page_container.dart';
 import 'package:flutter/material.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 
 class HostedAuctionsPage extends StatefulWidget {
   const HostedAuctionsPage({Key? key}) : super(key: key);
@@ -10,6 +12,25 @@ class HostedAuctionsPage extends StatefulWidget {
 }
 
 class _HostedAuctionsPageState extends State<HostedAuctionsPage> {
+  late String emailid;
+
+  @override
+  void initState() {
+    super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -21,54 +42,54 @@ class _HostedAuctionsPageState extends State<HostedAuctionsPage> {
             new SliverAppBar(
               title: Text('Hosted Auctions'),
               pinned: true,
-              floating: true,
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              bottom: TabBar(
-                indicatorColor: kprimarycolor,
-                indicatorWeight: 4,
-                isScrollable: false,
-                labelStyle:
+                  floating: true,
+                  leading: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  bottom: TabBar(
+                    indicatorColor: kprimarycolor,
+                    indicatorWeight: 4,
+                    isScrollable: false,
+                    labelStyle:
                     TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                unselectedLabelStyle:
+                    unselectedLabelStyle:
                     TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                labelColor: kprimarycolor,
-                unselectedLabelColor: Colors.black,
-                tabs: [
-                  Tab(
-                    child: Text(
-                      'All',
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      'Live',
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      'Upcoming',
-                    ),
-                  ),
-                ],
+                    labelColor: kprimarycolor,
+                    unselectedLabelColor: Colors.black,
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          'All',
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Live',
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Upcoming',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ];
             },
             body: TabBarView(
               children: <Widget>[
-            HostedAuctionsAll(),
-            HostedAuctionsLive(),
-            HostedAuctionsUpcoming(),
-          ],
-        ),
-      )),
+                HostedAuctionsAll(),
+                HostedAuctionsLive(),
+                HostedAuctionsUpcoming(),
+              ],
+            ),
+          )),
     );
   }
 }

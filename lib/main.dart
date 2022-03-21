@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
             ),
           )),
       // home: SplashScreen(),
-      home: RegistrationPage(),
+      home: LoginPage(),
       routes: {
         RegistrationPage.routename: (context) => RegistrationPage(),
         LoginPage.routename: (context) => LoginPage(),

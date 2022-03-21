@@ -1,6 +1,8 @@
+import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/profile/history_page.dart';
 import 'package:eauc/uiscreens/profile/hosted_auctions_page.dart';
 import 'package:eauc/uiscreens/profile/my_account_page.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/profile/pinned_auctions_page.dart';
 import 'package:eauc/widgetmodels/custom_navigation_drawer.dart';
 import 'package:eauc/widgetmodels/shaded_container.dart';
@@ -16,6 +18,25 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  late String emailid;
+
+  @override
+  void initState() {
+    super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,5 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eauc/constants.dart';
+import 'package:eauc/database/db.dart';
+import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
 import 'package:eauc/uiscreens/individualpages/individual_product_page.dart';
 import 'package:eauc/widgetmodels/tag_container.dart';
@@ -21,6 +23,25 @@ class ProductsPageContainer extends StatefulWidget {
 }
 
 class _ProductsPageContainerState extends State<ProductsPageContainer> {
+  late String emailid;
+
+  @override
+  void initState() {
+    super.initState();
+    getIdPreference().then((value) async {
+      if (value == 'No Email Attached') {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false);
+      } else {
+        setState(() {
+          this.emailid = value;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
