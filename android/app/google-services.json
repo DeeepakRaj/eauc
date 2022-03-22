@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "757308159087",
+    "project_id": "eauc-d9cf8",
+    "storage_bucket": "eauc-d9cf8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:757308159087:android:97a5a83f5186e82fbf099a",
+        "android_client_info": {
+          "package_name": "com.eauc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "757308159087-q2agrbl0r564p0k37ng6gm31k0s91uua.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eauc",
+            "certificate_hash": "ab73a969da548839615ec16c142b3b91b8d71533"
+          }
+        },
+        {
+          "client_id": "757308159087-tdm29gvhcpu1r3vjjst7ue7ed0oh8l1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz7HRxoDtUrlMI5nUGmwCIgqpZdVl44EM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "757308159087-tdm29gvhcpu1r3vjjst7ue7ed0oh8l1q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

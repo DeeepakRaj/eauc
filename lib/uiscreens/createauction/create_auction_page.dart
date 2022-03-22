@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
+import 'package:eauc/uiscreens/home/home.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/createauction/add_product_page.dart';
 import 'package:eauc/uiscreens/createauction/product_class.dart';
@@ -73,35 +74,45 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
     auctionData["products_length"] = products.length.toString();
 
     for (var i = 0; i < products.length; i++) {
-       auctionData['productName'+(i).toString()] = products[i].productName;
-       auctionData['productDesc'+(i).toString()] = products[i].productDesc;
-       auctionData['productPrice'+(i).toString()] = products[i].productPrice.toString();
-       auctionData['productTags'+(i).toString()] = products[i].productTags.join(",").toString();
-       auctionData['productImage'+(i).toString()] = base64Encode(products[i].primaryImage.readAsBytesSync());
+      auctionData['productName' + (i).toString()] = products[i].productName;
+      auctionData['productDesc' + (i).toString()] = products[i].productDesc;
+      auctionData['productPrice' + (i).toString()] =
+          products[i].productPrice.toString();
+      auctionData['productTags' + (i).toString()] =
+          products[i].productTags.join(",").toString();
+      auctionData['productImage' + (i).toString()] =
+          (base64Encode(products[i].primaryImage.readAsBytesSync())).toString();
 
-       var images = [];
+      var images = [];
 
-      for (var j = 0; j < products[i].moreImages.length; j++) {
-        images.add(base64Encode(products[i].moreImages[j].readAsBytesSync()));
+      for (int j = 0; j < products[i].moreImages.length; j++) {
+        images.add((base64Encode(products[i].moreImages[j].readAsBytesSync()))
+            .toString());
       }
 
       auctionData['moreProductImages' + (i).toString()] =
           images.join(",").toString();
     }
 
+    print(auctionData);
     var response = await http.post(Uri.parse(url), body: auctionData);
-
     var data = jsonDecode(response.body);
-    setState(() {
-      _loading = false;
-    });
     //print(data);
-    if (data == "true") {
-      Fluttertoast.showToast(
-          msg: "Auction Hosted Successfully", toastLength: Toast.LENGTH_LONG);
-    } else {
+    if (data == "false" || data!.toString().isEmpty) {
+      setState(() {
+        _loading = false;
+      });
       Fluttertoast.showToast(
           msg: "Error. Please Try Again", toastLength: Toast.LENGTH_LONG);
+    } else {
+      //TODO: Firebase code
+      setState(() {
+        _loading = false;
+      });
+      Fluttertoast.showToast(
+          msg: "Auction Created Successfully", toastLength: Toast.LENGTH_LONG);
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (context) => Home()), (route) => false);
     }
   }
 
@@ -341,7 +352,9 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                       dateLabelText: 'Date',
                       timeLabelText: 'Hour',
                       onChanged: (val) {
-                        _datefrom = DateTime.parse(val);
+                        setState(() {
+                          _datefrom = DateTime.parse(val);
+                        });
                       },
                       validator: (val) {
                         if (_datefrom == null || _datefrom.toString().isEmpty) {
@@ -372,6 +385,8 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                       style: TextStyle(color: Colors.black),
                       type: DateTimePickerType.dateTime,
                       dateMask: 'dd-MM-yyyy HH:mm',
+                      readOnly:
+                          _datefrom == null || _datefrom.toString().isEmpty,
                       initialValue: '',
                       firstDate: DateTime.now(),
                       lastDate: DateTime(2100),
@@ -379,7 +394,9 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                       dateLabelText: 'Date',
                       timeLabelText: 'Hour',
                       onChanged: (val) {
-                        _dateto = DateTime.parse(val);
+                        setState(() {
+                          _dateto = DateTime.parse(val);
+                        });
                       },
                       validator: (val) {
                         if (_dateto == null || _dateto.toString().isEmpty) {
