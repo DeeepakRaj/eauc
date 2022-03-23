@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
@@ -8,6 +8,7 @@ import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/createauction/add_product_page.dart';
 import 'package:eauc/uiscreens/createauction/product_class.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
+import 'package:eauc/uiscreens/wrapper.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:eauc/widgetmodels/custom_outlined_button.dart';
 import 'package:eauc/widgetmodels/customtextbutton.dart';
@@ -31,6 +32,9 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
   List<Product> products = [];
   late String emailid;
   bool _loading = false;
+
+  // final collectionRef = FirebaseFirestore.instance;
+  // final dbBatch = FirebaseFirestore.instance.batch;
 
   TextEditingController _auctionName = TextEditingController();
   TextEditingController _auctionDescription = TextEditingController();
@@ -59,6 +63,21 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
     });
   }
 
+  WriteBatch _insertIntoFirestore(auctionId, List productIds) {
+    final collectionRef = FirebaseFirestore.instance;
+    final batch = FirebaseFirestore.instance.batch();
+    DocumentReference docRef;
+    productIds.forEach((id) {
+      docRef =
+          collectionRef.collection(auctionId.toString()).doc(id.toString());
+      batch.set(docRef, {
+        "basePrice": products[productIds.indexOf(id)].productPrice.toString(),
+        "timeRemaining": "12:43:12",
+      });
+    });
+    return batch;
+  }
+
   void _createAuction() async {
     var url = apiUrl + "createAuction.php";
     setState(() {
@@ -84,35 +103,55 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
           (base64Encode(products[i].primaryImage.readAsBytesSync())).toString();
 
       var images = [];
-
       for (int j = 0; j < products[i].moreImages.length; j++) {
         images.add((base64Encode(products[i].moreImages[j].readAsBytesSync()))
             .toString());
       }
-
       auctionData['moreProductImages' + (i).toString()] =
           images.join(",").toString();
     }
 
-    print(auctionData);
-    var response = await http.post(Uri.parse(url), body: auctionData);
-    var data = jsonDecode(response.body);
-    //print(data);
-    if (data == "false" || data!.toString().isEmpty) {
+    try {
+      var response = await http.post(Uri.parse(url), body: auctionData);
+      var data = jsonDecode(response.body);
+      if (data['result'] == "true") {
+        _insertIntoFirestore(data['auction_id'], data['products_id'])
+            .commit()
+            .then((value) {
+          setState(() {
+            _loading = false;
+          });
+          Fluttertoast.showToast(
+              msg: "Auction Created Successfully",
+              toastLength: Toast.LENGTH_LONG);
+          _showCongratulationsDialog();
+        }).catchError((error) async {
+          url = apiUrl + "deleteAuction.php";
+          var response = await http.post(Uri.parse(url), body: auctionData);
+          data = jsonDecode(response.body);
+          if (data['result'] == 'success') {
+            setState(() {
+              _loading = false;
+            });
+            Fluttertoast.showToast(
+                msg: "Error. Please Try Again", toastLength: Toast.LENGTH_LONG);
+          } else {
+            //TODO: Think about what to do in this
+          }
+        });
+      } else {
+        setState(() {
+          _loading = false;
+        });
+        Fluttertoast.showToast(
+            msg: "Error. Please Try Again", toastLength: Toast.LENGTH_LONG);
+      }
+    } catch (exception) {
       setState(() {
         _loading = false;
       });
       Fluttertoast.showToast(
           msg: "Error. Please Try Again", toastLength: Toast.LENGTH_LONG);
-    } else {
-      //TODO: Firebase code
-      setState(() {
-        _loading = false;
-      });
-      Fluttertoast.showToast(
-          msg: "Auction Created Successfully", toastLength: Toast.LENGTH_LONG);
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) => Home()), (route) => false);
     }
   }
 
@@ -212,7 +251,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
         builder: (context) {
           return AlertDialog(
             insetPadding: EdgeInsets.all(10),
-            contentPadding: EdgeInsets.all(10),
+            contentPadding: EdgeInsets.all(20),
             clipBehavior: Clip.antiAliasWithSaveLayer,
             backgroundColor: kbackgroundcolor,
             elevation: 10,
@@ -230,19 +269,74 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
               ),
             ),
             content: Text(
-              'Are you sure you want to exit Create Auction Page? All the unsaved changes will be lost',
+              'Are you sure you want to exit Create Auction Page? Any data entered in this page will be lost.',
+              textAlign: TextAlign.justify,
               style: kHeaderTextStyle.copyWith(color: Colors.red),
             ),
             actions: [
-              CustomOutlinedButton(
-                onPressed: () {},
-                buttonText: 'Cancel',
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      color: kprimarycolor),
+                ),
               ),
               CustomNormalButton(
-                  buttonText: 'Yes',
+                  buttonText: 'Yes, Exit This Page',
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.of(context).pop();
+                  })
+            ],
+          );
+        });
+  }
+
+  void _showCongratulationsDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            insetPadding: EdgeInsets.all(10),
+            contentPadding: EdgeInsets.all(20),
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            backgroundColor: kbackgroundcolor,
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            actionsAlignment: MainAxisAlignment.spaceAround,
+            title: Text(
+              'CONGRATULATIONS!',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 25,
+                color: kprimarycolor,
+              ),
+            ),
+            content: Text(
+              'You have successfully created an auction event. You can check your '
+              'created/hosted auctions under Hosted Auctions in Profile tab',
+              textAlign: TextAlign.justify,
+              style: kHeaderTextStyle.copyWith(color: Colors.green),
+            ),
+            actions: [
+              CustomNormalButton(
+                  buttonText: 'OK',
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => Wrapper()),
+                        (route) => false);
                   })
             ],
           );
@@ -275,7 +369,6 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                 onPressed: (products.length == 0)
                     ? null
                     : () {
-                        //TODO: Create Auction into Database
                         _createAuction();
                       },
                 buttonText: 'CREATE'),
@@ -456,7 +549,6 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                                                       color: Colors.red),
                                                 ),
                                                 onPressed: () {
-                                                  // TODO: Delete the item from DB etc..
                                                   Navigator.of(context).pop();
                                                   setState(() {
                                                     products.removeAt(index);

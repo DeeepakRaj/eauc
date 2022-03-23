@@ -112,7 +112,7 @@ packages:
       name: dots_indicator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   dropdown_search:
     dependency: "direct main"
     description:
@@ -225,7 +225,7 @@ packages:
       name: getwidget
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   http:
     dependency: "direct main"
     description:
@@ -246,7 +246,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.4+9"
+    version: "0.8.4+11"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -309,7 +309,7 @@ packages:
       name: multi_select_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "4.1.2"
   path:
     dependency: transitive
     description:
@@ -400,7 +400,7 @@ packages:
       name: shared_preferences_ios
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.10"
+    version: "2.1.0"
   shared_preferences_linux:
     dependency: transitive
     description:
@@ -517,7 +517,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.0"
+    version: "2.4.2"
   xdg_directories:
     dependency: transitive
     description:

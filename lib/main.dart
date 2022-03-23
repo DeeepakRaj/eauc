@@ -6,13 +6,17 @@ import 'package:eauc/uiscreens/registration_page.dart';
 import 'package:eauc/uiscreens/search_results_page.dart';
 import 'package:eauc/uiscreens/splashscreen.dart';
 import 'package:eauc/uiscreens/wrapper.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'uiscreens/products/products.dart';
 import 'uiscreens/home/home.dart';
 import 'uiscreens/profile/profile.dart';
 import 'uiscreens/auctions/auctions.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(MyApp());
 }
 
