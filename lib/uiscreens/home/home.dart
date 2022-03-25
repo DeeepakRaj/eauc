@@ -2,9 +2,11 @@ import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/widgetmodels/custom_navigation_drawer.dart';
+import 'package:eauc/widgetmodels/display_auction_countdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:ntp/ntp.dart';
 import 'home_four_cards.dart';
 import 'home_live_auctions.dart';
 import 'home_product_category_list.dart';
@@ -46,8 +48,8 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: typing
             ? TextBox()
-            : Text(
-                'HOME',
+            : DisplayAuctionCountdown(
+                auctionId: '110',
               ),
         leading: typing
             ? IconButton(

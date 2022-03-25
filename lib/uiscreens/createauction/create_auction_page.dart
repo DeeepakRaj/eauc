@@ -63,17 +63,23 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
     });
   }
 
-  WriteBatch _insertIntoFirestore(auctionId, List productIds) {
+  WriteBatch _insertIntoFirestore(auctionId, List productIds,
+      DateTime auctionDateFrom, DateTime auctionDateTo) {
     final collectionRef = FirebaseFirestore.instance;
     final batch = FirebaseFirestore.instance.batch();
-    DocumentReference docRef;
+    DocumentReference docRef, timeRef;
     productIds.forEach((id) {
       docRef =
           collectionRef.collection(auctionId.toString()).doc(id.toString());
       batch.set(docRef, {
         "basePrice": products[productIds.indexOf(id)].productPrice.toString(),
-        "timeRemaining": "12:43:12",
+        "currentBid": products[productIds.indexOf(id)].productPrice.toString(),
       });
+    });
+    docRef = collectionRef.collection(auctionId.toString()).doc('timings');
+    batch.set(docRef, {
+      "startDate": auctionDateFrom.millisecondsSinceEpoch,
+      "endDate": auctionDateTo.millisecondsSinceEpoch,
     });
     return batch;
   }
@@ -87,8 +93,8 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
 
     auctionData["auction_name"] = _auctionName.text;
     auctionData["auction_desc"] = _auctionDescription.text;
-    auctionData["start_Date"] = _datefrom.toString();
-    auctionData["end_Date"] = _dateto.toString();
+    auctionData["start_Date"] = _datefrom!.millisecondsSinceEpoch.toString();
+    auctionData["end_Date"] = _dateto!.millisecondsSinceEpoch.toString();
     auctionData["email"] = emailid;
     auctionData["products_length"] = products.length.toString();
 
@@ -115,7 +121,8 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
       var response = await http.post(Uri.parse(url), body: auctionData);
       var data = jsonDecode(response.body);
       if (data['result'] == "true") {
-        _insertIntoFirestore(data['auction_id'], data['products_id'])
+        _insertIntoFirestore(
+                data['auction_id'], data['products_id'], _datefrom!, _dateto!)
             .commit()
             .then((value) {
           setState(() {
