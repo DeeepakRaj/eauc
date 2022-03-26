@@ -41,6 +41,7 @@ class _DisplayAuctionCountdownState extends State<DisplayAuctionCountdown> {
       stream: Stream.periodic(Duration(seconds: 1), (count) {
         if (currentTime.isBefore(startDateTime))
           return startDateTime.toString();
+        //TODO: Set status Upcoming, Live
         else
           return endDateTime
               .difference(currentTime.add(Duration(seconds: count)))

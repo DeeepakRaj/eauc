@@ -71,7 +71,6 @@ class MyApp extends StatelessWidget {
         Auctions.routename: (context) => Auctions(),
         Profile.routename: (context) => Profile(),
         SearchResultsPage.routename: (context) => SearchResultsPage(),
-        IndividualAuctionPage.routename: (context) => IndividualAuctionPage(),
         PinnedAuctionsPage.routename: (context) => PinnedAuctionsPage(),
       },
     );

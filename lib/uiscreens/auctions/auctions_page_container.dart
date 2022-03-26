@@ -28,7 +28,9 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
       closedColor: kbackgroundcolor,
       transitionType: ContainerTransitionType.fade,
       transitionDuration: Duration(milliseconds: 500),
-      openBuilder: (context, _) => IndividualAuctionPage(),
+      openBuilder: (context, _) => IndividualAuctionPage(
+        auctionID: '111',
+      ),
       closedShape: RoundedRectangleBorder(),
       closedBuilder: (context, openContainer) {
         return GestureDetector(

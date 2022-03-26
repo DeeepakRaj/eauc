@@ -334,7 +334,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       }
                     },
                     onChanged: (value) {
-                      _product.productPrice = value;
+                      _product.openingBid = value;
                     },
                   ),
                   SizedBox(

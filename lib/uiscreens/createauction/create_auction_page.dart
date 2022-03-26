@@ -72,8 +72,8 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
       docRef =
           collectionRef.collection(auctionId.toString()).doc(id.toString());
       batch.set(docRef, {
-        "basePrice": products[productIds.indexOf(id)].productPrice.toString(),
-        "currentBid": products[productIds.indexOf(id)].productPrice.toString(),
+        "openingBid": products[productIds.indexOf(id)].openingBid.toString(),
+        "currentBid": products[productIds.indexOf(id)].openingBid.toString(),
       });
     });
     docRef = collectionRef.collection(auctionId.toString()).doc('timings');
@@ -102,7 +102,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
       auctionData['productName' + (i).toString()] = products[i].productName;
       auctionData['productDesc' + (i).toString()] = products[i].productDesc;
       auctionData['productPrice' + (i).toString()] =
-          products[i].productPrice.toString();
+          products[i].openingBid.toString();
       auctionData['productTags' + (i).toString()] =
           products[i].productTags.join(",").toString();
       auctionData['productImage' + (i).toString()] =
@@ -373,7 +373,11 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
             child: CustomTextButton(
-                onPressed: (products.length == 0)
+                onPressed: (_auctionName.text.isEmpty ||
+                        _auctionDescription.text.isEmpty ||
+                        _datefrom.toString().isEmpty ||
+                        _dateto.toString().isEmpty ||
+                        products.length == 0)
                     ? null
                     : () {
                         _createAuction();
@@ -600,7 +604,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                                     children: [
                                       Text(products[index].productDesc),
                                       Text(
-                                        products[index].productPrice,
+                                        products[index].openingBid,
                                         style: TextStyle(
                                             fontSize: 25, color: Colors.green),
                                       )

@@ -319,7 +319,7 @@ class _EditProductPageState extends State<EditProductPage> {
                     height: 10,
                   ),
                   TextFormField(
-                    initialValue: widget.product.productPrice,
+                    initialValue: widget.product.openingBid,
                     decoration: kInputFieldDecoration.copyWith(
                         hintText: 'Set Base Price'),
                     style: kInputFieldTextStyle,
@@ -334,7 +334,7 @@ class _EditProductPageState extends State<EditProductPage> {
                       }
                     },
                     onChanged: (value) {
-                      widget.product.productPrice = value;
+                      widget.product.openingBid = value;
                     },
                   ),
                   SizedBox(
