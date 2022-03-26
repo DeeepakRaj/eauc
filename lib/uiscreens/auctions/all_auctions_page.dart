@@ -118,6 +118,7 @@ class _AllAuctionsPageState extends State<AllAuctionsPage> {
                       itemCount: 15,
                       itemBuilder: (context, index) {
                         return AuctionsPageContainer(
+                          auctionID: '111',
                           auctionName: 'Coins Auction',
                           hostName: 'HostName',
                           currentBid: '5000',
@@ -145,6 +146,7 @@ class _AllAuctionsPageState extends State<AllAuctionsPage> {
                     itemCount: 15,
                     itemBuilder: (context, index) {
                       return AuctionsPageContainer(
+                        auctionID: '111',
                         auctionName: 'Coins Auction',
                         hostName: 'HostName',
                         currentBid: '5000',

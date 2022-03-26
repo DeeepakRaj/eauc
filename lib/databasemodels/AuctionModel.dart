@@ -34,8 +34,10 @@ class AuctionModel {
         auctionId: json["auction_id"],
         auctionName: json["auction_name"],
         auctionDesc: json["auction_desc"],
-        startDate: DateTime.parse(json["start_Date"]),
-        endDate: DateTime.parse(json["end_Date"]),
+        // startDate: DateTime.parse(json["start_Date"]),
+        // endDate: DateTime.parse(json["end_Date"]),
+        startDate: json["start_Date"],
+        endDate: json["end_Date"],
         email: json["email"],
         products: List<Product>.from(
             json["products"].map((x) => Product.fromJson(x))),

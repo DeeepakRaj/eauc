@@ -78,8 +78,8 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
     });
     docRef = collectionRef.collection(auctionId.toString()).doc('timings');
     batch.set(docRef, {
-      "startDate": auctionDateFrom.millisecondsSinceEpoch,
-      "endDate": auctionDateTo.millisecondsSinceEpoch,
+      "start_Date": auctionDateFrom.millisecondsSinceEpoch,
+      "end_Date": auctionDateTo.millisecondsSinceEpoch,
     });
     return batch;
   }

@@ -137,6 +137,7 @@ class _HostedAuctionsAllState extends State<HostedAuctionsAll> {
                 children: List.generate(
                     6,
                     (index) => AuctionsPageContainer(
+                      auctionID: '111',
                           auctionName: 'Product1',
                           hostName: 'HostName',
                           currentBid: '5000',
@@ -194,6 +195,7 @@ class _HostedAuctionsLiveState extends State<HostedAuctionsLive> {
                 children: List.generate(
                     6,
                     (index) => AuctionsPageContainer(
+                      auctionID: '111',
                           auctionName: 'Product1',
                           hostName: 'HostName',
                           currentBid: '5000',
@@ -251,6 +253,7 @@ class _HostedAuctionsUpcomingState extends State<HostedAuctionsUpcoming> {
                 children: List.generate(
                     6,
                     (index) => AuctionsPageContainer(
+                      auctionID: '111',
                           auctionName: 'Product1',
                           hostName: 'HostName',
                           currentBid: '5000',

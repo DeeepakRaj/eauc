@@ -28,8 +28,9 @@ class _DisplayAuctionCountdownState extends State<DisplayAuctionCountdown> {
         FirebaseFirestore.instance.collection(widget.auctionId).doc('timings');
     ref.get().then((snapshot) {
       //TODO: change startAt to startDate later on
-      startDateTime = DateTime.fromMillisecondsSinceEpoch(snapshot['startAt']);
-      endDateTime = DateTime.fromMillisecondsSinceEpoch(snapshot['endAt']);
+      startDateTime =
+          DateTime.fromMillisecondsSinceEpoch(snapshot['start_Date']);
+      endDateTime = DateTime.fromMillisecondsSinceEpoch(snapshot['end_Date']);
     });
     currentTime = await NTP.now();
     currentTime = currentTime.add(Duration(seconds: 1));

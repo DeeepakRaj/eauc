@@ -81,13 +81,14 @@ class _PinnedAuctionsPageState extends State<PinnedAuctionsPage> {
                       children: List.generate(
                           6,
                               (index) => AuctionsPageContainer(
-                            auctionName: 'Product1',
-                            hostName: 'HostName',
-                            currentBid: '5000',
-                            type: 'Live',
-                            imageName: 'sampleimage1',
-                            time: '13/12/2022 13:23',
-                          ))),
+                                auctionID: '111',
+                                auctionName: 'Product1',
+                                hostName: 'HostName',
+                                currentBid: '5000',
+                                type: 'Live',
+                                imageName: 'sampleimage1',
+                                time: '13/12/2022 13:23',
+                              ))),
                 ),
               )
             ],

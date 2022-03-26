@@ -80,6 +80,7 @@ class _UpcomingAuctionsPageState extends State<UpcomingAuctionsPage> {
                       itemCount: 15,
                       itemBuilder: (context, index) {
                         return AuctionsPageContainer(
+                          auctionID: '111',
                           auctionName: 'Product1',
                           hostName: 'HostName',
                           currentBid: '5000',
@@ -107,6 +108,7 @@ class _UpcomingAuctionsPageState extends State<UpcomingAuctionsPage> {
                       itemCount: 15,
                       itemBuilder: (context, index) {
                         return AuctionsPageContainer(
+                          auctionID: '111',
                           auctionName: 'Product1',
                           hostName: 'HostName',
                           currentBid: '5000',

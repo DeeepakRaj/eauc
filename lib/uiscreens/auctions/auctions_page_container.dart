@@ -8,14 +8,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AuctionsPageContainer extends StatefulWidget {
-  final String type, imageName, auctionName, hostName, currentBid, time;
+  final String auctionID,
+      type,
+      imageName,
+      auctionName,
+      hostName,
+      currentBid,
+      time;
 
-  AuctionsPageContainer({required this.type,
-    required this.imageName,
-    required this.auctionName,
-    required this.hostName,
-    required this.currentBid,
-    required this.time});
+  AuctionsPageContainer(
+      {required this.auctionID,
+      required this.type,
+      required this.imageName,
+      required this.auctionName,
+      required this.hostName,
+      required this.currentBid,
+      required this.time});
 
   @override
   _AuctionsPageContainerState createState() => _AuctionsPageContainerState();

@@ -74,6 +74,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                     return Container(
                       height: kProductsListViewHeight,
                       child: AuctionsPageContainer(
+                        auctionID: '111',
                         auctionName: 'Product1',
                         hostName: 'HostName',
                         currentBid: '5000',
