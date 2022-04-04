@@ -46,11 +46,7 @@ class _HomeState extends State<Home> {
       backgroundColor: kbackgroundcolor,
       drawer: CustomNavigationDrawer(),
       appBar: AppBar(
-        title: typing
-            ? TextBox()
-            : DisplayAuctionCountdown(
-                auctionId: '110',
-              ),
+        title: typing ? TextBox() : Text('HOME'),
         leading: typing
             ? IconButton(
                 icon: Icon(

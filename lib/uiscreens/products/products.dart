@@ -2,6 +2,8 @@ import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/advanced_filter.dart';
 import 'package:eauc/uiscreens/login_page.dart';
+import 'package:eauc/uiscreens/products/all_products_page.dart';
+import 'package:eauc/uiscreens/products/my_products_page.dart';
 import 'package:eauc/uiscreens/products/products_page_container.dart';
 import 'package:eauc/uiscreens/products/shimmering_products.dart';
 import 'package:eauc/widgetmodels/custom_navigation_drawer.dart';
@@ -39,6 +41,13 @@ class _ProductsState extends State<Products> {
       }
     });
     _popupSelectedValue = _popUpMenuValues[0];
+  }
+
+  Widget _buildProductsPage() {
+    if (_popupSelectedValue == _popUpMenuValues[0])
+      return AllProductsPage();
+    else
+      return MyProductsPage();
   }
 
   @override
@@ -85,123 +94,7 @@ class _ProductsState extends State<Products> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10),
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      flex: 10,
-                      child: TextFormField(
-                        cursorColor: kprimarycolor,
-                        style: kSearchFieldTextStyle,
-                        decoration: kSearchFieldDecoration.copyWith(
-                          hintText: 'Search in All Auctions',
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              //TODO: Clear the search field
-                            },
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          //TODO: Build search list
-                        },
-                      ),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: IconButton(
-                        splashRadius: 1,
-                        icon: Icon(
-                          Icons.filter_alt_outlined,
-                          color: kprimarycolor,
-                        ),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AdvancedFilter(
-                                  screenWidth: screenWidth,
-                                  screenHeight: screenHeight,
-                                );
-                              });
-                        },
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ExpandableCategoriesContainer(),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Ending Recently',
-                  style: kHeaderTextStyle,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                  width: double.infinity,
-                  height: kProductsListViewHeight,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return ProductsPageContainer(
-                          productName: 'Product Name',
-                          imageName: 'sampleimage1',
-                          hostName: 'HostName',
-                          currentBid: '50000',
-                          type: 'Live',
-                          time: '12:14:15',
-                        );
-                      }),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Live Auctions',
-                  style: kHeaderTextStyle,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                  width: double.infinity,
-                  height: kProductsListViewHeight,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return ProductsPageContainer(
-                          productName: 'Product Name',
-                          imageName: 'sampleimage1',
-                          hostName: 'HostName',
-                          currentBid: '50000',
-                          type: 'Upcoming',
-                          time: '12:14:15',
-                        );
-                      }),
-                ),
-              ],
-            ),
-          ),
+          child: _buildProductsPage(),
         ),
       ),
     );

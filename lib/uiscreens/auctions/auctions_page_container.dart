@@ -12,17 +12,17 @@ class AuctionsPageContainer extends StatefulWidget {
       type,
       imageName,
       auctionName,
+      auctionDesc,
       hostName,
-      currentBid,
       time;
 
   AuctionsPageContainer(
       {required this.auctionID,
       required this.type,
       required this.imageName,
+      required this.auctionDesc,
       required this.auctionName,
       required this.hostName,
-      required this.currentBid,
       required this.time});
 
   @override
@@ -37,7 +37,8 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
       transitionType: ContainerTransitionType.fade,
       transitionDuration: Duration(milliseconds: 500),
       openBuilder: (context, _) => IndividualAuctionPage(
-        auctionID: '111',
+        auctionID: widget.auctionID,
+        auctionName: widget.auctionName,
       ),
       closedShape: RoundedRectangleBorder(),
       closedBuilder: (context, openContainer) {
@@ -109,23 +110,15 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
                 SizedBox(
                   height: 5,
                 ),
-                Text(
-                  'Tags:',
-                  style: TextStyle(fontSize: 12),
-                ),
                 Flexible(
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return TagContainer('Electronics');
-                    },
-                  ),
-                ),
+                    child: Text(
+                  widget.auctionDesc,
+                  style: kCardSubTitleTextStyle.copyWith(fontSize: 15),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                )),
                 SizedBox(
-                  height: 5,
+                  height: 10,
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,

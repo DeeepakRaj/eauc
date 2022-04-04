@@ -96,6 +96,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
     auctionData["start_Date"] = _datefrom!.millisecondsSinceEpoch.toString();
     auctionData["end_Date"] = _dateto!.millisecondsSinceEpoch.toString();
     auctionData["email"] = emailid;
+    auctionData["type"] = 'upcoming';
     auctionData["products_length"] = products.length.toString();
 
     for (var i = 0; i < products.length; i++) {
@@ -116,7 +117,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
       auctionData['moreProductImages' + (i).toString()] =
           images.join(",").toString();
     }
-
+    print(auctionData);
     try {
       var response = await http.post(Uri.parse(url), body: auctionData);
       var data = jsonDecode(response.body);
@@ -141,7 +142,8 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
               _loading = false;
             });
             Fluttertoast.showToast(
-                msg: "Error. Please Try Again", toastLength: Toast.LENGTH_LONG);
+                msg: "Firebase Error. Please Try Again",
+                toastLength: Toast.LENGTH_LONG);
           } else {
             //TODO: Think about what to do in this
           }
@@ -151,14 +153,16 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
           _loading = false;
         });
         Fluttertoast.showToast(
-            msg: "Error. Please Try Again", toastLength: Toast.LENGTH_LONG);
+            msg: "Webhost Error. Please Try Again",
+            toastLength: Toast.LENGTH_LONG);
       }
     } catch (exception) {
       setState(() {
         _loading = false;
       });
       Fluttertoast.showToast(
-          msg: "Error. Please Try Again", toastLength: Toast.LENGTH_LONG);
+          msg: "Exception Error. Please Try Again",
+          toastLength: Toast.LENGTH_LONG);
     }
   }
 

@@ -1,9 +1,12 @@
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
+import 'package:eauc/databasemodels/AllProductsModel.dart';
 import 'package:eauc/databasemodels/AuctionModel.dart';
+import 'package:eauc/widgetmodels/shimmering_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:eauc/uiscreens/login_page.dart';
+import 'package:eauc/databasemodels/AuctionModel.dart';
 import 'package:http/http.dart' as http;
 
 import 'auction_info_container.dart';
@@ -11,9 +14,9 @@ import 'iap_product_container.dart';
 
 class IndividualAuctionPage extends StatefulWidget {
   static const routename = 'individual_auction_page';
-  final String auctionID;
+  final String auctionID, auctionName;
 
-  IndividualAuctionPage({required this.auctionID});
+  IndividualAuctionPage({required this.auctionID, required this.auctionName});
 
   @override
   _IndividualAuctionPageState createState() => _IndividualAuctionPageState();
@@ -21,17 +24,17 @@ class IndividualAuctionPage extends StatefulWidget {
 
 class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
   late String emailid;
-  late Future<AuctionModel> thisauction;
+  Future<AllProductsModel>? thisproducts;
 
-  Future<AuctionModel> getAuctionData(String auctionid) async {
-    var auction;
-    var url = apiUrl + "AuctionData/getAuctionDataByID.php";
+  Future<AllProductsModel> getAuctionProducts(String auctionid) async {
+    var products;
+    var url = apiUrl + "AuctionData/getAllProducts.php";
     var response = await http.post(Uri.parse(url), body: {
       "auction_id": auctionid,
     });
     print(response.statusCode);
-    auction = auctionsFromJson(response.body);
-    return auction;
+    products = allProductsModelFromJson(response.body);
+    return products;
   }
 
   @override
@@ -46,7 +49,7 @@ class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
       } else {
         setState(() {
           this.emailid = value;
-          thisauction = getAuctionData(widget.auctionID);
+          thisproducts = getAuctionProducts(widget.auctionID);
         });
       }
     });
@@ -56,7 +59,7 @@ class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Coins Auction'),
+        title: Text(widget.auctionName),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
@@ -66,78 +69,91 @@ class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
           },
         ),
       ),
-      body: FutureBuilder<AuctionModel>(
-        future: thisauction,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData)
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          else {
-            print(snapshot.hasData);
-            return SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  AuctionInfoContainer(
-                    auctionID: widget.auctionID,
-                    place: 'individualauctionplace',
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: StickyHeader(
-                      header: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                        color: kbackgroundcolor,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            TextFormField(
-                              decoration: kSearchFieldDecoration.copyWith(
-                                  hintText: 'Search in Products'),
-                              textInputAction: TextInputAction.search,
-                              style: kSearchFieldTextStyle,
-                              cursorColor: kprimarycolor,
-                              onChanged: (value) {
-                                //TODO: Build search list view
-                              },
-                            ),
-                          ],
-                        ),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            AuctionInfoContainer(
+              auctionID: widget.auctionID,
+              place: 'individualauctionpage',
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: StickyHeader(
+                header: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                  color: kbackgroundcolor,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextFormField(
+                        decoration: kSearchFieldDecoration.copyWith(
+                            hintText: 'Search in Products'),
+                        textInputAction: TextInputAction.search,
+                        style: kSearchFieldTextStyle,
+                        cursorColor: kprimarycolor,
+                        onChanged: (value) {
+                          //TODO: Build search list view
+                        },
                       ),
-                      content: ListView.separated(
-                          separatorBuilder: (BuildContext context, int index) =>
-                              const Divider(),
-                          physics: NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          itemCount: snapshot.data!.products.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return IapProductContainer(
-                              auctionType: 'Live',
-                              imageName: 'sampleimage1',
-                              productName:
-                                  snapshot.data!.products[index].productName,
-                              productDesc:
-                                  snapshot.data!.products[index].productDesc,
-                              productTags: snapshot
-                                  .data!.products[index].productCategory
-                                  .split(','),
-                              productPriceOrBid:
-                                  snapshot.data!.products[index].basePrice,
-                            );
-                          }),
-                    ),
+                    ],
                   ),
-                ],
+                ),
+                content: FutureBuilder<AllProductsModel>(
+                  future: thisproducts,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasData) {
+                        return ListView.separated(
+                            separatorBuilder:
+                                (BuildContext context, int index) =>
+                                    const Divider(),
+                            physics: NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data!.result.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return IapProductContainer(
+                                auctionType: 'Live',
+                                auctionID:
+                                    snapshot.data!.result[index].auctionId,
+                                imageName:
+                                    snapshot.data!.result[index].productImage,
+                                productName:
+                                    snapshot.data!.result[index].productName,
+                                productID:
+                                    snapshot.data!.result[index].productId,
+                                productDesc:
+                                    snapshot.data!.result[index].productDesc,
+                                productTags: snapshot
+                                    .data!.result[index].productCategory
+                                    .split(','),
+                                productPriceOrBid:
+                                    snapshot.data!.result[index].basePrice,
+                              );
+                            });
+                      } else {
+                        return Center(
+                          child: Text(
+                            'No Products Available',
+                            style: kHeaderTextStyle,
+                          ),
+                        );
+                      }
+                    } else {
+                      return ShimmeringWidget(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.4);
+                    }
+                  },
+                ),
               ),
-            );
-          }
-        },
+            ),
+          ],
+        ),
       ),
       // body: SafeArea(
       //   child: Padding(

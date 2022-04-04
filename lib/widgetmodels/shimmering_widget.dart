@@ -12,9 +12,9 @@ class ShimmeringWidget extends StatelessWidget {
         child: Container(
           height: height,
           width: width,
-          color: Colors.grey.shade400,
+          color: Colors.grey.shade300,
         ),
-        baseColor: Colors.grey.shade400,
-        highlightColor: Colors.grey.shade200);
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade50);
   }
 }

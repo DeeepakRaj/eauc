@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/individualpages/individual_product_page.dart';
@@ -8,6 +11,8 @@ import 'package:eauc/uiscreens/login_page.dart';
 
 class IapProductContainer extends StatefulWidget {
   final String imageName,
+      auctionID,
+      productID,
       productName,
       productDesc,
       auctionType,
@@ -16,6 +21,8 @@ class IapProductContainer extends StatefulWidget {
 
   IapProductContainer(
       {required this.auctionType,
+      required this.auctionID,
+      required this.productID,
       required this.imageName,
       required this.productName,
       required this.productDesc,
@@ -37,7 +44,7 @@ class _IapProductContainerState extends State<IapProductContainer> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),
-            (route) => false);
+                (route) => false);
       } else {
         setState(() {
           this.emailid = value;
@@ -61,15 +68,26 @@ class _IapProductContainerState extends State<IapProductContainer> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      image: DecorationImage(
-                        image: AssetImage(
-                          'assets/images/${widget.imageName}.jpg',
-                        ),
-                        fit: BoxFit.cover,
-                      ),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => IndividualProductPage(
+                                  auctionID: widget.auctionID,
+                                  productID: widget.productID,
+                                  productName: widget.productName,
+                                )),
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          image: DecorationImage(
+                              image:
+                                  Image.memory(base64Decode(widget.imageName))
+                                      .image,
+                              fit: BoxFit.contain)),
                     ),
                   ),
                 ),
@@ -82,19 +100,9 @@ class _IapProductContainerState extends State<IapProductContainer> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        IndividualProductPage()),
-                              );
-                            },
-                            child: Text(
-                              widget.productName,
-                              style: kCardTitleTextStyle,
-                            ),
+                          Text(
+                            widget.productName,
+                            style: kCardTitleTextStyle,
                           ),
                           SizedBox(
                             height: 10,

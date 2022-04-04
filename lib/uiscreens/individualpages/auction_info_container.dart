@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/databasemodels/AuctionModel.dart';
-import 'package:eauc/widgetmodels/blinking_live_indicator.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/widgetmodels/blinking_live_indicator_large.dart';
 import 'package:eauc/widgetmodels/display_auction_countdown.dart';
+import 'package:eauc/widgetmodels/shimmering_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:like_button/like_button.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class AuctionInfoContainer extends StatefulWidget {
   final String auctionID, place;
@@ -19,19 +25,34 @@ class AuctionInfoContainer extends StatefulWidget {
 
 class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
   bool _isPinned = false;
+  bool _hasBackground = false;
   late String emailid;
+  final likebtnkey = GlobalKey<LikeButtonState>();
 
-  late Future<AuctionModel> thisauction;
+  Future<AuctionModel>? thisauction;
+  Future<String>? functiondata;
 
-  Future<AuctionModel> getAuctionData(String auctionid) async {
-    var auction;
-    var url = apiUrl + "AuctionData/getAuctionDataByID.php";
+  Future<AuctionModel> getAuctionData(String auctionid, String email) async {
+    var auction, temp;
+    var url = apiUrl + "AuctionData/getAuctionInfo.php";
     var response = await http.post(Uri.parse(url), body: {
       "auction_id": auctionid,
+      "emailid": email,
     });
-    print(response.statusCode);
-    auction = auctionsFromJson(response.body);
+    temp = jsonDecode(response.body);
+    _isPinned = temp['pinned_auctions'].split(",").contains(widget.auctionID);
+    auction = auctionModelFromJson(response.body);
     return auction;
+  }
+
+  Future<String> pin_unpinauction(String auctionid, bool type) async {
+    var url = apiUrl + "pinned_unpinned_auction.php";
+    var response = await http.post(Uri.parse(url), body: {
+      "future_state": (type) ? "pinned" : "unpinned",
+      "email": emailid,
+      "auction_id": auctionid,
+    });
+    return response.body;
   }
 
   @override
@@ -46,7 +67,7 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
       } else {
         setState(() {
           this.emailid = value;
-          thisauction = getAuctionData(widget.auctionID);
+          thisauction = getAuctionData(widget.auctionID, emailid);
         });
       }
     });
@@ -54,177 +75,239 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final animationduration = Duration(milliseconds: 500);
+
     return FutureBuilder<AuctionModel>(
       future: thisauction,
       builder: (context, snapshot) {
-        if (!snapshot.hasData)
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        else {
-          return Container(
-            width: double.infinity,
-            color: Colors.white,
-            padding: EdgeInsets.all(15.0),
-            margin: EdgeInsets.all(2),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      width: 1,
-                    ),
-                    BlinkingLiveIndicatorLarge(),
-                  ],
-                ),
-                Flexible(
-                  child: Text(
-                    snapshot.data!.auctionName,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                        color: kprimarycolor),
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            return Container(
+              width: double.infinity,
+              color: Colors.white,
+              padding: EdgeInsets.all(15.0),
+              margin: EdgeInsets.all(2),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        width: 1,
+                      ),
+                      BlinkingLiveIndicatorLarge(),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    ChoiceChip(
-                      label: _isPinned ? Text('Pinned') : Text('Pin Auction'),
-                      labelStyle: _isPinned
-                          ? TextStyle(
-                              fontSize: 12,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)
-                          : TextStyle(
-                              fontSize: 12,
-                              color: Colors.blueAccent,
-                              fontWeight: FontWeight.bold),
-                      selected: _isPinned,
-                      avatar: _isPinned
-                          ? Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 20,
-                            )
-                          : Icon(
-                              Icons.push_pin,
-                              color: Colors.blueAccent,
-                              size: 20,
-                            ),
-                      backgroundColor: Colors.white,
-                      // elevation: 6,
-                      // pressElevation: 1,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          side: BorderSide(color: Colors.blueAccent, width: 2)),
-                      selectedColor: Colors.blueAccent,
-                      onSelected: (value) {
-                        setState(() {
-                          _isPinned = value;
-                          // TODO: pinned or not function
-                        });
-                      },
+                  Flexible(
+                    child: Text(
+                      snapshot.data!.result[0].auctionName,
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          color: kprimarycolor),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    (widget.place == 'individualproductpage')
-                        ? Chip(
-                            label: Text('Go to Auction'),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () async {
+                          // setState(()=>_hasBackground=!_isPinned);
+                          await Future.delayed(Duration(milliseconds: 100));
+                          likebtnkey.currentState!.onTap();
+                        },
+                        style: OutlinedButton.styleFrom(
+                            padding: EdgeInsets.all(8),
+                            backgroundColor:
+                                _isPinned ? Colors.blue : Colors.white,
                             shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                                side:
-                                    BorderSide(color: Colors.green, width: 2)),
-                            backgroundColor: Colors.green,
-                            labelStyle: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                            avatar: Icon(
-                              Icons.add_to_home_screen,
-                              color: Colors.white,
-                              size: 20,
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          )
-                        : SizedBox(
-                            width: 1,
+                            side: BorderSide(color: Colors.blue, width: 2)),
+                        child: IgnorePointer(
+                          child: LikeButton(
+                            isLiked: _isPinned,
+                            key: likebtnkey,
+                            size: 23,
+                            animationDuration: animationduration,
+                            circleColor: CircleColor(
+                                start: Color(0xff00ddff),
+                                end: Color(0xff0099cc)),
+                            bubblesColor: BubblesColor(
+                              dotPrimaryColor: Color(0xff33b5e5),
+                              dotSecondaryColor: Color(0xff0099cc),
+                            ),
+                            likeBuilder: (bool isPinned) {
+                              return Icon(
+                                Icons.push_pin,
+                                color: isPinned ? Colors.white : Colors.blue,
+                                size: 23,
+                              );
+                            },
+                            likeCount: 0,
+                            countBuilder: (count, isPinned, text) {
+                              return Text(
+                                isPinned ? 'Pinned' : 'Pin Auction',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        isPinned ? Colors.white : Colors.blue),
+                              );
+                            },
+                            onTap: (isPinned) async {
+                              showToast(
+                                'Please wait...',
+                                context: context,
+                                animation: StyledToastAnimation.slideFromBottom,
+                                reverseAnimation:
+                                    StyledToastAnimation.slideFromBottomFade,
+                                position: StyledToastPosition.center,
+                                animDuration: Duration(seconds: 1),
+                                duration: Duration(seconds: 4),
+                                curve: Curves.elasticOut,
+                                reverseCurve: Curves.linear,
+                              );
+                              var url = apiUrl + "pinned_unpinned_auction.php";
+                              var response =
+                                  await http.post(Uri.parse(url), body: {
+                                "future_state":
+                                    (isPinned) ? "unpinned" : "pinned",
+                                "email": emailid,
+                                "auction_id": widget.auctionID,
+                              });
+                              if (jsonDecode(response.body) == 'true') {
+                                setState(() {
+                                  _isPinned = !isPinned;
+                                });
+                              }
+                              showToast(
+                                (jsonDecode(response.body) == 'true')
+                                    ? 'Successful'
+                                    : 'Error. Please Try Again',
+                                context: context,
+                                animation: StyledToastAnimation.slideFromBottom,
+                                reverseAnimation:
+                                    StyledToastAnimation.slideFromBottomFade,
+                                position: StyledToastPosition.center,
+                                animDuration: Duration(seconds: 1),
+                                duration: Duration(seconds: 4),
+                                curve: Curves.elasticOut,
+                                reverseCurve: Curves.linear,
+                              );
+                              return (jsonDecode(response.body) == 'true')
+                                  ? !isPinned
+                                  : isPinned;
+                            },
                           ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Text(
-                    snapshot.data!.auctionDesc,
-                    style: kCardSubTitleTextStyle.copyWith(fontSize: 15),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      (widget.place == 'individualproductpage')
+                          ? Chip(
+                              label: Text('Go to Auction'),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  side: BorderSide(
+                                      color: Colors.green, width: 2)),
+                              backgroundColor: Colors.green,
+                              labelStyle: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              avatar: Icon(
+                                Icons.add_to_home_screen,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            )
+                          : SizedBox(
+                              width: 1,
+                            ),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Hosted By:',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.black,
+                  SizedBox(
+                    height: 10,
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                ListTile(
-                  selectedTileColor: Colors.white,
-                  selectedColor: Colors.white,
-                  leading: Icon(
-                    Icons.account_circle,
-                    size: 40,
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Text(
+                      snapshot.data!.result[0].auctionDesc,
+                      style: kCardSubTitleTextStyle.copyWith(fontSize: 15),
+                    ),
                   ),
-                  iconColor: ksecondarycolor,
-                  title: Text(
-                    snapshot.data!.email,
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Hosted By:',
                     style: TextStyle(
-                        color: Colors.brown, fontWeight: FontWeight.bold),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.black,
+                    ),
                   ),
-                  tileColor: kprimarycolor,
-                  // subtitle: Text(
-                  //   'Company Details or name',
-                  //   style: TextStyle(color: ksecondarycolor),
-                  // ),
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.access_time,
-                    size: 40,
+                  SizedBox(
+                    height: 10,
                   ),
-                  iconColor: ksecondarycolor,
-                  title: Text(
-                    'Ending In',
-                    style: TextStyle(
-                        color: Colors.brown, fontWeight: FontWeight.bold),
+                  ListTile(
+                    selectedTileColor: Colors.white,
+                    selectedColor: Colors.white,
+                    leading: Icon(
+                      Icons.account_circle,
+                      size: 40,
+                    ),
+                    iconColor: ksecondarycolor,
+                    title: Text(
+                      snapshot.data!.result[0].email,
+                      style: TextStyle(
+                          color: Colors.brown, fontWeight: FontWeight.bold),
+                    ),
+                    tileColor: kprimarycolor,
+                    // subtitle: Text(
+                    //   'Company Details or name',
+                    //   style: TextStyle(color: ksecondarycolor),
+                    // ),
                   ),
-                  tileColor: kprimarycolor,
-                  // subtitle:
-                  //     DisplayAuctionCountdown(auctionId: widget.auctionID),
-                  subtitle: Text('12,14,15'),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-              ],
-            ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.access_time,
+                      size: 40,
+                    ),
+                    iconColor: ksecondarycolor,
+                    title: Text(
+                      'Ending In',
+                      style: TextStyle(
+                          color: Colors.brown, fontWeight: FontWeight.bold),
+                    ),
+                    tileColor: kprimarycolor,
+                    // subtitle:
+                    //     DisplayAuctionCountdown(auctionId: widget.auctionID),
+                    subtitle: Text('12,14,15'),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                ],
+              ),
+            );
+          } else
+            return Center(
+              child: Text('No data to display'),
+            );
+        } else
+          return ShimmeringWidget(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * 0.4,
           );
-        }
       },
     );
   }

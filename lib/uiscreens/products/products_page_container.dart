@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
@@ -8,13 +10,24 @@ import 'package:eauc/widgetmodels/tag_container.dart';
 import 'package:flutter/material.dart';
 
 class ProductsPageContainer extends StatefulWidget {
-  final String type, imageName, productName, hostName, currentBid, time;
+  final String type,
+      imageName,
+      productName,
+      hostName,
+      currentBid,
+      time,
+      productTags,
+      productID,
+      auctionID;
 
   ProductsPageContainer(
       {required this.type,
       required this.imageName,
       required this.productName,
       required this.hostName,
+      required this.productTags,
+      required this.productID,
+      required this.auctionID,
       required this.currentBid,
       required this.time});
 
@@ -24,30 +37,26 @@ class ProductsPageContainer extends StatefulWidget {
 
 class _ProductsPageContainerState extends State<ProductsPageContainer> {
   late String emailid;
+  List<String>? producttags;
 
   @override
   void initState() {
     super.initState();
-    getIdPreference().then((value) async {
-      if (value == 'No Email Attached') {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
-            (route) => false);
-      } else {
-        setState(() {
-          this.emailid = value;
-        });
-      }
-    });
+    producttags = widget.productTags.split(',');
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => IndividualProductPage()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => IndividualProductPage(
+                      auctionID: widget.auctionID,
+                      productID: widget.productID,
+                      productName: widget.productName,
+                    )));
       },
       child: Container(
         // height: MediaQuery.of(context).size.height * 0.35,
@@ -73,25 +82,18 @@ class _ProductsPageContainerState extends State<ProductsPageContainer> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              width: 180,
-              height: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
+                width: 180,
+                height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  ),
                 ),
-                // image: DecorationImage(
-                //   image: AssetImage(
-                //     'assets/images/' + imageName + '.jpg',
-                //   ),
-                //   fit: BoxFit.cover,
-                // ),
-              ),
-              child: Image.asset(
-                'assets/images/' + widget.imageName + '.jpg',
-                fit: BoxFit.cover,
-              ),
-            ),
+                child: Image(
+                  image: Image.memory(base64Decode(widget.imageName)).image,
+                  fit: BoxFit.contain,
+                )),
             SizedBox(
               height: 5,
             ),
@@ -153,9 +155,9 @@ class _ProductsPageContainerState extends State<ProductsPageContainer> {
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
-                  itemCount: 3,
+                  itemCount: producttags!.length,
                   itemBuilder: (context, index) {
-                    return TagContainer('Electronics');
+                    return TagContainer(producttags![index]);
                   }),
             ),
             SizedBox(

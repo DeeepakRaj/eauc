@@ -1,7 +1,15 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
+import 'package:eauc/databasemodels/AllProductsModel.dart';
+import 'package:eauc/databasemodels/AuctionModel.dart';
+import 'package:eauc/widgetmodels/shimmering_widget.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+import 'package:eauc/databasemodels/IndividualProductModel.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/individualpages/auction_info_container.dart';
 import 'package:eauc/uiscreens/individualpages/ipp_bidding_container.dart';
@@ -12,7 +20,12 @@ import 'package:eauc/widgetmodels/tag_container.dart';
 import 'package:flutter/material.dart';
 
 class IndividualProductPage extends StatefulWidget {
-  const IndividualProductPage({Key? key}) : super(key: key);
+  final String auctionID, productID, productName;
+
+  IndividualProductPage(
+      {required this.auctionID,
+      required this.productID,
+      required this.productName});
 
   @override
   _IndividualProductPageState createState() => _IndividualProductPageState();
@@ -20,13 +33,44 @@ class IndividualProductPage extends StatefulWidget {
 
 class _IndividualProductPageState extends State<IndividualProductPage> {
   late double _currentCarouselIndex = 0;
+  Future<IndividualProductModel>? thisproduct;
+  Future<AuctionModel>? thisauction;
   CarouselController carouselController = CarouselController();
-  final featuredImages = [
-    'assets/images/sampleimage1.jpg',
-    'assets/images/sampleimage2.jpg',
-  ];
   late String emailid;
   bool _showBottomSheet = false;
+  Future<AllProductsModel>? thisauctionproducts;
+
+  Future<AllProductsModel> getAuctionProducts(String auctionid) async {
+    var products;
+    var url = apiUrl + "AuctionData/getAllProducts.php";
+    var response = await http.post(Uri.parse(url), body: {
+      "auction_id": auctionid,
+    });
+    print(response.statusCode);
+    products = allProductsModelFromJson(response.body);
+    return products;
+  }
+
+  Future<AuctionModel> getAuctionData(String auctionid, String email) async {
+    var auction;
+    var url = apiUrl + "AuctionData/getAuctionInfo.php";
+    var response = await http.post(Uri.parse(url), body: {
+      "auction_id": auctionid,
+      "emailid": email,
+    });
+    auction = auctionModelFromJson(response.body);
+    return auction;
+  }
+
+  Future<IndividualProductModel> getProductData(String productid) async {
+    var product;
+    var url = apiUrl + "AuctionData/getIndividualProductDetails.php";
+    var response = await http.post(Uri.parse(url), body: {
+      "product_id": productid,
+    });
+    product = individualProductModelFromJson(response.body);
+    return product;
+  }
 
   @override
   void initState() {
@@ -40,6 +84,9 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
       } else {
         setState(() {
           this.emailid = value;
+          thisproduct = getProductData(widget.productID);
+          thisauction = getAuctionData(widget.auctionID, emailid);
+          thisauctionproducts = getAuctionProducts(widget.auctionID);
         });
       }
     });
@@ -50,7 +97,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text('Product Name'),
+        title: Text(widget.productName),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
@@ -60,220 +107,355 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
           },
         ),
       ),
-      body: ListView(
-        children: [
-          Container(
-            color: kbackgroundcolor,
-            child: Stack(
-              alignment: AlignmentDirectional.bottomCenter,
-              children: [
-                CarouselSlider(
-                  carouselController: carouselController,
-                  options: CarouselOptions(
-                      viewportFraction: 1,
-                      autoPlay: true,
-                      height: MediaQuery.of(context).size.height * 0.40,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          _currentCarouselIndex = index.toDouble();
-                        });
-                      }),
-                  items: featuredImages.map((featuredImage) {
-                    return Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(
-                            featuredImage,
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                DotsIndicator(
-                  dotsCount: featuredImages.length,
-                  position: _currentCarouselIndex,
-                  decorator: DotsDecorator(
-                    color: Colors.grey.shade300, // Inactive color
-                    activeColor: Colors.white,
-                    activeSize: Size.fromRadius(7),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            // padding: EdgeInsets.all(10),
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                IntrinsicHeight(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          color: Colors.white,
-                          padding: EdgeInsets.all(8),
-                          child: GestureDetector(
-                            onTap: () {
-                              _buildBottomSheet();
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    'Coins AuctionCoins AuctionCoins AuctionCoins Auction',
-                                    style: kCardTitleTextStyle.copyWith(
-                                        color: ksecondarycolor),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+      body: FutureBuilder<IndividualProductModel>(
+        future: thisproduct,
+        builder: (context, productsnapshot) {
+          if (productsnapshot.connectionState == ConnectionState.done) {
+            if (productsnapshot.hasData) {
+              var carouselImages =
+                  productsnapshot.data!.moreProductImage.split(',');
+              var productTags =
+                  productsnapshot.data!.productCategory.split(',');
+              return ListView(
+                children: [
+                  Container(
+                    color: kbackgroundcolor,
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      children: [
+                        CarouselSlider.builder(
+                          itemCount: carouselImages.length,
+                          itemBuilder: (context, itemIndex, realIndex) {
+                            return Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: Image.memory(base64Decode(
+                                          carouselImages[itemIndex]))
+                                      .image,
+                                  fit: BoxFit.contain,
                                 ),
-                                Row(
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        'HostHostHostHostHost',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.black),
+                              ),
+                            );
+                          },
+                          options: CarouselOptions(
+                              viewportFraction: 1,
+                              autoPlay: false,
+                              height: MediaQuery.of(context).size.height * 0.40,
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _currentCarouselIndex = index.toDouble();
+                                });
+                              }),
+                        ),
+                        // CarouselSlider(
+                        //   carouselController: carouselController,
+                        //   options: CarouselOptions(
+                        //       viewportFraction: 1,
+                        //       autoPlay: false,
+                        //       height: MediaQuery.of(context).size.height * 0.40,
+                        //       onPageChanged: (index, reason) {
+                        //         setState(() {
+                        //           _currentCarouselIndex = index.toDouble();
+                        //         });
+                        //       }),
+                        //   items: productsnapshot.data!.moreProductImage.split(',').map((featuredImage) {
+                        //     return Container(
+                        //       width: double.infinity,
+                        //       decoration: BoxDecoration(
+                        //         image: DecorationImage(
+                        //           image: Image.memory(base64Decode(featuredImage)).image,
+                        //           fit: BoxFit.contain,
+                        //         ),
+                        //       ),
+                        //     );
+                        //   }).toList(),
+                        // ),
+                        DotsIndicator(
+                          dotsCount: productsnapshot.data!.moreProductImage
+                              .split(',')
+                              .length,
+                          position: _currentCarouselIndex,
+                          decorator: DotsDecorator(
+                            color: Colors.grey.shade300, // Inactive color
+                            activeColor: Colors.white,
+                            activeSize: Size.fromRadius(7),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  FutureBuilder<AuctionModel>(
+                    future: thisauction,
+                    builder: (auctioncontext, auctionsnapshot) {
+                      if (auctionsnapshot.connectionState ==
+                          ConnectionState.done) {
+                        if (auctionsnapshot.hasData) {
+                          return Container(
+                            width: double.infinity,
+                            // padding: EdgeInsets.all(10),
+                            color: Colors.white,
+                            child: IntrinsicHeight(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      color: Colors.white,
+                                      padding: EdgeInsets.all(8),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          _buildBottomSheet();
+                                        },
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                auctionsnapshot.data!.result[0]
+                                                    .auctionName,
+                                                style: kCardTitleTextStyle
+                                                    .copyWith(
+                                                        color: ksecondarycolor),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Flexible(
+                                                  child: Text(
+                                                    auctionsnapshot
+                                                        .data!.result[0].email,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  '...more',
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: ksecondarycolor,
+                                                      decoration: TextDecoration
+                                                          .underline),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    SizedBox(
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      color: Colors.orange.withOpacity(0.1),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Ending In: ',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.brown,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            '12:14:15',
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        } else {
+                          return Center(
+                            child: Text(
+                              'Unable to Load Auction. Please refresh the Page',
+                              style: kHeaderTextStyle,
+                            ),
+                          );
+                        }
+                      } else {
+                        return ShimmeringWidget(
+                            width: double.infinity,
+                            height: MediaQuery.of(context).size.height * 0.25);
+                      }
+                    },
+                  ),
+                  Divider(
+                    height: 8,
+                    color: Colors.transparent,
+                    thickness: 2,
+                  ),
+                  IppBiddingContainerHost(productId: 'ID'),
+                  Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          productsnapshot.data!.productName,
+                          style: kCardTitleTextStyle,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          height: 30,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: productTags.length,
+                              itemBuilder: (context, index) {
+                                return TagContainer(productTags[index]);
+                              }),
+                        ),
+                        Divider(
+                          height: 20,
+                        ),
+                        Text(
+                          'About this item',
+                          style: kHeaderTextStyle,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          productsnapshot.data!.productDesc,
+                          maxLines: 6,
+                          style: TextStyle(fontSize: 12, color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    height: 30,
+                    color: Colors.transparent,
+                    thickness: 2,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      'More products in this auction',
+                      style: kHeaderTextStyle,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: FutureBuilder<AllProductsModel>(
+                      future: thisauctionproducts,
+                      builder: (context, auctionproductssnapshot) {
+                        if (auctionproductssnapshot.connectionState ==
+                            ConnectionState.done) {
+                          if (auctionproductssnapshot.hasData) {
+                            return Container(
+                              width: double.infinity,
+                              height: kProductsListViewHeight,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: auctionproductssnapshot
+                                      .data!.result.length,
+                                  itemBuilder: (context, index) {
+                                    return ProductsPageContainer(
+                                      productID: auctionproductssnapshot
+                                          .data!.result[index].productId,
+                                      auctionID: auctionproductssnapshot
+                                          .data!.result[index].auctionId,
+                                      productTags: auctionproductssnapshot
+                                          .data!.result[index].productCategory,
+                                      productName: auctionproductssnapshot
+                                          .data!.result[index].productName,
+                                      imageName: auctionproductssnapshot
+                                          .data!.result[index].productImage,
+                                      hostName: auctionproductssnapshot
+                                          .data!.result[index].email,
+                                      currentBid: auctionproductssnapshot
+                                          .data!.result[index].basePrice,
+                                      type: 'Live',
+                                      time: '12:14:15',
+                                    );
+                                  }),
+                            );
+                          } else {
+                            return Center(
+                              child: Text(
+                                'No other products in this auction',
+                                style: kHeaderTextStyle,
+                              ),
+                            );
+                          }
+                        } else {
+                          return Container(
+                            width: double.infinity,
+                            height: kProductsListViewHeight,
+                            child: ListView.separated(
+                                separatorBuilder: (context, _) => SizedBox(
                                       width: 5,
                                     ),
-                                    Text(
-                                      '...more',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: ksecondarycolor,
-                                          decoration: TextDecoration.underline),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          color: Colors.orange.withOpacity(0.1),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Ending In: ',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.brown,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                '12:14:15',
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Divider(
-            height: 8,
-            color: Colors.transparent,
-            thickness: 2,
-          ),
-          IppBiddingContainerHost(productId: 'ID'),
-          Container(
-            color: Colors.white,
-            padding: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Product Name',
-                  style: kCardTitleTextStyle,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                  height: 30,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return TagContainer('Ancient');
-                      }),
-                ),
-                Divider(
-                  height: 20,
-                ),
-                Text(
-                  'About this item',
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 5,
+                                itemBuilder: (context, index) {
+                                  return ShimmeringWidget(
+                                    width: 170,
+                                    height: kProductsListViewHeight,
+                                  );
+                                }),
+                          );
+                        }
+                      },
+                    ),
+                  )
+                ],
+              );
+            } else {
+              return Center(
+                child: Text(
+                  'No Data to Display',
                   style: kHeaderTextStyle,
                 ),
+              );
+            }
+          } else {
+            return ListView(
+              children: [
+                ShimmeringWidget(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.35),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
-                Text(
-                  'Description',
-                  maxLines: 6,
-                  style: TextStyle(fontSize: 12, color: Colors.black),
+                ShimmeringWidget(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    height: MediaQuery.of(context).size.height * 0.25),
+                SizedBox(
+                  height: 20,
                 ),
+                ShimmeringWidget(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    height: MediaQuery.of(context).size.height * 0.45),
               ],
-            ),
-          ),
-          Divider(
-            height: 30,
-            color: Colors.transparent,
-            thickness: 2,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              'More products in this auction',
-              style: kHeaderTextStyle,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Container(
-              width: double.infinity,
-              height: kProductsListViewHeight,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return ProductsPageContainer(
-                      productName: 'Product Name',
-                      imageName: 'sampleimage1',
-                      hostName: 'HostName',
-                      currentBid: '50000',
-                      type: 'Live',
-                      time: '12:14:15',
-                    );
-                  }),
-            ),
-          )
-        ],
+            );
+          }
+        },
       ),
     );
   }
@@ -309,7 +491,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                       child: SingleChildScrollView(
                         physics: BouncingScrollPhysics(),
                         child: AuctionInfoContainer(
-                          auctionID: 'auctionID1',
+                          auctionID: widget.auctionID,
                           place: 'individualproductpage',
                         ),
                       ),

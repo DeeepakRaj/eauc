@@ -9,7 +9,7 @@ const knormalbuttoncolor = Color(0xFFF0A500);
 // const kbrowntextcolor = Color(0xFFB26E63);
 const ksecondarycolor = Color(0xFFBF9954);
 
-const String apiUrl = 'https://eauc2022.000webhostapp.com/';
+const String apiUrl = 'https://eauction2022.000webhostapp.com/';
 
 String numberRegExp = r'^[0-9]*$';
 String emailRegExp =
