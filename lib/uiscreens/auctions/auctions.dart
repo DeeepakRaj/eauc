@@ -133,47 +133,52 @@ class _AuctionsState extends State<Auctions> {
                       FutureBuilder<AuctionModel>(
                         future: allauctions,
                         builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Container(
-                              height: kAuctionsListViewHeight,
-                              width: MediaQuery.of(context).size.width,
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: ScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 5,
-                                  itemBuilder: (context, index) {
-                                    return ShimmeringWidget(
-                                      width: 180,
-                                      height: kAuctionsListViewHeight,
-                                    );
-                                  }),
-                            );
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Container(
-                              height: kAuctionsListViewHeight,
-                              width: MediaQuery.of(context).size.width,
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: ScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 5,
-                                  itemBuilder: (context, index) {
-                                    return ShimmeringWidget(
-                                      width: 180,
-                                      height: kAuctionsListViewHeight,
-                                    );
-                                  }),
-                            );
-                          } else {
-                            if (snapshot.data!.result.length == 0)
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (snapshot.hasData) {
+                              if (snapshot.data!.result.length != 0)
+                                return Container(
+                                  height: kAuctionsListViewHeight,
+                                  color: Colors.transparent,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: ScrollPhysics(),
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: snapshot.data!.result.length,
+                                      itemBuilder: (context, index) {
+                                        return AuctionsPageContainer(
+                                          auctionID: snapshot
+                                              .data!.result[index].auctionId,
+                                          auctionName: snapshot
+                                              .data!.result[index].auctionName,
+                                          auctionDesc: snapshot
+                                              .data!.result[index].auctionDesc,
+                                          hostName: snapshot
+                                              .data!.result[index].email,
+                                          type:
+                                              snapshot.data!.result[index].type,
+                                          imageName: 'sampleimage1',
+                                          time: '13/12/2022 13:23',
+                                        );
+                                      }),
+                                );
+                              else
+                                return Center(
+                                  child: Text(
+                                    'No Auctions Available',
+                                    style: kHeaderTextStyle,
+                                  ),
+                                );
+                            } else {
                               return Center(
                                 child: Text(
-                                  'No actions at the moment',
+                                  'No Auctions Available',
                                   style: kHeaderTextStyle,
                                 ),
                               );
+                            }
+                          } else {
                             return Container(
                               height: kAuctionsListViewHeight,
                               width: MediaQuery.of(context).size.width,
@@ -181,20 +186,11 @@ class _AuctionsState extends State<Auctions> {
                                   shrinkWrap: true,
                                   physics: ScrollPhysics(),
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: snapshot.data!.result.length,
+                                  itemCount: 5,
                                   itemBuilder: (context, index) {
-                                    return AuctionsPageContainer(
-                                      auctionID: snapshot
-                                          .data!.result[index].auctionId,
-                                      auctionName: snapshot
-                                          .data!.result[index].auctionName,
-                                      auctionDesc: snapshot
-                                          .data!.result[index].auctionDesc,
-                                      hostName:
-                                          snapshot.data!.result[index].email,
-                                      type: snapshot.data!.result[index].type,
-                                      imageName: 'sampleimage1',
-                                      time: '13/12/2022 13:23',
+                                    return ShimmeringWidget(
+                                      width: 180,
+                                      height: kAuctionsListViewHeight,
                                     );
                                   }),
                             );

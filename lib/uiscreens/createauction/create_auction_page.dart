@@ -157,6 +157,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
             toastLength: Toast.LENGTH_LONG);
       }
     } catch (exception) {
+      print(exception.toString());
       setState(() {
         _loading = false;
       });

@@ -41,12 +41,13 @@ class _DisplayAuctionCountdownState extends State<DisplayAuctionCountdown> {
     return StreamBuilder(
       stream: Stream.periodic(Duration(seconds: 1), (count) {
         if (currentTime.isBefore(startDateTime))
-          return startDateTime.toString();
+          return startDateTime.toString().split('.')[0];
         //TODO: Set status Upcoming, Live in firestore
         else
           return endDateTime
               .difference(currentTime.add(Duration(seconds: count)))
-              .toString();
+              .toString()
+              .split('.')[0];
       }),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {

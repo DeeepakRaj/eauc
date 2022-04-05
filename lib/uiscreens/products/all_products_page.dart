@@ -132,7 +132,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
-                        itemCount: 5,
+                        itemCount: snapshot.data!.result.length,
                         itemBuilder: (context, index) {
                           return ProductsPageContainer(
                             productID: snapshot.data!.result[index].productId,

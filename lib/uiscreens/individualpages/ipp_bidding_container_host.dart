@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 
 class IppBiddingContainerHost extends StatefulWidget {
-  final String productId;
+  final String auctionId, productId;
 
-  IppBiddingContainerHost({required this.productId});
+  IppBiddingContainerHost({required this.productId, required this.auctionId});
 
   @override
   _IppBiddingContainerHostState createState() =>

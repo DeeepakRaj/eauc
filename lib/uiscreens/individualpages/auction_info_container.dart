@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/databasemodels/AuctionModel.dart';
+import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/widgetmodels/blinking_live_indicator_large.dart';
 import 'package:eauc/widgetmodels/display_auction_countdown.dart';
@@ -117,7 +118,6 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
                     children: [
                       OutlinedButton(
                         onPressed: () async {
-                          // setState(()=>_hasBackground=!_isPinned);
                           await Future.delayed(Duration(milliseconds: 100));
                           likebtnkey.currentState!.onTap();
                         },
@@ -211,22 +211,35 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
                         width: 10,
                       ),
                       (widget.place == 'individualproductpage')
-                          ? Chip(
-                              label: Text('Go to Auction'),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20)),
-                                  side: BorderSide(
-                                      color: Colors.green, width: 2)),
-                              backgroundColor: Colors.green,
-                              labelStyle: TextStyle(
-                                  fontSize: 12,
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            IndividualAuctionPage(
+                                              auctionID: widget.auctionID,
+                                              auctionName: snapshot
+                                                  .data!.result[0].auctionName,
+                                            )));
+                              },
+                              child: Chip(
+                                label: Text('Go to Auction'),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                    side: BorderSide(
+                                        color: Colors.green, width: 2)),
+                                backgroundColor: Colors.green,
+                                labelStyle: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                                avatar: Icon(
+                                  Icons.add_to_home_screen,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              avatar: Icon(
-                                Icons.add_to_home_screen,
-                                color: Colors.white,
-                                size: 20,
+                                  size: 20,
+                                ),
                               ),
                             )
                           : SizedBox(

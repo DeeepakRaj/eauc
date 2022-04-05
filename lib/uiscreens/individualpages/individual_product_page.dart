@@ -6,6 +6,8 @@ import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/databasemodels/AllProductsModel.dart';
 import 'package:eauc/databasemodels/AuctionModel.dart';
+import 'package:eauc/widgetmodels/display_auction_countdown.dart';
+import 'package:eauc/widgetmodels/get_auction_timestream.dart';
 import 'package:eauc/widgetmodels/shimmering_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +37,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
   late double _currentCarouselIndex = 0;
   Future<IndividualProductModel>? thisproduct;
   Future<AuctionModel>? thisauction;
-  CarouselController carouselController = CarouselController();
+  CarouselController _carouselController = CarouselController();
   late String emailid;
   bool _showBottomSheet = false;
   Future<AllProductsModel>? thisauctionproducts;
@@ -114,6 +116,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
             if (productsnapshot.hasData) {
               var carouselImages =
                   productsnapshot.data!.moreProductImage.split(',');
+              carouselImages.insert(0, productsnapshot.data!.productImage);
               var productTags =
                   productsnapshot.data!.productCategory.split(',');
               return ListView(
@@ -125,6 +128,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                       children: [
                         CarouselSlider.builder(
                           itemCount: carouselImages.length,
+                          carouselController: _carouselController,
                           itemBuilder: (context, itemIndex, realIndex) {
                             return Container(
                               width: double.infinity,
@@ -140,6 +144,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                           },
                           options: CarouselOptions(
                               viewportFraction: 1,
+                              pageSnapping: true,
                               autoPlay: false,
                               height: MediaQuery.of(context).size.height * 0.40,
                               onPageChanged: (index, reason) {
@@ -172,9 +177,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                         //   }).toList(),
                         // ),
                         DotsIndicator(
-                          dotsCount: productsnapshot.data!.moreProductImage
-                              .split(',')
-                              .length,
+                          dotsCount: carouselImages.length,
                           position: _currentCarouselIndex,
                           decorator: DotsDecorator(
                             color: Colors.grey.shade300, // Inactive color
@@ -256,30 +259,50 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                                   ),
                                   Expanded(
                                     flex: 1,
-                                    child: Container(
-                                      color: Colors.orange.withOpacity(0.1),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Ending In: ',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.brown,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            '12:14:15',
-                                            style: TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
+                                    child: StreamBuilder<String>(
+                                      stream:
+                                          GetAuctionTimeStream(widget.auctionID)
+                                              .getAuctionTimeStream(),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return ShimmeringWidget(
+                                              width: 90, height: 50);
+                                        } else {
+                                          return Container(
+                                            color:
+                                                Colors.orange.withOpacity(0.1),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  snapshot.data!
+                                                      .toString()
+                                                      .split('.')[0],
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.brown,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Text(
+                                                  snapshot.data!
+                                                      .toString()
+                                                      .split('.')[1],
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 17,
+                                                      color: Colors.red),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }
+                                      },
                                     ),
                                   ),
                                 ],
@@ -306,7 +329,10 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                     color: Colors.transparent,
                     thickness: 2,
                   ),
-                  IppBiddingContainerHost(productId: 'ID'),
+                  IppBiddingContainer(
+                    productId: widget.productID,
+                    auctionId: widget.auctionID,
+                  ),
                   Container(
                     color: Colors.white,
                     padding: EdgeInsets.all(10),

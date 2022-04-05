@@ -40,7 +40,8 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
         auctionID: widget.auctionID,
         auctionName: widget.auctionName,
       ),
-      closedShape: RoundedRectangleBorder(),
+      closedShape:
+          RoundedRectangleBorder(side: BorderSide(color: Colors.transparent)),
       closedBuilder: (context, openContainer) {
         return GestureDetector(
           onTap: openContainer,
