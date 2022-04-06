@@ -268,9 +268,17 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                                           return ShimmeringWidget(
                                               width: 90, height: 50);
                                         } else {
+                                          String heading = snapshot.data!
+                                              .toString()
+                                              .split('.')[0];
+                                          String time = snapshot.data!
+                                              .toString()
+                                              .split('.')[1];
                                           return Container(
-                                            color:
-                                                Colors.orange.withOpacity(0.1),
+                                            color: (heading == 'Scheduled Date')
+                                                ? Colors.green.withOpacity(0.1)
+                                                : Colors.orange
+                                                    .withOpacity(0.1),
                                             child: Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
@@ -278,9 +286,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  snapshot.data!
-                                                      .toString()
-                                                      .split('.')[0],
+                                                  heading,
                                                   style: TextStyle(
                                                       fontSize: 12,
                                                       color: Colors.brown,
@@ -288,14 +294,15 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                                                           FontWeight.bold),
                                                 ),
                                                 Text(
-                                                  snapshot.data!
-                                                      .toString()
-                                                      .split('.')[1],
+                                                  time,
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontSize: 17,
-                                                      color: Colors.red),
+                                                      color: (heading ==
+                                                              'Scheduled Date')
+                                                          ? Colors.blue
+                                                          : Colors.red),
                                                   textAlign: TextAlign.center,
                                                 ),
                                               ],

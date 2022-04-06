@@ -29,7 +29,7 @@ class GetAuctionTimeStream {
 
   Stream<String> getAuctionTimeStream() {
     return Stream.periodic(Duration(seconds: 1), (count) {
-      if (currentTime.isBefore(startDateTime))
+      if (currentTime.add(Duration(seconds: count)).isBefore(startDateTime))
         return 'Scheduled Date.' + getProperDate(startDateTime.toString());
       //TODO: Set status Upcoming, Live in firestore
       else

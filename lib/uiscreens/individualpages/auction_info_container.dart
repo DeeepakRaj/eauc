@@ -15,6 +15,8 @@ import 'package:http/http.dart' as http;
 import 'package:like_button/like_button.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
+import '../../widgetmodels/get_auction_timestream.dart';
+
 class AuctionInfoContainer extends StatefulWidget {
   final String auctionID, place;
 
@@ -26,7 +28,7 @@ class AuctionInfoContainer extends StatefulWidget {
 
 class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
   bool _isPinned = false;
-  bool _hasBackground = false;
+  bool _showLoading = false;
   late String emailid;
   final likebtnkey = GlobalKey<LikeButtonState>();
 
@@ -161,18 +163,21 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
                               );
                             },
                             onTap: (isPinned) async {
-                              showToast(
-                                'Please wait...',
-                                context: context,
-                                animation: StyledToastAnimation.slideFromBottom,
-                                reverseAnimation:
-                                    StyledToastAnimation.slideFromBottomFade,
-                                position: StyledToastPosition.center,
-                                animDuration: Duration(seconds: 1),
-                                duration: Duration(seconds: 4),
-                                curve: Curves.elasticOut,
-                                reverseCurve: Curves.linear,
-                              );
+                              setState(() {
+                                _showLoading = true;
+                              });
+                              // showToast(
+                              //   'Please wait...',
+                              //   context: context,
+                              //   animation: StyledToastAnimation.slideFromBottom,
+                              //   reverseAnimation:
+                              //       StyledToastAnimation.slideFromBottomFade,
+                              //   position: StyledToastPosition.center,
+                              //   animDuration: Duration(seconds: 1),
+                              //   duration: Duration(seconds: 4),
+                              //   curve: Curves.elasticOut,
+                              //   reverseCurve: Curves.linear,
+                              // );
                               var url = apiUrl + "pinned_unpinned_auction.php";
                               var response =
                                   await http.post(Uri.parse(url), body: {
@@ -184,22 +189,26 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
                               if (jsonDecode(response.body) == 'true') {
                                 setState(() {
                                   _isPinned = !isPinned;
+                                  _showLoading = false;
                                 });
+                              } else {
+                                setState(() {
+                                  _showLoading = false;
+                                });
+                                showToast(
+                                  'Error. Please Try Again',
+                                  context: context,
+                                  animation:
+                                      StyledToastAnimation.slideFromBottom,
+                                  reverseAnimation:
+                                      StyledToastAnimation.slideFromBottomFade,
+                                  position: StyledToastPosition.center,
+                                  animDuration: Duration(seconds: 1),
+                                  duration: Duration(seconds: 4),
+                                  curve: Curves.elasticOut,
+                                  reverseCurve: Curves.linear,
+                                );
                               }
-                              showToast(
-                                (jsonDecode(response.body) == 'true')
-                                    ? 'Successful'
-                                    : 'Error. Please Try Again',
-                                context: context,
-                                animation: StyledToastAnimation.slideFromBottom,
-                                reverseAnimation:
-                                    StyledToastAnimation.slideFromBottomFade,
-                                position: StyledToastPosition.center,
-                                animDuration: Duration(seconds: 1),
-                                duration: Duration(seconds: 4),
-                                curve: Curves.elasticOut,
-                                reverseCurve: Curves.linear,
-                              );
                               return (jsonDecode(response.body) == 'true')
                                   ? !isPinned
                                   : isPinned;
@@ -207,6 +216,16 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      _showLoading
+                          ? CircularProgressIndicator(
+                              strokeWidth: 5,
+                            )
+                          : SizedBox(
+                              width: 1,
+                            ),
                       SizedBox(
                         width: 10,
                       ),
@@ -290,21 +309,45 @@ class _AuctionInfoContainerState extends State<AuctionInfoContainer> {
                     //   style: TextStyle(color: ksecondarycolor),
                     // ),
                   ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.access_time,
-                      size: 40,
-                    ),
-                    iconColor: ksecondarycolor,
-                    title: Text(
-                      'Ending In',
-                      style: TextStyle(
-                          color: Colors.brown, fontWeight: FontWeight.bold),
-                    ),
-                    tileColor: kprimarycolor,
-                    // subtitle:
-                    //     DisplayAuctionCountdown(auctionId: widget.auctionID),
-                    subtitle: Text('12,14,15'),
+                  StreamBuilder<String>(
+                    stream: GetAuctionTimeStream(widget.auctionID)
+                        .getAuctionTimeStream(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return ShimmeringWidget(width: 90, height: 50);
+                      } else {
+                        String heading =
+                            snapshot.data!.toString().split('.')[0];
+                        String time = snapshot.data!.toString().split('.')[1];
+                        return ListTile(
+                          leading: Icon(
+                            (heading == 'Scheduled Date')
+                                ? Icons.access_time
+                                : Icons.alarm,
+                            size: 40,
+                          ),
+                          iconColor: ksecondarycolor,
+                          title: Text(
+                            heading,
+                            style: TextStyle(
+                                color: Colors.brown,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          tileColor: kprimarycolor,
+                          // subtitle:
+                          //     DisplayAuctionCountdown(auctionId: widget.auctionID),
+                          subtitle: Text(
+                            time,
+                            style: TextStyle(
+                                color: (heading == 'Scheduled Date')
+                                    ? Colors.blue
+                                    : Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                        );
+                      }
+                    },
                   ),
                   SizedBox(
                     height: 5,

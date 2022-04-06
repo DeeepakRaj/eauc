@@ -1,13 +1,17 @@
 import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/individualpages/individual_auction_page.dart';
 import 'package:eauc/uiscreens/individualpages/individual_product_page.dart';
+import 'package:eauc/widgetmodels/shimmering_widget.dart';
 import 'package:eauc/widgetmodels/tag_container.dart';
 import 'package:flutter/material.dart';
+
+import '../../widgetmodels/get_auction_timestream.dart';
 
 class ProductsPageContainer extends StatefulWidget {
   final String type,
@@ -191,43 +195,81 @@ class _ProductsPageContainerState extends State<ProductsPageContainer> {
             SizedBox(
               height: 5,
             ),
-            Text(
-              (widget.type == 'Live') ? 'Current Bid' : 'Opening Bid',
-              style: TextStyle(fontSize: 12),
-            ),
-            Flexible(
-              child: AutoSizeText(
-                widget.currentBid,
-                minFontSize: 25,
-                maxLines: 1,
-                maxFontSize: 27,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: ksecondarycolor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              (widget.type == 'Live') ? 'Ending In' : 'Scheduled Start',
-              style: TextStyle(fontSize: 12),
-            ),
-            Flexible(
-              child: AutoSizeText(
-                widget.time,
-                textAlign: TextAlign.start,
-                minFontSize: 18,
-                maxFontSize: 20,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: (widget.type == 'Live') ? Colors.red : Colors.indigo,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            StreamBuilder<String>(
+              stream:
+                  GetAuctionTimeStream(widget.auctionID).getAuctionTimeStream(),
+              builder: (context, timesnapshot) {
+                if (!timesnapshot.hasData) {
+                  return ShimmeringWidget(width: 120, height: 50);
+                } else {
+                  String heading = timesnapshot.data!.toString().split('.')[0];
+                  String time = timesnapshot.data!.toString().split('.')[1];
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (heading == 'Scheduled Date')
+                            ? 'Opening Bid'
+                            : 'Current Bid',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      StreamBuilder<DocumentSnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection(widget.auctionID)
+                              .doc(widget.productID)
+                              .snapshots(),
+                          builder: (context, bidsnapshot) {
+                            if (!bidsnapshot.hasData) {
+                              return Text(
+                                'Loading...',
+                              );
+                            } else {
+                              int _currentBid = int.parse(
+                                  bidsnapshot.data!.get('currentBid'));
+                              return Flexible(
+                                child: AutoSizeText(
+                                  _currentBid.toString(),
+                                  minFontSize: 25,
+                                  maxLines: 1,
+                                  maxFontSize: 27,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: ksecondarycolor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
+                            }
+                          }),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        heading,
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      Flexible(
+                        child: AutoSizeText(
+                          time,
+                          textAlign: TextAlign.start,
+                          minFontSize: (heading == 'Scheduled Date') ? 14 : 17,
+                          maxFontSize: (heading == 'Scheduled Date') ? 16 : 19,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: (heading == 'Scheduled Date')
+                                ? Colors.blue
+                                : Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
             ),
           ],
         ),
