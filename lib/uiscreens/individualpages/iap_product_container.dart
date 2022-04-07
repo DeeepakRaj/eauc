@@ -1,10 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/individualpages/individual_product_page.dart';
+import 'package:eauc/widgetmodels/bid_inc_dec_container.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
+import 'package:eauc/widgetmodels/get_auction_timestream.dart';
+import 'package:eauc/widgetmodels/shimmering_widget.dart';
 import 'package:eauc/widgetmodels/tag_container.dart';
 import 'package:flutter/material.dart';
 import 'package:eauc/uiscreens/login_page.dart';
@@ -36,6 +41,16 @@ class IapProductContainer extends StatefulWidget {
 class _IapProductContainerState extends State<IapProductContainer> {
   late String emailid;
 
+  int incrementValue(int? currentBid) {
+    var len = currentBid.toString().length;
+    if (len < 3) {
+      return 5;
+    }
+
+    num ans = pow(10, len - 2);
+    return ans.toInt();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +59,7 @@ class _IapProductContainerState extends State<IapProductContainer> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),
-                (route) => false);
+            (route) => false);
       } else {
         setState(() {
           this.emailid = value;
@@ -55,205 +70,314 @@ class _IapProductContainerState extends State<IapProductContainer> {
 
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      color: Colors.white,
-      width: double.infinity,
+      width: screenWidth,
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            offset: Offset(0.0, 1.0), //(x,y)
+            blurRadius: 5.0,
+          ),
+        ],
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          IntrinsicHeight(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => IndividualProductPage(
-                                  auctionID: widget.auctionID,
-                                  productID: widget.productID,
-                                  productName: widget.productName,
-                                )),
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          image: DecorationImage(
-                              image:
-                                  Image.memory(base64Decode(widget.imageName))
-                                      .image,
-                              fit: BoxFit.contain)),
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Flexible(
+              flex: 1,
+              child: Container(
+                width: screenWidth,
+                height: screenHeight * 0.2,
+                decoration: BoxDecoration(
+                  // borderRadius: BorderRadius.all(Radius.circular(15)),
+                  image: DecorationImage(
+                    image: AssetImage(
+                      'assets/images/sampleimage1.jpg',
                     ),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Expanded(
-                    flex: 3,
-                    child: Container(
-                      margin: EdgeInsets.all(5),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            widget.productName,
-                            style: kCardTitleTextStyle,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            widget.productDesc,
-                            overflow: TextOverflow.ellipsis,
-                            style: kCardSubTitleTextStyle,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text('Tags:'),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Container(
-                            height: 25,
-                            child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                itemCount: widget.productTags.length,
-                                itemBuilder: (context, index) {
-                                  return TagContainer(
-                                      widget.productTags[index]);
-                                }),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
+              )),
+          StreamBuilder<String>(
+            stream:
+                GetAuctionTimeStream(widget.auctionID).getAuctionTimeStream(),
+            builder: (context, timesnapshot) {
+              if (!timesnapshot.hasData) {
+                return Flexible(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        IntrinsicHeight(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3),
-                                  color: ksecondarycolor,
-                                ),
-                                child: Text(
-                                  'CURRENT BID',
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                  overflow: TextOverflow.ellipsis,
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Oppo F11 Pro',
+                                      style: kCardTitleTextStyle,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Container(
+                                      height: 30,
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: widget.productTags.length,
+                                          itemBuilder: (context, index) {
+                                            return TagContainer(
+                                                widget.productTags[index]);
+                                          }),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              SizedBox(
-                                width: 3,
-                              )
+                              Column(
+                                children: [
+                                  ShimmeringWidget(width: 80, height: 20),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  ShimmeringWidget(width: 80, height: 20),
+                                ],
+                              ),
                             ],
                           ),
-                          SizedBox(
-                            height: 5,
+                        ),
+                        Flexible(
+                          child: Text(
+                            'Oppo f11 pro is a flagship smartphone with incredible features and also other features Oppo f11 pro is a flagship smartphone with incredible features and also other features',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 13),
                           ),
-                          Text(
-                            widget.productPriceOrBid,
-                            style: TextStyle(
-                              color: Colors.brown,
-                              fontSize: 27,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ))
-              ],
-            ),
-          ),
-          IntrinsicHeight(
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: IntrinsicHeight(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  color: ksecondarycolor,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10)),
-                                ),
-                                child: Center(
-                                    child: Text(
-                                      '+',
-                                      style: TextStyle(
-                                          fontSize: 40,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ))),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Container(
-                              color: kbackgroundcolor,
-                              child: Center(
-                                child: Text(
-                                  '500',
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold),
+                        ),
+                        ShimmeringWidget(width: screenWidth * 0.8, height: 40),
+                      ],
+                    ),
+                  ),
+                );
+              } else {
+                String heading = timesnapshot.data!.toString().split('.')[0];
+                String time = timesnapshot.data!.toString().split('.')[0];
+                return StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection(widget.auctionID)
+                      .doc(widget.productID)
+                      .snapshots(),
+                  builder: (context, bidsnapshot) {
+                    if (!bidsnapshot.hasData) {
+                      return Flexible(
+                        flex: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              IntrinsicHeight(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Oppo F11 Pro',
+                                            style: kCardTitleTextStyle,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Container(
+                                            height: 30,
+                                            child: ListView.builder(
+                                                shrinkWrap: true,
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount:
+                                                    widget.productTags.length,
+                                                itemBuilder: (context, index) {
+                                                  return TagContainer(widget
+                                                      .productTags[index]);
+                                                }),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Column(
+                                      children: [
+                                        ShimmeringWidget(width: 80, height: 20),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        ShimmeringWidget(width: 80, height: 20),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  color: ksecondarycolor,
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      bottomRight: Radius.circular(10)),
+                              Flexible(
+                                child: Text(
+                                  'Oppo f11 pro is a flagship smartphone with incredible features and also other features Oppo f11 pro is a flagship smartphone with incredible features and also other features',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 13),
                                 ),
-                                child: Center(
-                                    child: Text(
-                                      '-',
-                                      style: TextStyle(
-                                          fontSize: 40,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ))),
+                              ),
+                              ShimmeringWidget(
+                                  width: screenWidth * 0.8, height: 40),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomNormalButton(
-                      onPressed: () {
-                        //TODO: Update current bid both in database and on screen
-                      },
-                      buttonText: 'Bid',
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                        ),
+                      );
+                    } else {
+                      int _currentBid =
+                          int.parse(bidsnapshot.data!.get('currentBid'));
+                      return Flexible(
+                        flex: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              IntrinsicHeight(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Oppo F11 Pro',
+                                            style: kCardTitleTextStyle,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Container(
+                                            height: 30,
+                                            child: ListView.builder(
+                                                shrinkWrap: true,
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount:
+                                                    widget.productTags.length,
+                                                itemBuilder: (context, index) {
+                                                  return TagContainer(widget
+                                                      .productTags[index]);
+                                                }),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Column(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(3),
+                                            color: ksecondarycolor,
+                                          ),
+                                          child: Text(
+                                            (heading == 'Scheduled Date')
+                                                ? 'OPENING BID'
+                                                : 'CURRENT BID',
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          _currentBid.toString(),
+                                          style: TextStyle(
+                                            color: Colors.brown,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  'Oppo f11 pro is a flagship smartphone with incredible features and also other features Oppo f11 pro is a flagship smartphone with incredible features and also other features',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 13),
+                                ),
+                              ),
+                              (heading == 'Scheduled Date')
+                                  ? Center(
+                                      child: Text(
+                                        'Bidding will start at the scheduled date and time',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    )
+                                  : BidIncDecContainer(
+                                      auctionId: widget.auctionID,
+                                      productId: widget.productID,
+                                      minBid: (_currentBid +
+                                              incrementValue(_currentBid))
+                                          .toString(),
+                                      from: 'individualauctionpage',
+                                      email: emailid,
+                                    ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                );
+              }
+            },
           ),
         ],
       ),

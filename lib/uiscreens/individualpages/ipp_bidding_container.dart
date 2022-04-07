@@ -137,6 +137,7 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
                                       minBid: (_currentBid! +
                                               incrementValue(_currentBid))
                                           .toString(),
+                                      from: 'ippbiddingcontainer',
                                       email: emailid,
                                     ),
                               SizedBox(
