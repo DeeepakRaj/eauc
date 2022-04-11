@@ -119,27 +119,7 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
                               SizedBox(
                                 height: 10,
                               ),
-                              (heading == 'Scheduled Date')
-                                  ? Center(
-                                      child: Text(
-                                        'Bidding will start at the scheduled date and time',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.green,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    )
-                                  : BidIncDecContainer(
-                                      auctionId: widget.auctionId,
-                                      productId: widget.productId,
-                                      minBid: (_currentBid! +
-                                              incrementValue(_currentBid))
-                                          .toString(),
-                                      from: 'ippbiddingcontainer',
-                                      email: emailid,
-                                    ),
+                              _buildBiddingWidget(heading, _currentBid),
                               SizedBox(
                                 height: 10,
                               ),
@@ -148,99 +128,6 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
                         );
                       }
                     },
-                    // child: Container(
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    //     children: [
-                    //       SizedBox(
-                    //         height: 10,
-                    //       ),
-                    //       Text(
-                    //         '400000',
-                    //         textAlign: TextAlign.center,
-                    //         style: TextStyle(
-                    //           color: Colors.brown,
-                    //           fontWeight: FontWeight.bold,
-                    //           fontSize: 25,
-                    //         ),
-                    //       ),
-                    //       SizedBox(
-                    //         height: 10,
-                    //       ),
-                    //       Padding(
-                    //         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    //         child: IntrinsicHeight(
-                    //           child: Row(
-                    //             mainAxisAlignment: MainAxisAlignment.center,
-                    //             crossAxisAlignment: CrossAxisAlignment.stretch,
-                    //             children: [
-                    //               Expanded(
-                    //                 flex: 1,
-                    //                 child: Container(
-                    //                     decoration: BoxDecoration(
-                    //                       color: ksecondarycolor,
-                    //                       borderRadius: BorderRadius.only(
-                    //                           topLeft: Radius.circular(10),
-                    //                           bottomLeft: Radius.circular(10)),
-                    //                     ),
-                    //                     child: Center(
-                    //                         child: Text(
-                    //                           '+',
-                    //                           style: TextStyle(
-                    //                               fontSize: 40,
-                    //                               color: Colors.white,
-                    //                               fontWeight: FontWeight.bold),
-                    //                         ))),
-                    //               ),
-                    //               Expanded(
-                    //                 flex: 3,
-                    //                 child: Container(
-                    //                   color: kbackgroundcolor,
-                    //                   child: Center(
-                    //                     child: Text(
-                    //                       '500',
-                    //                       style: TextStyle(
-                    //                           fontSize: 25,
-                    //                           color: Colors.green,
-                    //                           fontWeight: FontWeight.bold),
-                    //                     ),
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //               Expanded(
-                    //                 flex: 1,
-                    //                 child: Container(
-                    //                     decoration: BoxDecoration(
-                    //                       color: ksecondarycolor,
-                    //                       borderRadius: BorderRadius.only(
-                    //                           topRight: Radius.circular(10),
-                    //                           bottomRight: Radius.circular(10)),
-                    //                     ),
-                    //                     child: Center(
-                    //                         child: Text(
-                    //                           '-',
-                    //                           style: TextStyle(
-                    //                               fontSize: 40,
-                    //                               color: Colors.white,
-                    //                               fontWeight: FontWeight.bold),
-                    //                         ))),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Padding(
-                    //         padding: const EdgeInsets.all(8.0),
-                    //         child: CustomNormalButton(
-                    //           buttonText: 'PLACE BID',
-                    //           onPressed: () {
-                    //             // TODO: Change current bid in the database
-                    //           },
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                   ),
                 ],
               ),
@@ -249,5 +136,47 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
         }
       },
     );
+  }
+
+  Widget _buildBiddingWidget(String heading, int? currentBid) {
+    if (heading == 'Auction Ended') {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Text(
+            'Auction has ended',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+        ),
+      );
+    } else if (heading == 'Scheduled Date') {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Text(
+            'Bidding will start at the scheduled date and time',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+        ),
+      );
+    } else {
+      return BidIncDecContainer(
+        auctionId: widget.auctionId,
+        productId: widget.productId,
+        minBid: (currentBid! + incrementValue(currentBid)).toString(),
+        from: 'individualauctionpage',
+        email: emailid,
+      );
+    }
   }
 }

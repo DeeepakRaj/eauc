@@ -33,7 +33,11 @@ class _AddProductPageState extends State<AddProductPage> {
   File? _primaryImage;
 
   void _selectPrimaryImage() async {
-    final _temperoryimage = await _picker.pickImage(source: ImageSource.camera, maxWidth: 900, maxHeight: 500);
+    final _temperoryimage = await _picker.pickImage(
+      source: ImageSource.camera,
+      maxWidth: 480,
+      maxHeight: 360,
+    );
     if (_temperoryimage == null)
       return;
     else {
@@ -44,7 +48,11 @@ class _AddProductPageState extends State<AddProductPage> {
   }
 
   void _selectMultipleImages() async {
-    final _temperoryimage = await _picker.pickImage(source: ImageSource.camera, maxWidth: 900, maxHeight: 500);
+    final _temperoryimage = await _picker.pickImage(
+      source: ImageSource.camera,
+      maxWidth: 480,
+      maxHeight: 360,
+    );
     if (_temperoryimage == null)
       return;
     else {

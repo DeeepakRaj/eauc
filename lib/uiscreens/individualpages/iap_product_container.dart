@@ -91,21 +91,30 @@ class _IapProductContainerState extends State<IapProductContainer> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Flexible(
-              flex: 1,
-              child: Container(
-                width: screenWidth,
-                height: screenHeight * 0.2,
-                decoration: BoxDecoration(
-                  // borderRadius: BorderRadius.all(Radius.circular(15)),
-                  image: DecorationImage(
-                    image: AssetImage(
-                      'assets/images/sampleimage1.jpg',
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => IndividualProductPage(
+                          auctionID: widget.auctionID,
+                          productID: widget.productID,
+                          productName: widget.productName)));
+            },
+            child: Flexible(
+                flex: 1,
+                child: Container(
+                  width: screenWidth,
+                  height: screenHeight * 0.2,
+                  decoration: BoxDecoration(
+                    // borderRadius: BorderRadius.all(Radius.circular(15)),
+                    image: DecorationImage(
+                      image: Image.memory(base64Decode(widget.imageName)).image,
+                      fit: BoxFit.cover,
                     ),
-                    fit: BoxFit.cover,
                   ),
-                ),
-              )),
+                )),
+          ),
           StreamBuilder<String>(
             stream:
                 GetAuctionTimeStream(widget.auctionID).getAuctionTimeStream(),
@@ -130,7 +139,7 @@ class _IapProductContainerState extends State<IapProductContainer> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Oppo F11 Pro',
+                                      widget.productName,
                                       style: kCardTitleTextStyle,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -165,7 +174,7 @@ class _IapProductContainerState extends State<IapProductContainer> {
                         ),
                         Flexible(
                           child: Text(
-                            'Oppo f11 pro is a flagship smartphone with incredible features and also other features Oppo f11 pro is a flagship smartphone with incredible features and also other features',
+                            widget.productDesc,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: 13),
@@ -207,7 +216,7 @@ class _IapProductContainerState extends State<IapProductContainer> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Oppo F11 Pro',
+                                            widget.productName,
                                             style: kCardTitleTextStyle,
                                             overflow: TextOverflow.ellipsis,
                                           ),
@@ -244,7 +253,7 @@ class _IapProductContainerState extends State<IapProductContainer> {
                               ),
                               Flexible(
                                 child: Text(
-                                  'Oppo f11 pro is a flagship smartphone with incredible features and also other features Oppo f11 pro is a flagship smartphone with incredible features and also other features',
+                                  widget.productDesc,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontSize: 13),
@@ -280,7 +289,7 @@ class _IapProductContainerState extends State<IapProductContainer> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Oppo F11 Pro',
+                                            widget.productName,
                                             style: kCardTitleTextStyle,
                                             overflow: TextOverflow.ellipsis,
                                           ),
@@ -342,33 +351,13 @@ class _IapProductContainerState extends State<IapProductContainer> {
                               ),
                               Flexible(
                                 child: Text(
-                                  'Oppo f11 pro is a flagship smartphone with incredible features and also other features Oppo f11 pro is a flagship smartphone with incredible features and also other features',
+                                  widget.productDesc,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontSize: 13),
                                 ),
                               ),
-                              (heading == 'Scheduled Date')
-                                  ? Center(
-                                      child: Text(
-                                        'Bidding will start at the scheduled date and time',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.green,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    )
-                                  : BidIncDecContainer(
-                                      auctionId: widget.auctionID,
-                                      productId: widget.productID,
-                                      minBid: (_currentBid +
-                                              incrementValue(_currentBid))
-                                          .toString(),
-                                      from: 'individualauctionpage',
-                                      email: emailid,
-                                    ),
+                              _buildBiddingWidget(heading, _currentBid),
                             ],
                           ),
                         ),
@@ -382,5 +371,47 @@ class _IapProductContainerState extends State<IapProductContainer> {
         ],
       ),
     );
+  }
+
+  Widget _buildBiddingWidget(String heading, int currentBid) {
+    if (heading == 'Auction Ended') {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Text(
+            'Auction has ended',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+        ),
+      );
+    } else if (heading == 'Scheduled Date') {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Text(
+            'Bidding will start at the scheduled date and time',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+        ),
+      );
+    } else {
+      return BidIncDecContainer(
+        auctionId: widget.auctionID,
+        productId: widget.productID,
+        minBid: (currentBid + incrementValue(currentBid)).toString(),
+        from: 'individualauctionpage',
+        email: emailid,
+      );
+    }
   }
 }

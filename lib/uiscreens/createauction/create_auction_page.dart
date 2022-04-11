@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eauc/constants.dart';
+import 'package:intl/intl.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/home/home.dart';
 import 'package:eauc/uiscreens/login_page.dart';
@@ -117,10 +118,10 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
       auctionData['moreProductImages' + (i).toString()] =
           images.join(",").toString();
     }
-    print(auctionData);
     try {
       var response = await http.post(Uri.parse(url), body: auctionData);
       var data = jsonDecode(response.body);
+      print(response.body);
       if (data['result'] == "true") {
         _insertIntoFirestore(
                 data['auction_id'], data['products_id'], _datefrom!, _dateto!)
@@ -380,6 +381,8 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
             child: CustomTextButton(
                 onPressed: (_auctionName.text.isEmpty ||
                         _auctionDescription.text.isEmpty ||
+                        _datefrom == null ||
+                        _dateto == null ||
                         _datefrom.toString().isEmpty ||
                         _dateto.toString().isEmpty ||
                         products.length == 0)
@@ -454,7 +457,9 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                       style: TextStyle(color: Colors.black),
                       type: DateTimePickerType.dateTime,
                       dateMask: 'dd-MM-yyyy HH:mm',
-                      initialValue: '',
+                      initialValue:
+                          DateFormat('dd-MM-yyyy HH:mm').format(DateTime.now()),
+                      initialDate: DateTime.now(),
                       firstDate: DateTime.now(),
                       lastDate: DateTime(2100),
                       icon: Icon(Icons.event),
@@ -496,7 +501,9 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
                       dateMask: 'dd-MM-yyyy HH:mm',
                       readOnly:
                           _datefrom == null || _datefrom.toString().isEmpty,
-                      initialValue: '',
+                      initialValue: DateFormat('dd-MM-yyyy HH:mm')
+                          .format(DateTime.now().add(Duration(days: 1))),
+                      initialDate: DateTime.now().add(Duration(days: 1)),
                       firstDate: DateTime.now(),
                       lastDate: DateTime(2100),
                       icon: Icon(Icons.event),

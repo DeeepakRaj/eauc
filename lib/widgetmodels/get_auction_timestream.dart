@@ -32,6 +32,8 @@ class GetAuctionTimeStream {
       if (currentTime.add(Duration(seconds: count)).isBefore(startDateTime))
         return 'Scheduled Date.' + getProperDate(startDateTime.toString());
       //TODO: Set status Upcoming, Live in firestore
+      else if (currentTime.add(Duration(seconds: count)).isAfter(endDateTime))
+        return 'Auction Ended.End of Auction';
       else
         return 'Time Remaining.' +
             endDateTime
