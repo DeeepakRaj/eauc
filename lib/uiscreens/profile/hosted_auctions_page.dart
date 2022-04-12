@@ -143,7 +143,6 @@ class _HostedAuctionsAllState extends State<HostedAuctionsAll> {
                           auctionDesc: 'auctionDesc',
                           type: 'Live',
                           imageName: 'sampleimage1',
-                          time: '13/12/2022 13:23',
                         ))),
           ),
         )
@@ -201,7 +200,6 @@ class _HostedAuctionsLiveState extends State<HostedAuctionsLive> {
                           auctionDesc: 'AuctionDesc',
                           type: 'Live',
                           imageName: 'sampleimage1',
-                          time: '13/12/2022 13:23',
                         ))),
           ),
         )
@@ -259,7 +257,6 @@ class _HostedAuctionsUpcomingState extends State<HostedAuctionsUpcoming> {
                           auctionDesc: 'auctionDesc',
                           type: 'Live',
                           imageName: 'sampleimage1',
-                          time: '13/12/2022 13:23',
                         ))),
           ),
         )

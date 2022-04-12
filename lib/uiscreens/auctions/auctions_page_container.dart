@@ -11,13 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class AuctionsPageContainer extends StatefulWidget {
-  final String auctionID,
-      type,
-      imageName,
-      auctionName,
-      auctionDesc,
-      hostName,
-      time;
+  final String auctionID, type, imageName, auctionName, auctionDesc, hostName;
 
   AuctionsPageContainer(
       {required this.auctionID,
@@ -25,8 +19,7 @@ class AuctionsPageContainer extends StatefulWidget {
       required this.imageName,
       required this.auctionDesc,
       required this.auctionName,
-      required this.hostName,
-      required this.time});
+      required this.hostName});
 
   @override
   _AuctionsPageContainerState createState() => _AuctionsPageContainerState();

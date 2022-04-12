@@ -80,7 +80,6 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                         auctionDesc: 'auctionDesc',
                         type: 'Live',
                         imageName: 'sampleimage1',
-                        time: '13/12/2022 13:23',
                       ),
                     );
                   },

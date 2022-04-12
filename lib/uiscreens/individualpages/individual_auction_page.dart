@@ -25,6 +25,8 @@ class IndividualAuctionPage extends StatefulWidget {
 class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
   late String emailid;
   Future<AllProductsModel>? thisproducts;
+  List<SearchProducts> searchproducts = [];
+  TextEditingController _searchFieldController = TextEditingController();
 
   Future<AllProductsModel> getAuctionProducts(String auctionid) async {
     var products;
@@ -80,135 +82,160 @@ class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
             SizedBox(
               height: 10,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: StickyHeader(
-                header: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                  color: kbackgroundcolor,
-                  child: Column(
+            FutureBuilder<AllProductsModel>(
+              future: thisproducts,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: StickyHeader(
+                        header: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                          color: kbackgroundcolor,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              TextFormField(
+                                decoration: kSearchFieldDecoration.copyWith(
+                                    hintText: 'Search in Products'),
+                                controller: _searchFieldController,
+                                textInputAction: TextInputAction.search,
+                                style: kSearchFieldTextStyle,
+                                cursorColor: kprimarycolor,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _searchProduct(value, snapshot);
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        content: (_searchFieldController.text.isEmpty)
+                            ? ListView.separated(
+                                separatorBuilder:
+                                    (BuildContext context, int index) =>
+                                        const Divider(),
+                                physics: NeverScrollableScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                itemCount: snapshot.data!.result.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return IapProductContainer(
+                                    auctionType: 'Live',
+                                    auctionID:
+                                        snapshot.data!.result[index].auctionId,
+                                    imageName: snapshot
+                                        .data!.result[index].productImage,
+                                    productName: snapshot
+                                        .data!.result[index].productName,
+                                    productID:
+                                        snapshot.data!.result[index].productId,
+                                    productDesc: snapshot
+                                        .data!.result[index].productDesc,
+                                    productTags: snapshot
+                                        .data!.result[index].productCategory
+                                        .split(','),
+                                    productPriceOrBid:
+                                        snapshot.data!.result[index].basePrice,
+                                  );
+                                })
+                            : _buildSearchListView(),
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: Text(
+                        'No Products Available',
+                        style: kHeaderTextStyle,
+                      ),
+                    );
+                  }
+                } else {
+                  return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      TextFormField(
-                        decoration: kSearchFieldDecoration.copyWith(
-                            hintText: 'Search in Products'),
-                        textInputAction: TextInputAction.search,
-                        style: kSearchFieldTextStyle,
-                        cursorColor: kprimarycolor,
-                        onChanged: (value) {
-                          //TODO: Build search list view
-                        },
+                      ShimmeringWidget(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: 40),
+                      SizedBox(
+                        height: 20,
                       ),
-                    ],
-                  ),
-                ),
-                content: FutureBuilder<AllProductsModel>(
-                  future: thisproducts,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasData) {
-                        return ListView.separated(
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    const Divider(),
-                            physics: NeverScrollableScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            itemCount: snapshot.data!.result.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return IapProductContainer(
-                                auctionType: 'Live',
-                                auctionID:
-                                    snapshot.data!.result[index].auctionId,
-                                imageName:
-                                    snapshot.data!.result[index].productImage,
-                                productName:
-                                    snapshot.data!.result[index].productName,
-                                productID:
-                                    snapshot.data!.result[index].productId,
-                                productDesc:
-                                    snapshot.data!.result[index].productDesc,
-                                productTags: snapshot
-                                    .data!.result[index].productCategory
-                                    .split(','),
-                                productPriceOrBid:
-                                    snapshot.data!.result[index].basePrice,
-                              );
-                            });
-                      } else {
-                        return Center(
-                          child: Text(
-                            'No Products Available',
-                            style: kHeaderTextStyle,
-                          ),
-                        );
-                      }
-                    } else {
-                      return ShimmeringWidget(
+                      ShimmeringWidget(
                           width: double.infinity,
-                          height: MediaQuery.of(context).size.height * 0.4);
-                    }
-                  },
-                ),
-              ),
+                          height: MediaQuery.of(context).size.height * 0.4)
+                    ],
+                  );
+                }
+              },
             ),
           ],
         ),
       ),
-      // body: SafeArea(
-      //   child: Padding(
-      //     padding: EdgeInsets.all(8),
-      //     child: SingleChildScrollView(
-      //       physics: BouncingScrollPhysics(),
-      //       child: Column(
-      //         children: [
-      //           AuctionInfoContainer(),
-      //           SizedBox(
-      //             height: 20,
-      //           ),
-      //           Text(
-      //             'Products',
-      //             style: kHeaderTextStyle.copyWith(fontSize: 35),
-      //             textAlign: TextAlign.left,
-      //           ),
-      //           SizedBox(
-      //             height: 10,
-      //           ),
-      //           TextFormField(
-      //             decoration: kSearchFieldDecoration.copyWith(
-      //                 hintText: 'Search in Products'),
-      //             textInputAction: TextInputAction.search,
-      //             style: kSearchFieldTextStyle,
-      //             cursorColor: kprimarycolor,
-      //             onChanged: (value) {
-      //               //TODO: Build search list view
-      //             },
-      //           ),
-      //           SizedBox(
-      //             height: 10,
-      //           ),
-      //           ListView.separated(
-      //               separatorBuilder: (BuildContext context, int index) =>
-      //                   const Divider(),
-      //               physics: NeverScrollableScrollPhysics(),
-      //               scrollDirection: Axis.vertical,
-      //               itemCount: 5,
-      //               shrinkWrap: true,
-      //               itemBuilder: (context, index) {
-      //                 return IapProductContainer(
-      //                   auctionType: 'Live',
-      //                   imageName: 'sampleimage1',
-      //                   productName: 'Product 1',
-      //                   productDesc: 'Description',
-      //                   productTags: ['Electronics', 'Ancient Items', 'Coins'],
-      //                   productPriceOrBid: '500000',
-      //                 );
-      //               }),
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // ),
     );
   }
+
+  ListView _buildSearchListView() {
+    return ListView.separated(
+        separatorBuilder: (BuildContext context, int index) => const Divider(),
+        physics: NeverScrollableScrollPhysics(),
+        scrollDirection: Axis.vertical,
+        itemCount: searchproducts.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return IapProductContainer(
+            auctionType: 'Live',
+            auctionID: searchproducts[index].auctionId,
+            imageName: searchproducts[index].productImage,
+            productName: searchproducts[index].productName,
+            productID: searchproducts[index].productId,
+            productDesc: searchproducts[index].productDesc,
+            productTags: searchproducts[index].productTags,
+            productPriceOrBid: searchproducts[index].productPriceOrBid,
+          );
+        });
+  }
+
+  void _searchProduct(String query, AsyncSnapshot asyncSnapshot) {
+    searchproducts.clear();
+    asyncSnapshot.data!.result.forEach((element) {
+      print(element.productName.toLowerCase());
+      if (element.productName.toLowerCase().contains(query.toLowerCase()) ||
+          element.productCategory.contains(query) ||
+          element.productDesc.toLowerCase().contains(query.toLowerCase())) {
+        searchproducts.add(SearchProducts(
+            element.productImage,
+            element.auctionId,
+            element.productId,
+            element.productName,
+            element.productDesc,
+            'Upcoming',
+            element.basePrice,
+            element.productCategory.split(',')));
+      }
+    });
+  }
+}
+
+class SearchProducts {
+  late String productImage,
+      auctionId,
+      productId,
+      productName,
+      productDesc,
+      auctionType,
+      productPriceOrBid;
+  late List<String> productTags;
+
+  SearchProducts(
+      this.productImage,
+      this.auctionId,
+      this.productId,
+      this.productName,
+      this.productDesc,
+      this.auctionType,
+      this.productPriceOrBid,
+      this.productTags);
 }

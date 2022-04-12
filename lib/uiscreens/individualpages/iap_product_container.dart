@@ -101,19 +101,17 @@ class _IapProductContainerState extends State<IapProductContainer> {
                           productID: widget.productID,
                           productName: widget.productName)));
             },
-            child: Flexible(
-                flex: 1,
-                child: Container(
-                  width: screenWidth,
-                  height: screenHeight * 0.2,
-                  decoration: BoxDecoration(
-                    // borderRadius: BorderRadius.all(Radius.circular(15)),
-                    image: DecorationImage(
-                      image: Image.memory(base64Decode(widget.imageName)).image,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                )),
+            child: Container(
+              width: screenWidth,
+              height: screenHeight * 0.2,
+              decoration: BoxDecoration(
+                // borderRadius: BorderRadius.all(Radius.circular(15)),
+                image: DecorationImage(
+                  image: Image.memory(base64Decode(widget.imageName)).image,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           ),
           StreamBuilder<String>(
             stream:

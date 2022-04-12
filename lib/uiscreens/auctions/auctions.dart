@@ -19,7 +19,6 @@ class Auctions extends StatefulWidget {
 
 class _AuctionsState extends State<Auctions> {
   late String emailid;
-
   Future<AuctionModel>? allauctions;
 
   Future<AuctionModel> getAuctionData(String auctionid, String email) async {
@@ -159,7 +158,6 @@ class _AuctionsState extends State<Auctions> {
                                           type:
                                               snapshot.data!.result[index].type,
                                           imageName: 'sampleimage1',
-                                          time: '13/12/2022 13:23',
                                         );
                                       }),
                                 );
