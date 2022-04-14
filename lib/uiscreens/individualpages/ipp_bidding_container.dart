@@ -13,9 +13,12 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import '../../widgetmodels/get_auction_timestream.dart';
 
 class IppBiddingContainer extends StatefulWidget {
-  final String auctionId, productId;
+  final String auctionId, productId, hostEmail;
 
-  IppBiddingContainer({required this.productId, required this.auctionId});
+  IppBiddingContainer(
+      {required this.productId,
+      required this.auctionId,
+      required this.hostEmail});
 
   @override
   _IppBiddingContainerState createState() => _IppBiddingContainerState();
@@ -119,7 +122,10 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
                               SizedBox(
                                 height: 10,
                               ),
-                              _buildBiddingWidget(heading, _currentBid),
+                              //TODO: Build bidding list
+                              (emailid == widget.hostEmail)
+                                  ? _buildBiddingListWidget()
+                                  : _buildBiddingWidget(heading, _currentBid),
                               SizedBox(
                                 height: 10,
                               ),
@@ -136,6 +142,458 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
         }
       },
     );
+  }
+
+  // Widget _buildBiddingListWidget(){
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.stretch,
+  //       children: [
+  //         Table(
+  //           columnWidths: {
+  //             0: FlexColumnWidth(1),
+  //             1: FlexColumnWidth(3),
+  //             2: FlexColumnWidth(3),
+  //           },
+  //           children: [
+  //             TableRow(
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.blueGrey,
+  //                   // borderRadius: BorderRadius.only(
+  //                   //     topLeft: Radius.circular(5),
+  //                   //     topRight: Radius.circular(5)),
+  //                 ),
+  //                 children: [
+  //                   Padding(
+  //                     padding: const EdgeInsets.all(8.0),
+  //                     child: Text(
+  //                       'No.',
+  //                       style: TextStyle(
+  //                           fontSize: 12,
+  //                           color: Colors.white,
+  //                           fontWeight: FontWeight.bold),
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: const EdgeInsets.all(8.0),
+  //                     child: Text(
+  //                       'Bid.',
+  //                       style: TextStyle(
+  //                           fontSize: 12,
+  //                           color: Colors.white,
+  //                           fontWeight: FontWeight.bold),
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: const EdgeInsets.all(8.0),
+  //                     child: Text(
+  //                       'User.',
+  //                       style: TextStyle(
+  //                           fontSize: 12,
+  //                           color: Colors.white,
+  //                           fontWeight: FontWeight.bold),
+  //                     ),
+  //                   ),
+  //                 ]),
+  //           ],
+  //         ),
+  //         ConstrainedBox(
+  //             constraints: BoxConstraints(
+  //               maxHeight: MediaQuery.of(context).size.height*0.25,
+  //               maxWidth: double.infinity,
+  //             ),
+  //             child: SingleChildScrollView(
+  //               child: Table(
+  //                 columnWidths: {
+  //                   0: FlexColumnWidth(1),
+  //                   1: FlexColumnWidth(3),
+  //                   2: FlexColumnWidth(3),
+  //                 },
+  //                 children: [
+  //                   TableRow(
+  //                       decoration: BoxDecoration(
+  //                         color: Colors.white,
+  //                       ),
+  //                       children: [
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'No.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'Bid.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'User.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                       ]),
+  //                   TableRow(
+  //                       decoration: BoxDecoration(
+  //                         color: Colors.white,
+  //                       ),
+  //                       children: [
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'No.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'Bid.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'User.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                       ]),
+  //                   TableRow(
+  //                       decoration: BoxDecoration(
+  //                         color: Colors.white,
+  //                       ),
+  //                       children: [
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'No.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'Bid.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'User.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                       ]),
+  //                   TableRow(
+  //                       decoration: BoxDecoration(
+  //                         color: Colors.white,
+  //                       ),
+  //                       children: [
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'No.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'Bid.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'User.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                       ]),
+  //                   TableRow(
+  //                       decoration: BoxDecoration(
+  //                         color: Colors.white,
+  //                       ),
+  //                       children: [
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'No.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'Bid.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'User.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                       ]),
+  //                   TableRow(
+  //                       decoration: BoxDecoration(
+  //                         color: Colors.white,
+  //                       ),
+  //                       children: [
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'No.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'Bid.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'User.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                       ]),
+  //                   TableRow(
+  //                       decoration: BoxDecoration(
+  //                         color: Colors.white,
+  //                       ),
+  //                       children: [
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'No.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'Bid.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'User.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                       ]),
+  //                   TableRow(
+  //                       decoration: BoxDecoration(
+  //                         color: Colors.white,
+  //                       ),
+  //                       children: [
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'No.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'Bid.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'User.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                       ]),
+  //                   TableRow(
+  //                       decoration: BoxDecoration(
+  //                         color: Colors.white,
+  //                       ),
+  //                       children: [
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'No.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'Bid.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                         Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Text(
+  //                             'User.',
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.blue.shade700,
+  //                                 fontWeight: FontWeight.bold),
+  //                           ),
+  //                         ),
+  //                       ]),
+  //                 ],
+  //               ),
+  //             ))
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  Widget _buildBiddingListWidget() {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection(widget.auctionId)
+              .doc(widget.productId)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return ShimmeringWidget(width: double.infinity, height: 100);
+            } else {
+              return DataTable(
+                sortColumnIndex: 0,
+                sortAscending: false,
+                headingRowColor: MaterialStateColor.resolveWith(
+                  (states) {
+                    return Colors.blueGrey;
+                  },
+                ),
+                headingTextStyle:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                columns: [
+                  DataColumn(label: Text('No')),
+                  DataColumn(
+                      label: Text(
+                    'Bid',
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'User',
+                  )),
+                ],
+                rows: _createRows(snapshot.data!.get('bidUsers')),
+              );
+            }
+          },
+        ));
+  }
+
+  List<DataRow> _createRows(Map userBidMap) {
+    print(userBidMap);
+    List<DataRow> newList = userBidMap.entries
+        .map((e) => DataRow(cells: [
+              DataCell(Text('No')),
+              DataCell(Text(e.key)),
+              DataCell(Text(e.value)),
+            ]))
+        .toList();
+
+    return newList;
   }
 
   Widget _buildBiddingWidget(String heading, int? currentBid) {
@@ -174,7 +632,7 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
         auctionId: widget.auctionId,
         productId: widget.productId,
         minBid: (currentBid! + incrementValue(currentBid)).toString(),
-        from: 'individualauctionpage',
+        from: 'individualproductpage',
         email: emailid,
       );
     }

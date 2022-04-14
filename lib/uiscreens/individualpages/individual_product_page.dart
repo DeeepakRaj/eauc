@@ -118,11 +118,11 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                   productsnapshot.data!.moreProductImage.split(',');
               carouselImages.insert(0, productsnapshot.data!.productImage);
               var productTags =
-                  productsnapshot.data!.productCategory.split(',');
+                  productsnapshot.data!.productCategory.split('*');
               return ListView(
                 children: [
                   Container(
-                    color: kbackgroundcolor,
+                    color: Colors.black,
                     child: Stack(
                       alignment: AlignmentDirectional.bottomCenter,
                       children: [
@@ -187,135 +187,14 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                         ),
                       ],
                     ),
-                  ),
+                  ), //Image Container
                   FutureBuilder<AuctionModel>(
                     future: thisauction,
                     builder: (auctioncontext, auctionsnapshot) {
                       if (auctionsnapshot.connectionState ==
                           ConnectionState.done) {
                         if (auctionsnapshot.hasData) {
-                          return Container(
-                            width: double.infinity,
-                            // padding: EdgeInsets.all(10),
-                            color: Colors.white,
-                            child: IntrinsicHeight(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      color: Colors.white,
-                                      padding: EdgeInsets.all(8),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          _buildBottomSheet();
-                                        },
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Flexible(
-                                              child: Text(
-                                                auctionsnapshot.data!.result[0]
-                                                    .auctionName,
-                                                style: kCardTitleTextStyle
-                                                    .copyWith(
-                                                        color: ksecondarycolor),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            Row(
-                                              children: [
-                                                Flexible(
-                                                  child: Text(
-                                                    auctionsnapshot
-                                                        .data!.result[0].email,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  '...more',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: ksecondarycolor,
-                                                      decoration: TextDecoration
-                                                          .underline),
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: StreamBuilder<String>(
-                                      stream:
-                                          GetAuctionTimeStream(widget.auctionID)
-                                              .getAuctionTimeStream(),
-                                      builder: (context, snapshot) {
-                                        if (!snapshot.hasData) {
-                                          return ShimmeringWidget(
-                                              width: 90, height: 50);
-                                        } else {
-                                          String heading = snapshot.data!
-                                              .toString()
-                                              .split('.')[0];
-                                          String time = snapshot.data!
-                                              .toString()
-                                              .split('.')[1];
-                                          return Container(
-                                            color: (heading == 'Scheduled Date')
-                                                ? Colors.green.withOpacity(0.1)
-                                                : Colors.orange
-                                                    .withOpacity(0.1),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  heading,
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.brown,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(
-                                                  time,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 17,
-                                                      color: (heading ==
-                                                              'Scheduled Date')
-                                                          ? Colors.blue
-                                                          : Colors.red),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
+                          return _buildAuctionDetailContainer(auctionsnapshot);
                         } else {
                           return Center(
                             child: Text(
@@ -336,9 +215,31 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                     color: Colors.transparent,
                     thickness: 2,
                   ),
-                  IppBiddingContainer(
-                    productId: widget.productID,
-                    auctionId: widget.auctionID,
+                  FutureBuilder<AuctionModel>(
+                    future: thisauction,
+                    builder: (context, snapshotauction) {
+                      if (snapshotauction.connectionState ==
+                          ConnectionState.done) {
+                        if (snapshotauction.hasData) {
+                          return IppBiddingContainer(
+                            productId: widget.productID,
+                            auctionId: widget.auctionID,
+                            hostEmail: snapshotauction.data!.result[0].email,
+                          );
+                        } else {
+                          return Center(
+                            child: Text(
+                              'Could not Connect to server. Please Refresh',
+                              style: kHeaderTextStyle,
+                            ),
+                          );
+                        }
+                      } else {
+                        return ShimmeringWidget(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            height: MediaQuery.of(context).size.height * 0.3);
+                      }
+                    },
                   ),
                   Container(
                     color: Colors.white,
@@ -489,6 +390,112 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
             );
           }
         },
+      ),
+    );
+  }
+
+  Widget _buildAuctionDetailContainer(
+      AsyncSnapshot<AuctionModel> auctionsnapshot) {
+    return Container(
+      width: double.infinity,
+      // padding: EdgeInsets.all(10),
+      color: Colors.white,
+      child: IntrinsicHeight(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(8),
+                child: GestureDetector(
+                  onTap: () {
+                    _buildBottomSheet();
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          auctionsnapshot.data!.result[0].auctionName,
+                          style: kCardTitleTextStyle.copyWith(
+                              color: ksecondarycolor),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              auctionsnapshot.data!.result[0].email,
+                              overflow: TextOverflow.ellipsis,
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.black),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            '...more',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: ksecondarycolor,
+                                decoration: TextDecoration.underline),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: StreamBuilder<String>(
+                stream: GetAuctionTimeStream(widget.auctionID)
+                    .getAuctionTimeStream(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return ShimmeringWidget(width: 90, height: 50);
+                  } else {
+                    String heading = snapshot.data!.toString().split('.')[0];
+                    String time = snapshot.data!.toString().split('.')[1];
+                    return Container(
+                      color: (heading == 'Scheduled Date')
+                          ? Colors.green.withOpacity(0.1)
+                          : Colors.orange.withOpacity(0.1),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            heading,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.brown,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            time,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17,
+                                color: (heading == 'Scheduled Date')
+                                    ? Colors.blue
+                                    : Colors.red),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

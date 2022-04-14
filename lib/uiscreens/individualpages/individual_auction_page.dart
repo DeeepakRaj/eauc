@@ -137,7 +137,7 @@ class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
                                         .data!.result[index].productDesc,
                                     productTags: snapshot
                                         .data!.result[index].productCategory
-                                        .split(','),
+                                        .split('*'),
                                     productPriceOrBid:
                                         snapshot.data!.result[index].basePrice,
                                   );
@@ -213,7 +213,7 @@ class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
             element.productDesc,
             'Upcoming',
             element.basePrice,
-            element.productCategory.split(',')));
+            element.productCategory.split('*')));
       }
     });
   }

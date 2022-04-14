@@ -349,13 +349,22 @@ class _AddProductPageState extends State<AddProductPage> {
                     height: 10,
                   ),
                   MultiSelectDialogField(
-                    items: [
-                      //TODO: Build categories here
-                      MultiSelectItem('Electronics', 'Electronics'),
-                      MultiSelectItem('Sports', 'Sports'),
-                      MultiSelectItem('Ancient', 'Ancient'),
-                      MultiSelectItem('Currency', 'Currency'),
-                    ],
+                    items: List.generate(
+                      categoriesList.length,
+                      (index) => MultiSelectItem(
+                          categoriesList[index], categoriesList[index]),
+                    ),
+                    // items: [
+                    //   //TODO: Build categories here
+                    //   MultiSelectItem('Electronics', 'Electronics'),
+                    //   MultiSelectItem('Sports', 'Sports'),
+                    //   MultiSelectItem('Ancient', 'Ancient'),
+                    //   MultiSelectItem('Currency', 'Currency'),
+                    // ],
+                    chipDisplay: MultiSelectChipDisplay(
+                      textStyle: TextStyle(color: Colors.blue.shade800),
+                      chipColor: Colors.blue.shade100,
+                    ),
                     listType: MultiSelectListType.LIST,
                     searchable: true,
                     title: Text(

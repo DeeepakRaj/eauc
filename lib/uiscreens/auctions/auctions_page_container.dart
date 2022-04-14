@@ -194,16 +194,19 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      AutoSizeText(
-                        widget.auctionName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: kprimarycolor,
+                      Flexible(
+                        flex: 3,
+                        child: AutoSizeText(
+                          widget.auctionName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: kprimarycolor,
+                          ),
+                          minFontSize: 19,
+                          maxLines: 1,
+                          maxFontSize: 22,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        minFontSize: 19,
-                        maxLines: 1,
-                        maxFontSize: 22,
-                        overflow: TextOverflow.ellipsis,
                       ),
                       (heading == 'Time Remaining')
                           ? BlinkingLiveIndicator()

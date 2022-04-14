@@ -24,6 +24,7 @@ class _BlinkingLiveIndicatorState extends State<BlinkingLiveIndicator>
   @override
   Widget build(BuildContext context) {
     return Flexible(
+      flex: 1,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

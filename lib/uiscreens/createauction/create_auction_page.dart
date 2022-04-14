@@ -106,7 +106,7 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
       auctionData['productPrice' + (i).toString()] =
           products[i].openingBid.toString();
       auctionData['productTags' + (i).toString()] =
-          products[i].productTags.join(",").toString();
+          products[i].productTags.join("*").toString();
       auctionData['productImage' + (i).toString()] =
           (base64Encode(products[i].primaryImage.readAsBytesSync())).toString();
 

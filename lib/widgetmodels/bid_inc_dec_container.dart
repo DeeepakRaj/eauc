@@ -243,9 +243,12 @@ class _BidIncDecContainerState extends State<BidIncDecContainer> {
         .doc(widget.productId)
         .update({
       "currentBid": (bidsList.length == 0) ? widget.minBid : bidsList.last,
-      'bidUsers': {
-        widget.email: (bidsList.length == 0) ? widget.minBid : bidsList.last,
-      }
+      getMapKey(): widget.email
+      // getMapKey() : FieldValue.serverTimestamp()
+      // 'bidUsers': {
+      //   // FieldValue.serverTimestamp(): (bidsList.length == 0) ? '${widget.email}*'+widget.minBid : '${widget.email}*'+bidsList.last,
+      //   'hi':FieldValue.serverTimestamp()
+      // },
     }).then((value) {
       setState(() {
         bidsList.clear();
@@ -276,5 +279,13 @@ class _BidIncDecContainerState extends State<BidIncDecContainer> {
         );
       });
     });
+  }
+
+  String getMapKey() {
+    if (bidsList.length == 0) {
+      return "bidUsers.${widget.minBid}";
+    } else {
+      return "bidUsers.${bidsList.last}";
+    }
   }
 }
