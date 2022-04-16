@@ -6,7 +6,6 @@ import 'package:eauc/widgetmodels/shimmering_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:eauc/uiscreens/login_page.dart';
-import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 class PinnedAuctionsPage extends StatefulWidget {
   static const routename = '/pinnedauctionspage';

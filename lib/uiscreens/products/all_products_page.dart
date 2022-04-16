@@ -1,7 +1,7 @@
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/databasemodels/AllProductsModel.dart';
-import 'package:eauc/uiscreens/advanced_filter.dart';
+import 'package:eauc/uiscreens/advanced_filter_product.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/products/expandable_categories_container.dart';
 import 'package:eauc/uiscreens/products/products_page_container.dart';
@@ -102,7 +102,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return AdvancedFilter(
+                                  return AdvancedFilterProduct(
                                     screenWidth: screenWidth,
                                     screenHeight: screenHeight,
                                   );
@@ -141,7 +141,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
                                 snapshot.data!.result[index].productName,
                             imageName:
                                 snapshot.data!.result[index].productImage,
-                            hostName: snapshot.data!.result[index].email,
+                            hostName: snapshot.data!.result[index].host_email,
                             productTags:
                                 snapshot.data!.result[index].productCategory,
                             currentBid: snapshot.data!.result[index].basePrice,

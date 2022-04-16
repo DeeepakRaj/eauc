@@ -7,10 +7,12 @@ class GetAuctionTimeStream {
   String auctionId;
 
   GetAuctionTimeStream(this.auctionId) {
+    //Default constructor
     _getCurrentServerTime(auctionId);
   }
 
   String _printDuration(Duration duration) {
+    //This function returns the time in format of hh:mm:ss
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
@@ -18,6 +20,7 @@ class GetAuctionTimeStream {
   }
 
   String getProperDate(String retrievedDate) {
+    //Return datetime in format of dd-MM-yyyy HH:mm:ss
     DateTime date = DateTime.parse(retrievedDate);
     return DateFormat('dd-MM-yyyy HH:mm:ss').format(date);
   }
@@ -30,7 +33,9 @@ class GetAuctionTimeStream {
           DateTime.fromMillisecondsSinceEpoch(snapshot['start_Date']);
       endDateTime = DateTime.fromMillisecondsSinceEpoch(snapshot['end_Date']);
     });
+    //Getting current time from server
     currentTime = await NTP.now();
+    //Adding duration of 1 second due to latency
     currentTime = currentTime.add(Duration(seconds: 1));
   }
 
@@ -42,6 +47,7 @@ class GetAuctionTimeStream {
       else if (currentTime.add(Duration(seconds: count)).isAfter(endDateTime))
         return 'Auction Ended.End of Auction';
       else
+        //Returning the duration between current time and auction end time
         return 'Time Remaining.' +
             _printDuration(endDateTime
                 .difference(currentTime.add(Duration(seconds: count))));

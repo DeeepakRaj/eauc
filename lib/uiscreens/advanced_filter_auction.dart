@@ -1,27 +1,27 @@
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
-import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/search_results_page.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
-import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
-class AdvancedFilter extends StatefulWidget {
+import 'login_page.dart';
+
+class AdvancedFilterAuction extends StatefulWidget {
   final double screenWidth;
   final double screenHeight;
 
-  AdvancedFilter({required this.screenWidth, required this.screenHeight});
+  AdvancedFilterAuction(
+      {required this.screenWidth, required this.screenHeight});
 
   @override
-  _AdvancedFilterState createState() => _AdvancedFilterState();
+  _AdvancedFilterAuctionState createState() => _AdvancedFilterAuctionState();
 }
 
-class _AdvancedFilterState extends State<AdvancedFilter> {
-  final GlobalKey<FormState> _advFilterFormKey = GlobalKey<FormState>();
+class _AdvancedFilterAuctionState extends State<AdvancedFilterAuction> {
+  final GlobalKey<FormState> _advFilterAuctionFormKey = GlobalKey<FormState>();
   late String emailid;
   List<String> auctionTypes = ['All', 'Live', 'Upcoming'];
   String? _auctiontype,
@@ -31,7 +31,6 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
       _basepricefrom,
       _basepriceto;
   DateTime? _datefrom, _dateto;
-  List _selectedCategories = [];
 
   @override
   void initState() {
@@ -82,7 +81,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
             child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               child: Form(
-                key: _advFilterFormKey,
+                key: _advFilterAuctionFormKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -168,139 +167,6 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                     SizedBox(
                       height: 15,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(
-                        'Product Category:',
-                        style: TextStyle(
-                            color: kprimarycolor, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    MultiSelectDialogField(
-                      items: [
-                        //TODO: Build categories here
-                        MultiSelectItem('Electronics', 'Electronics'),
-                        MultiSelectItem('Sports', 'Sports'),
-                        MultiSelectItem('Ancient', 'Ancient'),
-                        MultiSelectItem('Currency', 'Currency'),
-                      ],
-                      listType: MultiSelectListType.LIST,
-                      searchable: true,
-                      title: Text(
-                        "Select Category",
-                        style: TextStyle(color: Colors.blue.shade800),
-                      ),
-                      selectedColor: Colors.blue.shade800,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      searchTextStyle: TextStyle(color: Colors.black),
-                      backgroundColor: kbackgroundcolor,
-                      buttonIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.blue.shade800,
-                      ),
-                      buttonText: Text(
-                        'Select Product Categories',
-                        style: TextStyle(
-                          color: Colors.blue.shade800,
-                          fontSize: 16,
-                        ),
-                      ),
-                      initialValue: _selectedCategories,
-                      onConfirm: (results) {
-                        _selectedCategories = results;
-                      },
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(
-                        'Base Price Range:',
-                        style: TextStyle(
-                            color: kprimarycolor, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Flexible(
-                          child: TextFormField(
-                            decoration: kSmallInputFieldDecoration.copyWith(
-                                hintText: ''),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            style: kSearchFieldTextStyle,
-                            cursorColor: kprimarycolor,
-                            validator: (value) {
-                              if (_basepricefrom == null ||
-                                  _basepricefrom!.isEmpty) {
-                                if (_basepriceto != null ||
-                                    _basepriceto!.isNotEmpty)
-                                  return 'Please leave either both fields blank or none';
-                              } else if (!RegExp(numberRegExp)
-                                  .hasMatch(_basepricefrom!))
-                                return 'Please enter a valid number';
-                              return null;
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                _basepricefrom = value;
-                              });
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5, right: 5),
-                          child: Text(
-                            'To',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        Flexible(
-                          child: TextFormField(
-                            decoration: kSmallInputFieldDecoration.copyWith(
-                                hintText: ''),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            style: kSearchFieldTextStyle,
-                            cursorColor: kprimarycolor,
-                            validator: (value) {
-                              if (_basepriceto == null ||
-                                  _basepriceto!.isEmpty) {
-                                if (_basepricefrom != null ||
-                                    _basepricefrom!.isNotEmpty)
-                                  return 'Please leave either both fields blank or none';
-                              } else if (!RegExp(numberRegExp)
-                                  .hasMatch(_basepriceto!))
-                                return 'Please enter a valid number';
-                              else if (int.parse(_basepriceto!) <
-                                  int.parse(_basepricefrom!))
-                                return 'Invalid Range';
-                              return null;
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                _basepriceto = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
                     SizedBox(
                       height: 15,
                     ),
@@ -370,8 +236,7 @@ class _AdvancedFilterState extends State<AdvancedFilter> {
                       style: TextStyle(color: Colors.black),
                       type: DateTimePickerType.dateTime,
                       dateMask: 'dd-MM-yyyy HH:mm',
-                      initialValue:
-                          DateTime.now().add(Duration(minutes: 5)).toString(),
+                      initialValue: '',
                       firstDate: DateTime.now(),
                       lastDate: DateTime(2100),
                       icon: Icon(Icons.event),

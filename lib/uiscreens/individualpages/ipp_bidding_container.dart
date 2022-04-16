@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:data_table_2/data_table_2.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/widgetmodels/bid_inc_dec_container.dart';
@@ -544,6 +545,7 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
   // }
 
   Widget _buildBiddingListWidget() {
+    ScrollController _scrollcontroller = ScrollController();
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: StreamBuilder<DocumentSnapshot>(
@@ -555,28 +557,122 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
             if (!snapshot.hasData) {
               return ShimmeringWidget(width: double.infinity, height: 100);
             } else {
-              return DataTable(
-                sortColumnIndex: 0,
-                sortAscending: false,
-                headingRowColor: MaterialStateColor.resolveWith(
-                  (states) {
-                    return Colors.blueGrey;
-                  },
-                ),
-                headingTextStyle:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                columns: [
-                  DataColumn(label: Text('No')),
-                  DataColumn(
-                      label: Text(
-                    'Bid',
-                  )),
-                  DataColumn(
-                      label: Text(
-                    'User',
-                  )),
+              Map<String, dynamic> userBidMap = snapshot.data!.get('bidUsers');
+              List<String> listkeys = userBidMap.keys.toList(growable: true)
+                ..sort();
+              List<String> sortedkeys =
+                  listkeys.reversed.toList(growable: true);
+              return Column(
+                children: [
+                  Table(
+                    columnWidths: {
+                      0: FlexColumnWidth(1),
+                      1: FlexColumnWidth(3),
+                      2: FlexColumnWidth(3),
+                    },
+                    children: [
+                      TableRow(
+                          decoration: BoxDecoration(
+                            color: Colors.teal,
+                          ),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'No.',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Bid.',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'User.',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ]),
+                    ],
+                  ),
+                  ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height * 0.25,
+                        maxWidth: double.infinity,
+                      ),
+                      child: Scrollbar(
+                        isAlwaysShown: true,
+                        controller: _scrollcontroller,
+                        child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            controller: _scrollcontroller,
+                            itemCount: sortedkeys.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return Table(
+                                columnWidths: {
+                                  0: FlexColumnWidth(1),
+                                  1: FlexColumnWidth(3),
+                                  2: FlexColumnWidth(3),
+                                },
+                                children: [
+                                  TableRow(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                      ),
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            (sortedkeys.length - index)
+                                                .toString(),
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            sortedkeys.elementAt(index),
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            userBidMap[
+                                                sortedkeys.elementAt(index)]!,
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ]),
+                                ],
+                              );
+                            }),
+                      ))
                 ],
-                rows: _createRows(snapshot.data!.get('bidUsers')),
               );
             }
           },
@@ -584,7 +680,6 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
   }
 
   List<DataRow> _createRows(Map userBidMap) {
-    print(userBidMap);
     List<DataRow> newList = userBidMap.entries
         .map((e) => DataRow(cells: [
               DataCell(Text('No')),
@@ -592,7 +687,6 @@ class _IppBiddingContainerState extends State<IppBiddingContainer> {
               DataCell(Text(e.value)),
             ]))
         .toList();
-
     return newList;
   }
 

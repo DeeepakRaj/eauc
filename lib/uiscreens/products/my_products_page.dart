@@ -1,5 +1,5 @@
 import 'package:eauc/constants.dart';
-import 'package:eauc/uiscreens/advanced_filter.dart';
+import 'package:eauc/uiscreens/advanced_filter_product.dart';
 import 'package:eauc/uiscreens/products/expandable_categories_container.dart';
 import 'package:eauc/uiscreens/products/products_page_container.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +61,7 @@ class _MyProductsPageState extends State<MyProductsPage> {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AdvancedFilter(
+                          return AdvancedFilterProduct(
                             screenWidth: screenWidth,
                             screenHeight: screenHeight,
                           );

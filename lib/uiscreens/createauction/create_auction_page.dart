@@ -75,6 +75,9 @@ class _CreateAuctionPageState extends State<CreateAuctionPage> {
       batch.set(docRef, {
         "openingBid": products[productIds.indexOf(id)].openingBid.toString(),
         "currentBid": products[productIds.indexOf(id)].openingBid.toString(),
+        "bidUsers": {
+          products[productIds.indexOf(id)].openingBid.toString(): "Opening Bid",
+        }
       });
     });
     docRef = collectionRef.collection(auctionId.toString()).doc('timings');

@@ -1,7 +1,8 @@
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/databasemodels/AuctionModel.dart';
-import 'package:eauc/uiscreens/advanced_filter.dart';
+import 'package:eauc/uiscreens/advanced_filter_auction.dart';
+import 'package:eauc/uiscreens/advanced_filter_product.dart';
 import 'package:eauc/uiscreens/auctions/auctions_page_container.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/widgetmodels/custom_navigation_drawer.dart';
@@ -103,7 +104,7 @@ class _AuctionsState extends State<Auctions> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return AdvancedFilter(
+                              return AdvancedFilterAuction(
                                 screenWidth: screenWidth,
                                 screenHeight: screenHeight,
                               );

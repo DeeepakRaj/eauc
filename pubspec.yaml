@@ -27,7 +27,6 @@ dependencies:
   expandable: ^5.0.1
   multi_select_flutter: ^4.0.0
   fluttertoast: ^8.0.9
-  responsive_grid_list: ^1.2.4
   shimmer: ^2.0.0
   modal_progress_hud_nsn: ^0.1.0-nullsafety-1
   firebase_core: ^1.13.1
@@ -36,6 +35,7 @@ dependencies:
   ntp: ^2.0.0
   like_button: ^2.0.4
   flutter_styled_toast: ^2.0.0
+  data_table_2: ^2.2.1
 
 dev_dependencies:
   flutter_test:

@@ -15,9 +15,7 @@ import 'package:eauc/databasemodels/IndividualProductModel.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/individualpages/auction_info_container.dart';
 import 'package:eauc/uiscreens/individualpages/ipp_bidding_container.dart';
-import 'package:eauc/uiscreens/individualpages/ipp_bidding_container_host.dart';
 import 'package:eauc/uiscreens/products/products_page_container.dart';
-import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:eauc/widgetmodels/tag_container.dart';
 import 'package:flutter/material.dart';
 
@@ -34,19 +32,19 @@ class IndividualProductPage extends StatefulWidget {
 }
 
 class _IndividualProductPageState extends State<IndividualProductPage> {
-  late double _currentCarouselIndex = 0;
   Future<IndividualProductModel>? thisproduct;
   Future<AuctionModel>? thisauction;
   CarouselController _carouselController = CarouselController();
   late String emailid;
-  bool _showBottomSheet = false;
   Future<AllProductsModel>? thisauctionproducts;
 
-  Future<AllProductsModel> getAuctionProducts(String auctionid) async {
+  Future<AllProductsModel> getAuctionProducts(
+      String auctionid, String productid) async {
     var products;
-    var url = apiUrl + "AuctionData/getAllProducts.php";
+    var url = apiUrl + "AuctionData/getMoreProductsInAuction.php";
     var response = await http.post(Uri.parse(url), body: {
       "auction_id": auctionid,
+      "product_id": productid,
     });
     print(response.statusCode);
     products = allProductsModelFromJson(response.body);
@@ -88,7 +86,8 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
           this.emailid = value;
           thisproduct = getProductData(widget.productID);
           thisauction = getAuctionData(widget.auctionID, emailid);
-          thisauctionproducts = getAuctionProducts(widget.auctionID);
+          thisauctionproducts =
+              getAuctionProducts(widget.auctionID, widget.productID);
         });
       }
     });
@@ -124,7 +123,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                   Container(
                     color: Colors.black,
                     child: Stack(
-                      alignment: AlignmentDirectional.bottomCenter,
+                      alignment: AlignmentDirectional.center,
                       children: [
                         CarouselSlider.builder(
                           itemCount: carouselImages.length,
@@ -143,48 +142,50 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                             );
                           },
                           options: CarouselOptions(
-                              viewportFraction: 1,
-                              pageSnapping: true,
-                              autoPlay: false,
-                              height: MediaQuery.of(context).size.height * 0.40,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _currentCarouselIndex = index.toDouble();
-                                });
-                              }),
-                        ),
-                        // CarouselSlider(
-                        //   carouselController: carouselController,
-                        //   options: CarouselOptions(
-                        //       viewportFraction: 1,
-                        //       autoPlay: false,
-                        //       height: MediaQuery.of(context).size.height * 0.40,
-                        //       onPageChanged: (index, reason) {
-                        //         setState(() {
-                        //           _currentCarouselIndex = index.toDouble();
-                        //         });
-                        //       }),
-                        //   items: productsnapshot.data!.moreProductImage.split(',').map((featuredImage) {
-                        //     return Container(
-                        //       width: double.infinity,
-                        //       decoration: BoxDecoration(
-                        //         image: DecorationImage(
-                        //           image: Image.memory(base64Decode(featuredImage)).image,
-                        //           fit: BoxFit.contain,
-                        //         ),
-                        //       ),
-                        //     );
-                        //   }).toList(),
-                        // ),
-                        DotsIndicator(
-                          dotsCount: carouselImages.length,
-                          position: _currentCarouselIndex,
-                          decorator: DotsDecorator(
-                            color: Colors.grey.shade300, // Inactive color
-                            activeColor: Colors.white,
-                            activeSize: Size.fromRadius(7),
+                            viewportFraction: 1,
+                            pageSnapping: true,
+                            autoPlay: false,
+                            height: MediaQuery.of(context).size.height * 0.40,
                           ),
                         ),
+                        Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black.withOpacity(0.2),
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                _carouselController.previousPage(
+                                    duration: Duration(milliseconds: 500));
+                              },
+                              icon: Icon(
+                                Icons.arrow_back_ios,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black.withOpacity(0.2),
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                _carouselController.nextPage(
+                                    duration: Duration(milliseconds: 500));
+                              },
+                              icon: Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ), //Image Container
@@ -215,31 +216,10 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                     color: Colors.transparent,
                     thickness: 2,
                   ),
-                  FutureBuilder<AuctionModel>(
-                    future: thisauction,
-                    builder: (context, snapshotauction) {
-                      if (snapshotauction.connectionState ==
-                          ConnectionState.done) {
-                        if (snapshotauction.hasData) {
-                          return IppBiddingContainer(
-                            productId: widget.productID,
-                            auctionId: widget.auctionID,
-                            hostEmail: snapshotauction.data!.result[0].email,
-                          );
-                        } else {
-                          return Center(
-                            child: Text(
-                              'Could not Connect to server. Please Refresh',
-                              style: kHeaderTextStyle,
-                            ),
-                          );
-                        }
-                      } else {
-                        return ShimmeringWidget(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            height: MediaQuery.of(context).size.height * 0.3);
-                      }
-                    },
+                  IppBiddingContainer(
+                    productId: widget.productID,
+                    auctionId: widget.auctionID,
+                    hostEmail: productsnapshot.data!.host_email,
                   ),
                   Container(
                     color: Colors.white,
@@ -321,7 +301,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                                       imageName: auctionproductssnapshot
                                           .data!.result[index].productImage,
                                       hostName: auctionproductssnapshot
-                                          .data!.result[index].email,
+                                          .data!.result[index].host_email,
                                       currentBid: auctionproductssnapshot
                                           .data!.result[index].basePrice,
                                       type: 'Live',
@@ -416,36 +396,33 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Flexible(
-                        child: Text(
-                          auctionsnapshot.data!.result[0].auctionName,
-                          style: kCardTitleTextStyle.copyWith(
-                              color: ksecondarycolor),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
                       Row(
                         children: [
                           Flexible(
                             child: Text(
-                              auctionsnapshot.data!.result[0].email,
+                              auctionsnapshot.data!.result[0].auctionName,
+                              style: kCardTitleTextStyle.copyWith(
+                                  color: ksecondarycolor),
                               overflow: TextOverflow.ellipsis,
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.black),
                             ),
                           ),
                           SizedBox(
                             width: 5,
                           ),
-                          Text(
-                            '...more',
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: ksecondarycolor,
-                                decoration: TextDecoration.underline),
+                          Icon(
+                            Icons.add_to_home_screen,
+                            color: ksecondarycolor,
+                            size: 20,
                           )
                         ],
-                      )
+                      ),
+                      Flexible(
+                        child: Text(
+                          auctionsnapshot.data!.result[0].email,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 12, color: Colors.black),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -463,6 +440,7 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                     String heading = snapshot.data!.toString().split('.')[0];
                     String time = snapshot.data!.toString().split('.')[1];
                     return Container(
+                      padding: EdgeInsets.all(5),
                       color: (heading == 'Scheduled Date')
                           ? Colors.green.withOpacity(0.1)
                           : Colors.orange.withOpacity(0.1),

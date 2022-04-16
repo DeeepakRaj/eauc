@@ -1,6 +1,6 @@
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
-import 'package:eauc/uiscreens/advanced_filter.dart';
+import 'package:eauc/uiscreens/advanced_filter_product.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/products/all_products_page.dart';
 import 'package:eauc/uiscreens/products/my_products_page.dart';

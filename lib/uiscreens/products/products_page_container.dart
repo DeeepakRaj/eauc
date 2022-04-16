@@ -79,16 +79,17 @@ class _ProductsPageContainerState extends State<ProductsPageContainer> {
             width: 180,
             height: 100,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
-            ),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  topRight: Radius.circular(5),
+                ),
+                color: Colors.black),
             child: Image(
               image: Image.memory(base64Decode(widget.imageName)).image,
               fit: BoxFit.contain,
             ),
           ),
+          //
           StreamBuilder<String>(
             stream:
                 GetAuctionTimeStream(widget.auctionID).getAuctionTimeStream(),

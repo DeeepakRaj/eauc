@@ -38,7 +38,7 @@ class Result {
     required this.auctionId,
     required this.productImage,
     required this.moreProductImage,
-    required this.email,
+    required this.host_email,
   });
 
   String productId;
@@ -49,7 +49,7 @@ class Result {
   String auctionId;
   String productImage;
   String moreProductImage;
-  String email;
+  String host_email;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         productId: json["product_id"],
@@ -60,10 +60,11 @@ class Result {
         auctionId: json["auction_id"],
         productImage: json["product_image"],
         moreProductImage: json["more_product_image"],
-        email: json["email"],
+        host_email: json["host_email"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "product_id": productId,
         "product_name": productName,
         "product_desc": productDesc,
@@ -72,6 +73,6 @@ class Result {
         "auction_id": auctionId,
         "product_image": productImage,
         "more_product_image": moreProductImage,
-        "email": email,
+        "host_email": host_email,
       };
 }

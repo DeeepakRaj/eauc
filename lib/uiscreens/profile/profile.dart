@@ -8,7 +8,6 @@ import 'package:eauc/widgetmodels/custom_navigation_drawer.dart';
 import 'package:eauc/widgetmodels/shaded_container.dart';
 import 'package:eauc/widgetmodels/shaded_container2.dart';
 import 'package:flutter/material.dart';
-import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 class Profile extends StatefulWidget {
   static const routename = '/hostedpage';
