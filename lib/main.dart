@@ -70,7 +70,6 @@ class MyApp extends StatelessWidget {
         Home.routename: (context) => Home(),
         Auctions.routename: (context) => Auctions(),
         Profile.routename: (context) => Profile(),
-        SearchResultsPage.routename: (context) => SearchResultsPage(),
         PinnedAuctionsPage.routename: (context) => PinnedAuctionsPage(),
       },
     );

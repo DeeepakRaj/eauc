@@ -1,6 +1,6 @@
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
-import 'package:eauc/databasemodels/AllProductsModel.dart';
+import 'package:eauc/databasemodels/all_products_model.dart';
 import 'package:eauc/databasemodels/AuctionModel.dart';
 import 'package:eauc/widgetmodels/shimmering_widget.dart';
 import 'package:flutter/material.dart';
@@ -201,7 +201,6 @@ class _IndividualAuctionPageState extends State<IndividualAuctionPage> {
   void _searchProduct(String query, AsyncSnapshot asyncSnapshot) {
     searchproducts.clear();
     asyncSnapshot.data!.result.forEach((element) {
-      print(element.productName.toLowerCase());
       if (element.productName.toLowerCase().contains(query.toLowerCase()) ||
           element.productCategory.contains(query) ||
           element.productDesc.toLowerCase().contains(query.toLowerCase())) {

@@ -4,7 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
-import 'package:eauc/databasemodels/AllProductsModel.dart';
+import 'package:eauc/databasemodels/all_products_model.dart';
 import 'package:eauc/databasemodels/AuctionModel.dart';
 import 'package:eauc/widgetmodels/display_auction_countdown.dart';
 import 'package:eauc/widgetmodels/get_auction_timestream.dart';

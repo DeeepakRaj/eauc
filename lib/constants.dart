@@ -19,6 +19,7 @@ String passwordRegExp =
 
 double kProductsListViewHeight = 310;
 double kAuctionsListViewHeight = 270;
+double kAuctionsListViewWidth = 180;
 
 final kInputFieldDecoration = InputDecoration(
     hintText: 'Email',
@@ -175,6 +176,7 @@ List<String> categoriesList = [
   'Medical equipment',
   'Motorbikes',
   'Office furniture & supplies',
+  'Old Currency',
   'Other Industrial Supplies & Equipment',
   'Pet Products',
   'Restaurant & Bar Equipment',

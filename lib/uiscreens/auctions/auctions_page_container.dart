@@ -90,7 +90,7 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
                       maxFontSize: 22,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    ShimmeringWidget(width: 30, height: 10)
+                    ShimmeringWidget(width: 10, height: 10)
                   ],
                 ),
                 SizedBox(

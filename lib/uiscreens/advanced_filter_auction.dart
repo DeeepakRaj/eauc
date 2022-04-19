@@ -24,12 +24,7 @@ class _AdvancedFilterAuctionState extends State<AdvancedFilterAuction> {
   final GlobalKey<FormState> _advFilterAuctionFormKey = GlobalKey<FormState>();
   late String emailid;
   List<String> auctionTypes = ['All', 'Live', 'Upcoming'];
-  String? _auctiontype,
-      _keyword,
-      _hostname,
-      _productcategory,
-      _basepricefrom,
-      _basepriceto;
+  String? _auctiontype, _keyword, _hostname;
   DateTime? _datefrom, _dateto;
 
   @override
@@ -48,6 +43,8 @@ class _AdvancedFilterAuctionState extends State<AdvancedFilterAuction> {
       }
     });
     _auctiontype = auctionTypes[0];
+    _keyword = '';
+    _hostname = '';
   }
 
   @override
@@ -103,7 +100,9 @@ class _AdvancedFilterAuctionState extends State<AdvancedFilterAuction> {
                       style: kSearchFieldTextStyle,
                       cursorColor: kprimarycolor,
                       onChanged: (value) {
-                        _keyword = value;
+                        setState(() {
+                          _keyword = value;
+                        });
                       },
                     ),
                     SizedBox(
@@ -126,7 +125,9 @@ class _AdvancedFilterAuctionState extends State<AdvancedFilterAuction> {
                       style: kSearchFieldTextStyle,
                       cursorColor: kprimarycolor,
                       onChanged: (value) {
-                        _hostname = value;
+                        setState(() {
+                          _hostname = value;
+                        });
                       },
                     ),
                     SizedBox(
@@ -205,14 +206,23 @@ class _AdvancedFilterAuctionState extends State<AdvancedFilterAuction> {
                       dateLabelText: 'Date',
                       timeLabelText: 'Hour',
                       onChanged: (val) {
-                        _datefrom = DateTime.parse(val);
+                        setState(() {
+                          _datefrom = DateTime.parse(val);
+                        });
                       },
                       validator: (val) {
-                        if (_datefrom == null || _datefrom.toString().isEmpty) {
-                          if (_dateto != null || _dateto!.toString().isNotEmpty)
-                            return 'Please leave either both fields blank or none';
-                        }
-                        return null;
+                        print(_datefrom == null);
+                        if ((_datefrom == null ||
+                                _datefrom.toString().isEmpty) &&
+                            (_dateto == null || _dateto.toString().isEmpty)) {
+                          return null;
+                        } else if ((_dateto != null &&
+                                _dateto.toString().isNotEmpty) &&
+                            (_datefrom != null &&
+                                _datefrom.toString().isNotEmpty)) {
+                          return null;
+                        } else
+                          return 'Please leave either both fields blank or none';
                       },
                       onSaved: (val) => print(val),
                     ),
@@ -243,16 +253,25 @@ class _AdvancedFilterAuctionState extends State<AdvancedFilterAuction> {
                       dateLabelText: 'Date',
                       timeLabelText: 'Hour',
                       onChanged: (val) {
-                        _dateto = DateTime.parse(val);
+                        setState(() {
+                          _dateto = DateTime.parse(val);
+                        });
                       },
                       validator: (val) {
-                        if (_dateto == null || _dateto.toString().isEmpty) {
-                          if (_datefrom != null ||
-                              _datefrom!.toString().isNotEmpty)
-                            return 'Please leave either both fields blank or none';
-                        } else if (_datefrom!.isAfter(_dateto!))
-                          return 'Please enter a valid range';
-                        return null;
+                        if ((_dateto == null || _dateto.toString().isEmpty) &&
+                            (_datefrom == null ||
+                                _datefrom.toString().isEmpty)) {
+                          return null;
+                        } else if ((_dateto != null &&
+                                _dateto.toString().isNotEmpty) &&
+                            (_datefrom != null &&
+                                _datefrom.toString().isNotEmpty)) {
+                          if (_datefrom!.isAfter(_dateto!))
+                            return 'Please enter a valid range';
+                          else
+                            return null;
+                        } else
+                          return 'Please leave either both fields empty or none';
                       },
                       onSaved: (val) => print(val),
                     ),
@@ -266,12 +285,26 @@ class _AdvancedFilterAuctionState extends State<AdvancedFilterAuction> {
       actions: [
         CustomNormalButton(
           onPressed: () {
-            // if(!_advFilterFormKey.currentState!.validate())
-            //   return;
-            // else{
-            //   //TODO: Navigate to the Search Results Screen by horizontal sliding animation
-            // }
-            Navigator.pushNamed(context, SearchResultsPage.routename);
+            if (!_advFilterAuctionFormKey.currentState!.validate()) {
+              return;
+            } else {
+              print(_hostname == null);
+              //TODO: Navigate to the Search Results Screen by horizontal sliding animation
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SearchResultsAuctions(
+                            auctionType: _auctiontype!,
+                            hostName: (_hostname == null) ? '' : _hostname!,
+                            keyWord: (_keyword == null) ? '' : _keyword!,
+                            dateFrom: (_datefrom == null)
+                                ? ''
+                                : _datefrom!.millisecondsSinceEpoch.toString(),
+                            dateTo: (_dateto == null)
+                                ? ''
+                                : _dateto!.millisecondsSinceEpoch.toString(),
+                          )));
+            }
           },
           buttonText: 'Search',
         ),

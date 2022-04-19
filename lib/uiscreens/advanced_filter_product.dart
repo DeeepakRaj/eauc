@@ -407,7 +407,7 @@ class _AdvancedFilterProductState extends State<AdvancedFilterProduct> {
             // else{
             //   //TODO: Navigate to the Search Results Screen by horizontal sliding animation
             // }
-            Navigator.pushNamed(context, SearchResultsPage.routename);
+            Navigator.pushNamed(context, SearchResultsAuctions.routename);
           },
           buttonText: 'Search',
         ),

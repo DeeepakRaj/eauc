@@ -1,6 +1,6 @@
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
-import 'package:eauc/databasemodels/AllProductsModel.dart';
+import 'package:eauc/databasemodels/all_products_model.dart';
 import 'package:eauc/uiscreens/advanced_filter_product.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/products/expandable_categories_container.dart';
