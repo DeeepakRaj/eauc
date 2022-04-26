@@ -171,110 +171,123 @@ class _AdvancedFilterAuctionState extends State<AdvancedFilterAuction> {
                     SizedBox(
                       height: 15,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(
-                        'Dates:',
-                        style: TextStyle(
-                            color: kprimarycolor, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(
-                        'From:',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    DateTimePicker(
-                      decoration: kSmallInputFieldDecoration.copyWith(
-                        hintText: 'From',
-                      ),
-                      style: TextStyle(color: Colors.black),
-                      type: DateTimePickerType.dateTime,
-                      dateMask: 'dd-MM-yyyy HH:mm',
-                      initialValue: '',
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2100),
-                      icon: Icon(Icons.event),
-                      dateLabelText: 'Date',
-                      timeLabelText: 'Hour',
-                      onChanged: (val) {
-                        setState(() {
-                          _datefrom = DateTime.parse(val);
-                        });
-                      },
-                      validator: (val) {
-                        print(_datefrom == null);
-                        if ((_datefrom == null ||
-                                _datefrom.toString().isEmpty) &&
-                            (_dateto == null || _dateto.toString().isEmpty)) {
-                          return null;
-                        } else if ((_dateto != null &&
-                                _dateto.toString().isNotEmpty) &&
-                            (_datefrom != null &&
-                                _datefrom.toString().isNotEmpty)) {
-                          return null;
-                        } else
-                          return 'Please leave either both fields blank or none';
-                      },
-                      onSaved: (val) => print(val),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(
-                        'To:',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    DateTimePicker(
-                      decoration: kSmallInputFieldDecoration.copyWith(
-                        hintText: 'To',
-                      ),
-                      style: TextStyle(color: Colors.black),
-                      type: DateTimePickerType.dateTime,
-                      dateMask: 'dd-MM-yyyy HH:mm',
-                      initialValue: '',
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2100),
-                      icon: Icon(Icons.event),
-                      dateLabelText: 'Date',
-                      timeLabelText: 'Hour',
-                      onChanged: (val) {
-                        setState(() {
-                          _dateto = DateTime.parse(val);
-                        });
-                      },
-                      validator: (val) {
-                        if ((_dateto == null || _dateto.toString().isEmpty) &&
-                            (_datefrom == null ||
-                                _datefrom.toString().isEmpty)) {
-                          return null;
-                        } else if ((_dateto != null &&
-                                _dateto.toString().isNotEmpty) &&
-                            (_datefrom != null &&
-                                _datefrom.toString().isNotEmpty)) {
-                          if (_datefrom!.isAfter(_dateto!))
-                            return 'Please enter a valid range';
-                          else
-                            return null;
-                        } else
-                          return 'Please leave either both fields empty or none';
-                      },
-                      onSaved: (val) => print(val),
-                    ),
+                    (_auctiontype == 'Live')
+                        ? SizedBox(
+                            height: 5,
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: Text(
+                                  'Dates:',
+                                  style: TextStyle(
+                                      color: kprimarycolor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: Text(
+                                  'From:',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              DateTimePicker(
+                                decoration: kSmallInputFieldDecoration.copyWith(
+                                  hintText: 'From',
+                                ),
+                                style: TextStyle(color: Colors.black),
+                                type: DateTimePickerType.dateTime,
+                                dateMask: 'dd-MM-yyyy HH:mm',
+                                initialValue: '',
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(2100),
+                                icon: Icon(Icons.event),
+                                dateLabelText: 'Date',
+                                timeLabelText: 'Hour',
+                                onChanged: (val) {
+                                  setState(() {
+                                    _datefrom = DateTime.parse(val);
+                                  });
+                                },
+                                validator: (val) {
+                                  print(_datefrom == null);
+                                  if ((_datefrom == null ||
+                                          _datefrom.toString().isEmpty) &&
+                                      (_dateto == null ||
+                                          _dateto.toString().isEmpty)) {
+                                    return null;
+                                  } else if ((_dateto != null &&
+                                          _dateto.toString().isNotEmpty) &&
+                                      (_datefrom != null &&
+                                          _datefrom.toString().isNotEmpty)) {
+                                    return null;
+                                  } else
+                                    return 'Please leave either both fields blank or none';
+                                },
+                                onSaved: (val) => print(val),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: Text(
+                                  'To:',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              DateTimePicker(
+                                decoration: kSmallInputFieldDecoration.copyWith(
+                                  hintText: 'To',
+                                ),
+                                style: TextStyle(color: Colors.black),
+                                type: DateTimePickerType.dateTime,
+                                dateMask: 'dd-MM-yyyy HH:mm',
+                                initialValue: '',
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(2100),
+                                icon: Icon(Icons.event),
+                                dateLabelText: 'Date',
+                                timeLabelText: 'Hour',
+                                onChanged: (val) {
+                                  setState(() {
+                                    _dateto = DateTime.parse(val);
+                                  });
+                                },
+                                validator: (val) {
+                                  if ((_dateto == null ||
+                                          _dateto.toString().isEmpty) &&
+                                      (_datefrom == null ||
+                                          _datefrom.toString().isEmpty)) {
+                                    return null;
+                                  } else if ((_dateto != null &&
+                                          _dateto.toString().isNotEmpty) &&
+                                      (_datefrom != null &&
+                                          _datefrom.toString().isNotEmpty)) {
+                                    if (_datefrom!.isAfter(_dateto!))
+                                      return 'Please enter a valid range';
+                                    else
+                                      return null;
+                                  } else
+                                    return 'Please leave either both fields empty or none';
+                                },
+                                onSaved: (val) => print(val),
+                              ),
+                            ],
+                          ),
                   ],
                 ),
               ),

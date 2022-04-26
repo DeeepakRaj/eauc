@@ -339,7 +339,10 @@ class _AddProductPageState extends State<AddProductPage> {
                     validator: (value) {
                       if (!RegExp(r"[0-9]+?").hasMatch(value!)) {
                         return 'Enter a valid number';
+                      } else if (value.isEmpty) {
+                        return 'Opening Bid is required';
                       }
+                      return null;
                     },
                     onChanged: (value) {
                       _product.openingBid = value;
@@ -390,6 +393,17 @@ class _AddProductPageState extends State<AddProductPage> {
                       ),
                     ),
                     initialValue: _selectedCategories,
+                    validator: (results) {
+                      if (results == null) {
+                        return 'At least one category is required';
+                      } else {
+                        if (results.isEmpty) {
+                          return 'At least one category is required';
+                        } else {
+                          return null;
+                        }
+                      }
+                    },
                     onConfirm: (results) {
                       setState(() {
                         _selectedCategories = results;
@@ -404,14 +418,24 @@ class _AddProductPageState extends State<AddProductPage> {
                   CustomNormalButton(
                       buttonText: 'ADD',
                       onPressed: () {
-                        if (_primaryImage == null) {
-                          Fluttertoast.showToast(
-                              msg: 'Primary Image is Required',
-                              toastLength: Toast.LENGTH_LONG);
+                        if (!_addprodPageFormKey.currentState!.validate()) {
+                          return;
                         } else {
-                          _product.primaryImage = _primaryImage!;
-                          _product.moreImages = moreImagesMap.keys.toList();
-                          Navigator.pop(context, _product);
+                          if (_primaryImage == null) {
+                            Fluttertoast.showToast(
+                                msg: 'Primary Image is Required',
+                                toastLength: Toast.LENGTH_LONG);
+                          }
+                          // else if(_product.moreImages.length==0){
+                          //   Fluttertoast.showToast(
+                          //       msg: 'At least one additional image is Required',
+                          //       toastLength: Toast.LENGTH_LONG);
+                          // }
+                          else {
+                            _product.primaryImage = _primaryImage!;
+                            _product.moreImages = moreImagesMap.keys.toList();
+                            Navigator.pop(context, _product);
+                          }
                         }
                       }),
                 ],

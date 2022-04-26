@@ -18,7 +18,7 @@ String passwordRegExp =
     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
 
 double kProductsListViewHeight = 310;
-double kAuctionsListViewHeight = 270;
+double kAuctionsListViewHeight = 250;
 double kAuctionsListViewWidth = 180;
 
 final kInputFieldDecoration = InputDecoration(

@@ -21,7 +21,8 @@ class IapProductContainer extends StatefulWidget {
       productName,
       productDesc,
       auctionType,
-      productPriceOrBid;
+      productPriceOrBid,
+      hostEmail;
   final List<String> productTags;
 
   IapProductContainer(
@@ -32,7 +33,8 @@ class IapProductContainer extends StatefulWidget {
       required this.productName,
       required this.productDesc,
       required this.productTags,
-      required this.productPriceOrBid});
+      required this.productPriceOrBid,
+      required this.hostEmail});
 
   @override
   _IapProductContainerState createState() => _IapProductContainerState();
@@ -355,7 +357,8 @@ class _IapProductContainerState extends State<IapProductContainer> {
                                   style: TextStyle(fontSize: 13),
                                 ),
                               ),
-                              _buildBiddingWidget(heading, _currentBid),
+                              _buildBiddingWidget(
+                                  heading, _currentBid, widget.hostEmail),
                             ],
                           ),
                         ),
@@ -371,7 +374,7 @@ class _IapProductContainerState extends State<IapProductContainer> {
     );
   }
 
-  Widget _buildBiddingWidget(String heading, int currentBid) {
+  Widget _buildBiddingWidget(String heading, int currentBid, String hostemail) {
     if (heading == 'Auction Ended') {
       return Center(
         child: Padding(
@@ -386,6 +389,10 @@ class _IapProductContainerState extends State<IapProductContainer> {
             ),
           ),
         ),
+      );
+    } else if (emailid == hostemail) {
+      return SizedBox(
+        height: 15,
       );
     } else if (heading == 'Scheduled Date') {
       return Center(

@@ -1,6 +1,6 @@
 import 'package:eauc/database/db.dart';
 import 'package:eauc/uiscreens/profile/history_page.dart';
-import 'package:eauc/uiscreens/profile/hosted_auctions_page.dart';
+import 'package:eauc/uiscreens/profile/my_hosted.dart';
 import 'package:eauc/uiscreens/profile/my_account_page.dart';
 import 'package:eauc/uiscreens/login_page.dart';
 import 'package:eauc/uiscreens/profile/pinned_auctions_page.dart';
@@ -108,7 +108,7 @@ class _ProfileState extends State<Profile> {
                       );
                     },
                     child: ShadedContainer2(
-                        theTitle: 'Hosted Auctions',
+                        theTitle: 'My Hosted',
                         cardColor: Colors.white,
                         textColor: Colors.white,
                         imgName: 'auctionicon'),

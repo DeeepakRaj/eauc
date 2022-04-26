@@ -99,7 +99,7 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
                 Flexible(
                     child: Text(
                   widget.auctionDesc,
-                  style: kCardSubTitleTextStyle.copyWith(fontSize: 15),
+                  style: kCardSubTitleTextStyle.copyWith(fontSize: 10),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 )),
@@ -220,8 +220,8 @@ class _AuctionsPageContainerState extends State<AuctionsPageContainer> {
                   ),
                   Flexible(
                       child: Text(
-                    widget.auctionDesc,
-                    style: kCardSubTitleTextStyle.copyWith(fontSize: 15),
+                        widget.auctionDesc,
+                    style: kCardSubTitleTextStyle.copyWith(fontSize: 10),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   )),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eauc/constants.dart';
 import 'package:eauc/database/db.dart';
 import 'package:eauc/databasemodels/AuctionModel.dart';
@@ -21,6 +23,8 @@ class Auctions extends StatefulWidget {
 
 class _AuctionsState extends State<Auctions> {
   Future<AuctionModel>? allauctions;
+  TextEditingController _searchAuctionsController = TextEditingController();
+  Timer? debouncer;
 
   Future<AuctionModel> getAuctionData(String auctionid, String email) async {
     var auction;
@@ -34,11 +38,13 @@ class _AuctionsState extends State<Auctions> {
   }
 
   Future<AuctionAdvancedFilterModel> getDifferentAuctionResults(
-      String keyWord,
-      String hostName,
-      String auctionType,
-      String dateFrom,
-      String dateTo) async {
+    String keyWord,
+    String hostName,
+    String auctionType,
+    String dateFrom,
+    String dateTo,
+    String ownEmail,
+  ) async {
     var auctions;
     var url = apiUrl + "AuctionData/getAuctionAdvancedFilterData.php";
     var response = await http.post(Uri.parse(url), body: {
@@ -46,15 +52,27 @@ class _AuctionsState extends State<Auctions> {
       "hostname": hostName,
       "type": auctionType,
       "start_date_from": dateFrom,
-      "start_date_to": dateTo
+      "start_date_to": dateTo,
+      "own_email": ownEmail
     });
     auctions = auctionAdvancedFilterModelFromJson(response.body);
     return auctions;
   }
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    debouncer?.cancel();
+    super.dispose();
+  }
+
+  void debounce(
+    VoidCallback callback, {
+    Duration duration = const Duration(milliseconds: 500),
+  }) {
+    if (debouncer != null) {
+      debouncer!.cancel();
+    }
+    debouncer = Timer(duration, callback);
   }
 
   @override
@@ -83,7 +101,7 @@ class _AuctionsState extends State<Auctions> {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => LoginPage()),
-                      (route) => false);
+                          (route) => false);
                   return Center(
                     child: CircularProgressIndicator(),
                   );
@@ -99,11 +117,18 @@ class _AuctionsState extends State<Auctions> {
                             child: TextFormField(
                               cursorColor: kprimarycolor,
                               style: kSearchFieldTextStyle,
+                              controller: _searchAuctionsController,
                               decoration: kSearchFieldDecoration.copyWith(
                                 hintText: 'Search in All Auctions',
                                 suffixIcon: GestureDetector(
                                   onTap: () {
-                                    //TODO: Clear the search field
+                                    _searchAuctionsController.clear();
+                                    FocusScopeNode currentFocus =
+                                        FocusScope.of(context);
+
+                                    if (!currentFocus.hasPrimaryFocus) {
+                                      currentFocus.unfocus();
+                                    }
                                   },
                                   child: Icon(
                                     Icons.close,
@@ -112,7 +137,19 @@ class _AuctionsState extends State<Auctions> {
                                 ),
                               ),
                               onChanged: (value) {
-                                //TODO: Build search list
+                                debounce(() async {
+                                  setState(() {
+                                    if (_searchAuctionsController
+                                        .text.isEmpty) {
+                                      FocusScopeNode currentFocus =
+                                          FocusScope.of(context);
+
+                                      if (!currentFocus.hasPrimaryFocus) {
+                                        currentFocus.unfocus();
+                                      }
+                                    }
+                                  });
+                                });
                               },
                             ),
                           ),
@@ -142,34 +179,37 @@ class _AuctionsState extends State<Auctions> {
                         height: 20,
                       ),
                       Expanded(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          physics: BouncingScrollPhysics(),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              AuctionsListView(
-                                ownEmail: emailid,
-                                hostName: '',
-                                auctionType: 'Live',
-                                headerTitle: 'Ongoing Auctions',
-                                dateTo: '',
-                                dateFrom: '',
-                                keyWord: '',
-                              ),
-                              AuctionsListView(
-                                ownEmail: emailid,
-                                hostName: '',
-                                auctionType: 'Upcoming',
-                                headerTitle: 'Upcoming Auctions',
-                                dateTo: '',
-                                dateFrom: '',
-                                keyWord: '',
-                              ),
-                            ],
-                          ),
-                        ),
+                        child: (_searchAuctionsController.text.isEmpty)
+                            ? SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                physics: BouncingScrollPhysics(),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    AuctionsListView(
+                                      ownEmail: emailid,
+                                      hostName: '',
+                                      auctionType: 'Live',
+                                      headerTitle: 'Ongoing Auctions',
+                                      dateTo: '',
+                                      dateFrom: '',
+                                      keyWord: '',
+                                    ),
+                                    AuctionsListView(
+                                      ownEmail: emailid,
+                                      hostName: '',
+                                      auctionType: 'Upcoming',
+                                      headerTitle: 'Upcoming Auctions',
+                                      dateTo: '',
+                                      dateFrom: '',
+                                      keyWord: '',
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : _buildSearchResultView(emailid),
                       ),
                     ],
                   );
@@ -180,6 +220,66 @@ class _AuctionsState extends State<Auctions> {
         ),
       ),
     );
+  }
+
+  Widget _buildSearchResultView(String ownEmail) {
+    return FutureBuilder<AuctionAdvancedFilterModel>(
+        future: getDifferentAuctionResults(
+            _searchAuctionsController.text, '', 'All', '', '', ownEmail),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              return GridView.builder(
+                physics: BouncingScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio:
+                      kAuctionsListViewWidth / kAuctionsListViewHeight,
+                ),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: snapshot.data!.result.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    height: kAuctionsListViewHeight,
+                    child: AuctionsPageContainer(
+                      auctionID: snapshot.data!.result[index].auctionId,
+                      auctionName: snapshot.data!.result[index].auctionName,
+                      hostName: snapshot.data!.result[index].email,
+                      auctionDesc: snapshot.data!.result[index].auctionDesc,
+                      type: 'Live',
+                      imageName: 'sampleimage1',
+                    ),
+                  );
+                },
+              );
+            } else {
+              return Center(
+                child: Text(
+                  'No Results Found',
+                  style: kHeaderTextStyle,
+                ),
+              );
+            }
+          } else {
+            return GridView.builder(
+              physics: BouncingScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio:
+                    kAuctionsListViewWidth / kAuctionsListViewHeight,
+              ),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: 6,
+              itemBuilder: (BuildContext context, int index) {
+                return ShimmeringWidget(
+                    width: kAuctionsListViewWidth,
+                    height: kAuctionsListViewHeight);
+              },
+            );
+          }
+        });
   }
 }
 
@@ -192,16 +292,15 @@ class AuctionsListView extends StatelessWidget {
       dateTo,
       ownEmail;
 
-  AuctionsListView(
-      {required this.headerTitle,
-      required this.keyWord,
-      required this.dateTo,
-      required this.dateFrom,
-      required this.hostName,
-      required this.auctionType,
-      required this.ownEmail});
+  AuctionsListView({required this.headerTitle,
+    required this.keyWord,
+    required this.dateTo,
+    required this.dateFrom,
+    required this.hostName,
+    required this.auctionType,
+    required this.ownEmail});
 
-  Future<AuctionAdvancedFilterModel> getDifferentAuctionResults() async {
+  Future<AuctionAdvancedFilterModel> _getDifferentAuctionResults() async {
     var auctions;
     var url = apiUrl + "AuctionData/getAuctionAdvancedFilterData.php";
     var response = await http.post(Uri.parse(url), body: {
@@ -228,7 +327,7 @@ class AuctionsListView extends StatelessWidget {
               //TODO: Navigate to All Ongoing Auctions Page perhaps
             }),
         FutureBuilder<AuctionAdvancedFilterModel>(
-          future: getDifferentAuctionResults(),
+          future: _getDifferentAuctionResults(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
@@ -246,9 +345,9 @@ class AuctionsListView extends StatelessWidget {
                           return AuctionsPageContainer(
                             auctionID: snapshot.data!.result[index].auctionId,
                             auctionName:
-                                snapshot.data!.result[index].auctionName,
+                            snapshot.data!.result[index].auctionName,
                             auctionDesc:
-                                snapshot.data!.result[index].auctionDesc,
+                            snapshot.data!.result[index].auctionDesc,
                             hostName: snapshot.data!.result[index].email,
                             type: snapshot.data!.result[index].type,
                             imageName: 'sampleimage1',

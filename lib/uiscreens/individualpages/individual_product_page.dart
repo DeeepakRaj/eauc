@@ -302,10 +302,6 @@ class _IndividualProductPageState extends State<IndividualProductPage> {
                                           .data!.result[index].productImage,
                                       hostName: auctionproductssnapshot
                                           .data!.result[index].host_email,
-                                      currentBid: auctionproductssnapshot
-                                          .data!.result[index].basePrice,
-                                      type: 'Live',
-                                      time: '12:14:15',
                                     );
                                   }),
                             );

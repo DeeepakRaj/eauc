@@ -8,6 +8,7 @@ import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:eauc/widgetmodels/customtextbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class AdvancedFilterProduct extends StatefulWidget {
@@ -181,13 +182,22 @@ class _AdvancedFilterProductState extends State<AdvancedFilterProduct> {
                       height: 5,
                     ),
                     MultiSelectDialogField(
-                      items: [
-                        //TODO: Build categories here
-                        MultiSelectItem('Electronics', 'Electronics'),
-                        MultiSelectItem('Sports', 'Sports'),
-                        MultiSelectItem('Ancient', 'Ancient'),
-                        MultiSelectItem('Currency', 'Currency'),
-                      ],
+                      items: List.generate(
+                        categoriesList.length,
+                        (index) => MultiSelectItem(
+                            categoriesList[index], categoriesList[index]),
+                      ),
+                      // items: [
+                      //   //TODO: Build categories here
+                      //   MultiSelectItem('Electronics', 'Electronics'),
+                      //   MultiSelectItem('Sports', 'Sports'),
+                      //   MultiSelectItem('Ancient', 'Ancient'),
+                      //   MultiSelectItem('Currency', 'Currency'),
+                      // ],
+                      chipDisplay: MultiSelectChipDisplay(
+                        textStyle: TextStyle(color: Colors.blue.shade800),
+                        chipColor: Colors.blue.shade100,
+                      ),
                       listType: MultiSelectListType.LIST,
                       searchable: true,
                       title: Text(
@@ -213,185 +223,270 @@ class _AdvancedFilterProductState extends State<AdvancedFilterProduct> {
                         ),
                       ),
                       initialValue: _selectedCategories,
-                      onConfirm: (results) {
-                        _selectedCategories = results;
-                      },
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(
-                        'Base Price Range:',
-                        style: TextStyle(
-                            color: kprimarycolor, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Flexible(
-                          child: TextFormField(
-                            decoration: kSmallInputFieldDecoration.copyWith(
-                                hintText: ''),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            style: kSearchFieldTextStyle,
-                            cursorColor: kprimarycolor,
-                            validator: (value) {
-                              if (_basepricefrom == null ||
-                                  _basepricefrom!.isEmpty) {
-                                if (_basepriceto != null ||
-                                    _basepriceto!.isNotEmpty)
-                                  return 'Please leave either both fields blank or none';
-                              } else if (!RegExp(numberRegExp)
-                                  .hasMatch(_basepricefrom!))
-                                return 'Please enter a valid number';
-                              return null;
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                _basepricefrom = value;
-                              });
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5, right: 5),
-                          child: Text(
-                            'To',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        Flexible(
-                          child: TextFormField(
-                            decoration: kSmallInputFieldDecoration.copyWith(
-                                hintText: ''),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            style: kSearchFieldTextStyle,
-                            cursorColor: kprimarycolor,
-                            validator: (value) {
-                              if (_basepriceto == null ||
-                                  _basepriceto!.isEmpty) {
-                                if (_basepricefrom != null ||
-                                    _basepricefrom!.isNotEmpty)
-                                  return 'Please leave either both fields blank or none';
-                              } else if (!RegExp(numberRegExp)
-                                  .hasMatch(_basepriceto!))
-                                return 'Please enter a valid number';
-                              else if (int.parse(_basepriceto!) <
-                                  int.parse(_basepricefrom!))
-                                return 'Invalid Range';
-                              return null;
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                _basepriceto = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(
-                        'Dates:',
-                        style: TextStyle(
-                            color: kprimarycolor, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(
-                        'From:',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    DateTimePicker(
-                      decoration: kSmallInputFieldDecoration.copyWith(
-                        hintText: 'From',
-                      ),
-                      style: TextStyle(color: Colors.black),
-                      type: DateTimePickerType.dateTime,
-                      dateMask: 'dd-MM-yyyy HH:mm',
-                      initialValue: '',
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2100),
-                      icon: Icon(Icons.event),
-                      dateLabelText: 'Date',
-                      timeLabelText: 'Hour',
-                      onChanged: (val) {
-                        _datefrom = DateTime.parse(val);
-                      },
-                      validator: (val) {
-                        if (_datefrom == null || _datefrom.toString().isEmpty) {
-                          if (_dateto != null || _dateto!.toString().isNotEmpty)
-                            return 'Please leave either both fields blank or none';
+                      validator: (results) {
+                        if (results == null) {
+                          return null;
+                        } else {
+                          if (results.length > 1) {
+                            return 'Only 1 category can be selected';
+                          } else {
+                            return null;
+                          }
                         }
-                        return null;
                       },
-                      onSaved: (val) => print(val),
+                      onConfirm: (results) {
+                        setState(() {
+                          _selectedCategories = results;
+                        });
+                      },
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 15,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(
-                        'To:',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    DateTimePicker(
-                      decoration: kSmallInputFieldDecoration.copyWith(
-                        hintText: 'To',
-                      ),
-                      style: TextStyle(color: Colors.black),
-                      type: DateTimePickerType.dateTime,
-                      dateMask: 'dd-MM-yyyy HH:mm',
-                      initialValue:
-                          DateTime.now().add(Duration(minutes: 5)).toString(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2100),
-                      icon: Icon(Icons.event),
-                      dateLabelText: 'Date',
-                      timeLabelText: 'Hour',
-                      onChanged: (val) {
-                        _dateto = DateTime.parse(val);
-                      },
-                      validator: (val) {
-                        if (_dateto == null || _dateto.toString().isEmpty) {
-                          if (_datefrom != null ||
-                              _datefrom!.toString().isNotEmpty)
-                            return 'Please leave either both fields blank or none';
-                        } else if (_datefrom!.isAfter(_dateto!))
-                          return 'Please enter a valid range';
-                        return null;
-                      },
-                      onSaved: (val) => print(val),
-                    ),
+                    (_auctiontype == 'Live')
+                        ? SizedBox(
+                            height: 5,
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: Text(
+                                  'Opening Bid Range:',
+                                  style: TextStyle(
+                                      color: kprimarycolor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Flexible(
+                                    child: TextFormField(
+                                      decoration: kSmallInputFieldDecoration
+                                          .copyWith(hintText: ''),
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: <TextInputFormatter>[
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      style: kSearchFieldTextStyle,
+                                      cursorColor: kprimarycolor,
+                                      validator: (value) {
+                                        if ((_basepricefrom == null ||
+                                                _basepricefrom
+                                                    .toString()
+                                                    .isEmpty) &&
+                                            (_basepriceto == null ||
+                                                _basepriceto
+                                                    .toString()
+                                                    .isEmpty)) {
+                                          return null;
+                                        } else if ((_basepriceto != null &&
+                                                _basepriceto
+                                                    .toString()
+                                                    .isNotEmpty) &&
+                                            (_basepricefrom != null &&
+                                                _basepricefrom
+                                                    .toString()
+                                                    .isNotEmpty)) {
+                                          return null;
+                                        } else
+                                          return 'Please leave either both fields blank or none';
+                                        // if (_basepricefrom == null ||
+                                        //     _basepricefrom!.isEmpty) {
+                                        //   if (_basepriceto != null ||
+                                        //       _basepriceto!.isNotEmpty)
+                                        //     return 'Please leave either both fields blank or none';
+                                        // } else if (!RegExp(numberRegExp)
+                                        //     .hasMatch(_basepricefrom!))
+                                        //   return 'Please enter a valid number';
+                                        // return null;
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _basepricefrom = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 5, right: 5),
+                                    child: Text(
+                                      'To',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: TextFormField(
+                                      decoration: kSmallInputFieldDecoration
+                                          .copyWith(hintText: ''),
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: <TextInputFormatter>[
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      style: kSearchFieldTextStyle,
+                                      cursorColor: kprimarycolor,
+                                      validator: (value) {
+                                        if ((_basepriceto == null ||
+                                                _basepriceto
+                                                    .toString()
+                                                    .isEmpty) &&
+                                            (_basepricefrom == null ||
+                                                _basepricefrom
+                                                    .toString()
+                                                    .isEmpty)) {
+                                          return null;
+                                        } else if ((_basepriceto != null &&
+                                                _basepriceto
+                                                    .toString()
+                                                    .isNotEmpty) &&
+                                            (_basepricefrom != null &&
+                                                _basepricefrom
+                                                    .toString()
+                                                    .isNotEmpty)) {
+                                          if (int.parse(_basepricefrom!) >
+                                              int.parse(_basepriceto!))
+                                            return 'Please enter a valid range';
+                                          else
+                                            return null;
+                                        } else
+                                          return 'Please leave either both fields empty or none';
+                                        // if (_basepriceto == null ||
+                                        //     _basepriceto!.isEmpty) {
+                                        //   if (_basepricefrom != null ||
+                                        //       _basepricefrom!.isNotEmpty)
+                                        //     return 'Please leave either both fields blank or none';
+                                        // } else if (!RegExp(numberRegExp)
+                                        //     .hasMatch(_basepriceto!))
+                                        //   return 'Please enter a valid number';
+                                        // else if (int.parse(_basepriceto!) <
+                                        //     int.parse(_basepricefrom!))
+                                        //   return 'Invalid Range';
+                                        // return null;
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _basepriceto = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: Text(
+                                  'Dates:',
+                                  style: TextStyle(
+                                      color: kprimarycolor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: Text(
+                                  'From:',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              DateTimePicker(
+                                decoration: kSmallInputFieldDecoration.copyWith(
+                                  hintText: 'From',
+                                ),
+                                style: TextStyle(color: Colors.black),
+                                type: DateTimePickerType.dateTime,
+                                dateMask: 'dd-MM-yyyy HH:mm',
+                                initialValue: '',
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(2100),
+                                icon: Icon(Icons.event),
+                                dateLabelText: 'Date',
+                                timeLabelText: 'Hour',
+                                onChanged: (val) {
+                                  _datefrom = DateTime.parse(val);
+                                },
+                                validator: (val) {
+                                  if ((_datefrom == null ||
+                                          _datefrom.toString().isEmpty) &&
+                                      (_dateto == null ||
+                                          _dateto.toString().isEmpty)) {
+                                    return null;
+                                  } else if ((_dateto != null &&
+                                          _dateto.toString().isNotEmpty) &&
+                                      (_datefrom != null &&
+                                          _datefrom.toString().isNotEmpty)) {
+                                    return null;
+                                  } else
+                                    return 'Please leave either both fields blank or none';
+                                },
+                                onSaved: (val) => print(val),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: Text(
+                                  'To:',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              DateTimePicker(
+                                decoration: kSmallInputFieldDecoration.copyWith(
+                                  hintText: 'To',
+                                ),
+                                style: TextStyle(color: Colors.black),
+                                type: DateTimePickerType.dateTime,
+                                dateMask: 'dd-MM-yyyy HH:mm',
+                                initialValue: '',
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(2100),
+                                icon: Icon(Icons.event),
+                                dateLabelText: 'Date',
+                                timeLabelText: 'Hour',
+                                onChanged: (val) {
+                                  _dateto = DateTime.parse(val);
+                                },
+                                validator: (val) {
+                                  if ((_dateto == null ||
+                                          _dateto.toString().isEmpty) &&
+                                      (_datefrom == null ||
+                                          _datefrom.toString().isEmpty)) {
+                                    return null;
+                                  } else if ((_dateto != null &&
+                                          _dateto.toString().isNotEmpty) &&
+                                      (_datefrom != null &&
+                                          _datefrom.toString().isNotEmpty)) {
+                                    if (_datefrom!.isAfter(_dateto!))
+                                      return 'Please enter a valid range';
+                                    else
+                                      return null;
+                                  } else
+                                    return 'Please leave either both fields empty or none';
+                                },
+                                onSaved: (val) => print(val),
+                              ),
+                            ],
+                          ),
                   ],
                 ),
               ),
@@ -402,12 +497,31 @@ class _AdvancedFilterProductState extends State<AdvancedFilterProduct> {
       actions: [
         CustomNormalButton(
           onPressed: () {
-            // if(!_advFilterFormKey.currentState!.validate())
-            //   return;
-            // else{
-            //   //TODO: Navigate to the Search Results Screen by horizontal sliding animation
-            // }
-            Navigator.pushNamed(context, SearchResultsAuctions.routename);
+            if (!_advFilterProductFormKey.currentState!.validate())
+              return;
+            else {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SearchResultsProducts(
+                            auctionType: _auctiontype!,
+                            dateFrom: (_datefrom == null)
+                                ? ''
+                                : _datefrom!.millisecondsSinceEpoch.toString(),
+                            dateTo: (_dateto == null)
+                                ? ''
+                                : _dateto!.millisecondsSinceEpoch.toString(),
+                            hostName: (_hostname == null) ? '' : _hostname!,
+                            basePriceFrom:
+                                (_basepricefrom == null) ? '' : _basepricefrom!,
+                            basePriceTo:
+                                (_basepriceto == null) ? '' : _basepriceto!,
+                            productCategory: (_selectedCategories.length == 0)
+                                ? ''
+                                : _selectedCategories[0]!,
+                            keyWord: (_keyword == null) ? '' : _keyword!,
+                          )));
+            }
           },
           buttonText: 'Search',
         ),

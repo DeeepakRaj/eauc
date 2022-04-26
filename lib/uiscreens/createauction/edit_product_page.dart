@@ -9,6 +9,7 @@ import 'package:eauc/uiscreens/createauction/product_class.dart';
 import 'package:eauc/widgetmodels/custom_normal_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
@@ -331,7 +332,10 @@ class _EditProductPageState extends State<EditProductPage> {
                     validator: (value) {
                       if (!RegExp(r"[0-9]+?").hasMatch(value!)) {
                         return 'Enter a valid number';
+                      } else if (value.isEmpty) {
+                        return 'Opening Bid is required';
                       }
+                      return null;
                     },
                     onChanged: (value) {
                       widget.product.openingBid = value;
@@ -341,13 +345,11 @@ class _EditProductPageState extends State<EditProductPage> {
                     height: 10,
                   ),
                   MultiSelectDialogField(
-                    items: [
-                      //TODO: Build categories here
-                      MultiSelectItem('Electronics', 'Electronics'),
-                      MultiSelectItem('Sports', 'Sports'),
-                      MultiSelectItem('Ancient', 'Ancient'),
-                      MultiSelectItem('Currency', 'Currency'),
-                    ],
+                    items: List.generate(
+                      categoriesList.length,
+                      (index) => MultiSelectItem(
+                          categoriesList[index], categoriesList[index]),
+                    ),
                     listType: MultiSelectListType.LIST,
                     searchable: true,
                     title: Text(
@@ -373,6 +375,17 @@ class _EditProductPageState extends State<EditProductPage> {
                       ),
                     ),
                     initialValue: _selectedCategories,
+                    validator: (results) {
+                      if (results == null) {
+                        return 'At least one category is required';
+                      } else {
+                        if (results.isEmpty) {
+                          return 'At least one category is required';
+                        } else {
+                          return null;
+                        }
+                      }
+                    },
                     onConfirm: (results) {
                       _selectedCategories = results;
                       widget.product.productTags =
@@ -385,9 +398,26 @@ class _EditProductPageState extends State<EditProductPage> {
                   CustomNormalButton(
                       buttonText: 'ADD',
                       onPressed: () {
-                        widget.product.primaryImage = _primaryImage!;
-                        widget.product.moreImages = moreImagesMap.keys.toList();
-                        Navigator.pop(context, widget.product);
+                        if (!_editprodPageFormKey.currentState!.validate()) {
+                          return;
+                        } else {
+                          if (_primaryImage == null) {
+                            Fluttertoast.showToast(
+                                msg: 'Primary Image is Required',
+                                toastLength: Toast.LENGTH_LONG);
+                          }
+                          // else if(_product.moreImages.length==0){
+                          //   Fluttertoast.showToast(
+                          //       msg: 'At least one additional image is Required',
+                          //       toastLength: Toast.LENGTH_LONG);
+                          // }
+                          else {
+                            widget.product.primaryImage = _primaryImage!;
+                            widget.product.moreImages =
+                                moreImagesMap.keys.toList();
+                            Navigator.pop(context, widget.product);
+                          }
+                        }
                       }),
                 ],
               ),

@@ -15,26 +15,21 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../widgetmodels/get_auction_timestream.dart';
 
 class ProductsPageContainer extends StatefulWidget {
-  final String type,
-      imageName,
+  final String imageName,
       productName,
       hostName,
-      currentBid,
-      time,
       productTags,
       productID,
       auctionID;
 
-  ProductsPageContainer(
-      {required this.type,
-      required this.imageName,
-      required this.productName,
-      required this.hostName,
-      required this.productTags,
-      required this.productID,
-      required this.auctionID,
-      required this.currentBid,
-      required this.time});
+  ProductsPageContainer({
+    required this.imageName,
+    required this.productName,
+    required this.hostName,
+    required this.productTags,
+    required this.productID,
+    required this.auctionID,
+  });
 
   @override
   _ProductsPageContainerState createState() => _ProductsPageContainerState();
