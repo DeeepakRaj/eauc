@@ -1,4 +1,4 @@
-# eauc
+# eAuc
 
 A new Flutter application.
 
